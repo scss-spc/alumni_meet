@@ -1,0 +1,424 @@
+/* ==========================================================================
+   SC&SS JNU Alumni Meet Platform — Admin & Organizer Dashboard Styles
+   Navy / Gold / Cream Institutional Identity
+   ========================================================================== */
+
+:root {
+    --admin-sidebar-width: 260px;
+    --admin-header-height: 64px;
+    --admin-bg: #F7F3EA;
+    --admin-card-bg: #FFFFFF;
+    --admin-border: #DCD6C7;
+    --admin-text-main: #1A1A1A;
+    --admin-text-muted: #5A6478;
+}
+
+body.admin-body {
+    background-color: var(--admin-bg);
+    color: var(--admin-text-main);
+    display: flex;
+    min-height: 100vh;
+    font-size: 0.95rem;
+}
+
+/* Sidebar Layout */
+.admin-sidebar {
+    width: var(--admin-sidebar-width);
+    background-color: #0B1F4D;
+    color: #F7F3EA;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    border-right: 2px solid var(--color-gold);
+}
+
+.sidebar-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(247, 243, 234, 0.15);
+}
+
+.sidebar-brand-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.sidebar-brand-sub {
+    font-size: 0.72rem;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 1rem 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-item {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    color: rgba(247, 243, 234, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: rgba(212, 167, 69, 0.12);
+    color: #FFFFFF;
+    border-left: 3px solid var(--color-gold);
+}
+
+.sidebar-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(247, 243, 234, 0.15);
+    font-size: 0.85rem;
+}
+
+.user-info {
+    margin-bottom: 0.5rem;
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.user-role-badge {
+    font-size: 0.7rem;
+    background-color: var(--color-gold);
+    color: var(--color-navy);
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+/* Main Content Area */
+.admin-main {
+    margin-left: var(--admin-sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.admin-topbar {
+    height: var(--admin-header-height);
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+.topbar-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-navy);
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-content {
+    padding: 2rem;
+    flex: 1;
+}
+
+/* Metric / Stat Tiles */
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.stat-tile {
+    background-color: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-top: 3px solid var(--color-navy);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(11, 31, 77, 0.03);
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--admin-text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    line-height: 1;
+}
+
+.stat-number.primary { color: var(--color-navy); }
+.stat-number.gold { color: var(--color-gold-dark); }
+.stat-number.success { color: var(--color-success); }
+.stat-number.warning { color: var(--color-warning); }
+
+.stat-sub {
+    font-size: 0.78rem;
+    color: var(--admin-text-muted);
+    margin-top: 0.4rem;
+}
+
+/* Admin Card Container */
+.admin-card {
+    background-color: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(11, 31, 77, 0.03);
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-navy);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Data Tables */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: #FAF8F4;
+    color: var(--color-navy);
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--admin-border);
+    color: var(--admin-text-main);
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #FAF8F4;
+}
+
+/* Status Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.badge-verified, .badge-active, .badge-completed {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+
+.badge-submitted, .badge-under_review, .badge-planned, .badge-assigned {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
+}
+
+.badge-rejected, .badge-cancelled, .badge-inactive {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+}
+
+/* Action Buttons */
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.82rem;
+}
+
+.btn-icon {
+    padding: 0.35rem 0.6rem;
+}
+
+.action-group {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+/* Admin Forms */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--color-navy);
+}
+
+.form-text {
+    font-size: 0.78rem;
+    color: var(--admin-text-muted);
+    margin-top: 0.25rem;
+}
+
+/* Modal Dialog */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(11, 31, 77, 0.6);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-dialog {
+    background-color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    border-top: 4px solid var(--color-gold);
+    max-width: 550px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(11, 31, 77, 0.25);
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-navy);
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--admin-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    background-color: #FAF8F4;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    gap: 0.3rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.page-item .page-link {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--admin-border);
+    background-color: #FFF;
+    color: var(--color-navy);
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.page-item.active .page-link {
+    background-color: var(--color-navy);
+    color: var(--color-gold);
+    border-color: var(--color-navy);
+}
+
+@media (max-width: 992px) {
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+    }
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    .admin-main {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,109 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Activities & Tasks{% endblock %}
+{% block page_title %}Organizing Activities & Workstreams{% endblock %}
+
+{% block topbar_actions %}
+    <button class="btn btn-primary btn-sm" onclick="openModal('activityModal')">+ New Activity</button>
+{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+    {% if activities %}
+        {% for act in activities %}
+            <div class="admin-card">
+                <div class="card-header">
+                    <div>
+                        <span class="card-title">{{ act.name }}</span>
+                        <div style="font-size: 0.78rem; color: #888; margin-top: 2px;">
+                            {{ act.description or 'No specific description provided.' }}
+                        </div>
+                    </div>
+                    <span class="badge badge-{{ act.status }}">{{ act.status }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 style="font-size: 0.85rem; text-transform: uppercase; color: var(--admin-text-muted); margin-bottom: 0.75rem;">
+                        Assigned Volunteers ({{ act.assignments | length }})
+                    </h5>
+
+                    {% if act.assignments %}
+                        <ul style="list-style: none; margin-bottom: 1.25rem;">
+                            {% for asgn in act.assignments %}
+                                <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #F0F0F0;">
+                                    <div>
+                                        <strong>{{ asgn.full_name }}</strong>
+                                        {% if asgn.responsibility %}
+                                            <div style="font-size: 0.8rem; color: #666;">Role: {{ asgn.responsibility }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <form method="POST" action="{{ url_for('admin.delete_assignment', assignment_id=asgn.assignment_id) }}" style="margin: 0;">
+                                        <button type="submit" class="btn btn-secondary btn-sm" style="color: var(--color-danger); padding: 0.2rem 0.5rem;" title="Remove assignment">
+                                            × Remove
+                                        </button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p style="font-size: 0.88rem; color: #888; margin-bottom: 1.25rem;">No volunteers assigned to this workstream yet.</p>
+                    {% endif %}
+
+                    <!-- Assign Volunteer Form -->
+                    <form method="POST" action="{{ url_for('admin.assign_activity_volunteer', activity_id=act.id) }}" style="background-color: #F8FAFC; padding: 0.75rem; border: 1px solid var(--admin-border);">
+                        <div style="font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem;">Assign Volunteer to {{ act.name }}</div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <select name="volunteer_id" required class="form-control" style="flex: 1; min-width: 150px; padding: 0.4rem 0.6rem; font-size: 0.85rem;">
+                                <option value="">Select Volunteer...</option>
+                                {% for v in volunteers %}
+                                    <option value="{{ v.id }}">{{ v.full_name }} ({{ v.role or 'Volunteer' }})</option>
+                                {% endfor %}
+                            </select>
+                            <input 
+                                type="text" 
+                                name="responsibility" 
+                                placeholder="Specific responsibility..." 
+                                class="form-control" 
+                                style="flex: 1; min-width: 150px; padding: 0.4rem 0.6rem; font-size: 0.85rem;"
+                            >
+                            <button type="submit" class="btn btn-primary btn-sm">Assign</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="admin-card" style="grid-column: span 2; text-align: center; padding: 3rem;">
+            <h3>No organizing activities configured.</h3>
+            <p>Create activities such as Registration, Hospitality, Technical Support, and Photography.</p>
+            <button class="btn btn-primary" onclick="openModal('activityModal')">+ Create First Activity</button>
+        </div>
+    {% endif %}
+</div>
+
+<!-- New Activity Modal -->
+<div class="modal-overlay" id="activityModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Add Organizing Activity</h4>
+            <button class="modal-close" onclick="closeModal('activityModal')">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('admin.activities') }}">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="actName">Activity / Workstream Name *</label>
+                    <input type="text" name="name" id="actName" required placeholder="e.g. Venue Coordination" class="form-control" style="width: 100%;">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="actDesc">Description</label>
+                    <textarea name="description" id="actDesc" rows="3" class="form-control" style="width: 100%;" placeholder="Describe the scope and deliverables for this team..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('activityModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Activity</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

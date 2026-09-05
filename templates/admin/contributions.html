@@ -1,0 +1,269 @@
+{% extends "admin/base.html" %}
+{% from "macros/icons.html" import icon_external %}
+
+{% block title %}Contribution Verification{% endblock %}
+{% block page_title %}Contribution & Payment Verification{% endblock %}
+
+{% block topbar_actions %}
+    {% if session.get('user_role') == 'admin' %}
+        <form method="POST" action="{{ url_for('admin.deduplicate_contributions_route') }}" style="margin: 0;" onsubmit="return confirm('Scan and remove duplicate contribution submissions?');">
+            <button type="submit" class="btn btn-secondary btn-sm" style="color: #4B5563; font-weight: 500;">
+                Clean Duplicate Contributions
+            </button>
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Metric Bar -->
+<div class="stat-grid" style="margin-bottom: 1.5rem;">
+    <div class="stat-tile">
+        <div class="stat-label">Total Verified Amount</div>
+        <div class="stat-number success">{{ data.stats.verified_amount | currency_inr }}</div>
+        <div class="stat-sub">{{ data.stats.verified_count }} verified receipts</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Pending Verification</div>
+        <div class="stat-number warning">{{ data.stats.pending_amount | currency_inr }}</div>
+        <div class="stat-sub">{{ data.stats.pending_count }} waiting for review</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Total Submissions</div>
+        <div class="stat-number">{{ data.stats.total_submissions }}</div>
+        <div class="stat-sub">From {{ data.stats.distinct_contributors }} distinct alumni</div>
+    </div>
+</div>
+
+<!-- Filters & Search -->
+<div class="admin-card">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.contributions') }}" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search by alumnus name, email, or UTR..." 
+                value="{{ current_search }}"
+                class="form-control"
+                style="flex: 1; min-width: 250px;"
+            >
+
+            <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="submitted" {% if current_status == 'submitted' %}selected{% endif %}>Submitted</option>
+                <option value="under_review" {% if current_status == 'under_review' %}selected{% endif %}>Under Review</option>
+                <option value="verified" {% if current_status == 'verified' %}selected{% endif %}>Verified</option>
+                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if current_search or current_status %}
+                <a href="{{ url_for('admin.contributions') }}" class="btn btn-secondary">Reset</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Contributions Table -->
+<div class="admin-card">
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Alumnus</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Transaction UTR</th>
+                        <th>Screenshot (Drive)</th>
+                        <th>Recognition</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data.records %}
+                        {% for c in data.records %}
+                            <tr>
+                                <td>
+                                    <strong>{{ c.full_name }}</strong>
+                                    <div style="font-size: 0.78rem; color: #888;">{{ c.email }} · Batch {{ c.graduation_year or 'N/A' }}</div>
+                                </td>
+                                <td><strong>{{ c.amount | currency_inr }}</strong></td>
+                                <td>
+                                    <span class="badge badge-{{ c.payment_status }}">{{ c.payment_status }}</span>
+                                    {% if c.verifier_name %}
+                                        <div style="font-size: 0.72rem; color: #888; margin-top: 2px;">by {{ c.verifier_name }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <code>{{ c.transaction_reference or 'Not provided' }}</code>
+                                </td>
+                                <td>
+                                    {% if c.drive_preview_url %}
+                                        <a href="{{ c.drive_preview_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+                                            View in Drive {{ icon_external(size=12) }}
+                                        </a>
+                                    {% else %}
+                                        <span style="font-size: 0.8rem; color: #888;">No Screenshot</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.8rem; color: var(--color-charcoal-muted);">{{ c.recognition_type }}</span>
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        {% if c.payment_status != 'verified' %}
+                                            <button 
+                                                class="btn btn-primary btn-sm"
+                                                onclick="openVerifyModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
+                                            >
+                                                Verify
+                                            </button>
+                                        {% endif %}
+
+                                        {% if c.payment_status != 'rejected' %}
+                                            <button 
+                                                class="btn btn-secondary btn-sm" 
+                                                style="color: var(--color-danger);"
+                                                onclick="openRejectModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
+                                            >
+                                                Reject
+                                            </button>
+                                        {% endif %}
+
+                                        {% if session.get('user_role') == 'admin' %}
+                                            <button 
+                                                type="button"
+                                                class="btn btn-secondary btn-sm" 
+                                                style="color: #DC2626; border-color: #FCA5A5; padding: 0.35rem 0.5rem;"
+                                                title="Delete Duplicate / Invalid Contribution"
+                                                onclick="openDeleteContribModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
+                                            >
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                </svg>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #888; padding: 2.5rem;">
+                                No contribution records found.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if data.total_pages > 1 %}
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--admin-text-muted);">
+            Showing page {{ data.page }} of {{ data.total_pages }}
+        </span>
+        <ul class="pagination">
+            {% if data.page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page-1, search=current_search, status=current_status) }}">Previous</a>
+                </li>
+            {% endif %}
+            <li class="page-item active"><span class="page-link">{{ data.page }}</span></li>
+            {% if data.page < data.total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page+1, search=current_search, status=current_status) }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}
+
+<!-- Verify Modal -->
+<div class="modal-overlay" id="verifyModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Verify Contribution #<span id="verifyContribId"></span></h4>
+            <button class="modal-close" onclick="closeModal('verifyModal')">&times;</button>
+        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <p>Are you sure you want to mark this contribution as verified?</p>
+                <div style="background-color: #F8FAFC; padding: 1rem; margin: 1rem 0; border: 1px solid var(--admin-border);">
+                    <div><strong>Alumnus:</strong> <span id="verifyAlumniName"></span></div>
+                    <div><strong>Amount:</strong> <span id="verifyAmount"></span></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="verifyNotes">Verification Notes / Statement Ref</label>
+                    <textarea name="notes" id="verifyNotes" rows="2" class="form-control" style="width: 100%;" placeholder="e.g. Verified against SBI account credit"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('verifyModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Confirm & Verify</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal-overlay" id="rejectModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title">Reject Contribution #<span id="rejectContribId"></span></h4>
+            <button class="modal-close" onclick="closeModal('rejectModal')">&times;</button>
+        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <p>Mark this contribution as rejected? Please provide a reason.</p>
+                <div style="background-color: #F8FAFC; padding: 1rem; margin: 1rem 0; border: 1px solid var(--admin-border);">
+                    <div><strong>Alumnus:</strong> <span id="rejectAlumniName"></span></div>
+                    <div><strong>Amount:</strong> <span id="rejectAmount"></span></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="rejectNotes">Rejection Reason</label>
+                    <textarea name="notes" id="rejectNotes" required rows="2" class="form-control" style="width: 100%;" placeholder="e.g. UTR not matched in bank statement"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('rejectModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="background-color: var(--color-danger);">Confirm Rejection</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Contribution Modal -->
+<div class="modal-overlay" id="deleteContribModal">
+    <div class="modal-dialog">
+        <div class="modal-header" style="border-bottom: 2px solid #EF4444;">
+            <h4 class="modal-title" style="color: #B91C1C;">Delete Contribution Record</h4>
+            <button class="modal-close" onclick="closeModal('deleteContribModal')">&times;</button>
+        </div>
+        <form method="POST" action="">
+            <div class="modal-body">
+                <p style="font-size: 0.92rem; color: var(--admin-text-main); margin-bottom: 1rem;">
+                    Are you sure you want to permanently remove this duplicate or invalid contribution entry?
+                </p>
+                <div style="background-color: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;" id="deleteContribInfo">
+                    <!-- Dynamic Target Contribution Info -->
+                </div>
+                <p style="font-size: 0.82rem; color: #666; margin: 0;">
+                    This will delete only this specific contribution entry. The alumnus profile and their meet RSVP will remain intact.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('deleteContribModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #DC2626; border-color: #DC2626;">Permanently Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

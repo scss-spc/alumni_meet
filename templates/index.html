@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon_location, icon_building, icon_sparkle, icon_privacy_badge, icon_external %}
+
+{% block title %}SC&SS JNU Alumni Meet 2026{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero concentric-motif-bg">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="eyebrow">School of Computer & Systems Sciences · JNU</span>
+            <h1>Alumni Meet 2026</h1>
+            <hr class="gold-rule">
+            <p class="lead-text">
+                Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.
+            </p>
+
+            <div class="hero-meta-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-value">{{ meet.event_date | format_date("%A, %d %B %Y") }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Venue</span>
+                    <span class="meta-value">{{ meet.venue | default('SC&SS Campus, JNU, New Delhi') }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Status</span>
+                    <span class="meta-value" style="color: var(--color-gold-dark);">Registration Open</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
+                    Register & Contribute via Google Form {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
+                    View Meet Schedule
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
+                    <span class="hero-card-badge">SC&SS · JNU Gathering</span>
+                    <img src="{{ url_for('static', filename='images/jnu_logo_gold.svg') }}" alt="JNU Seal" style="width: 54px; height: 54px;">
+                </div>
+                <h3>Reconnect. Reminisce. Re-engage.</h3>
+                <p>
+                    From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations.
+                </p>
+                <div class="divider"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
+                    <span>{{ icon_location(size=14) }} JNU Campus, New Delhi</span>
+                    <span>{{ icon_building(size=14) }} SC&SS Auditorium</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contribution Tracker Spotlight Section -->
+<section class="section section-tracker-spotlight">
+    <div class="container">
+        <div class="tracker-spotlight-card">
+            <div class="tracker-header-grid">
+                <div>
+                    <div class="badge badge-gold-glow">{{ icon_sparkle(size=14) }} Live Contribution Tracker</div>
+                    <h2 style="margin-top: 0.5rem; color: var(--color-navy);">Alumni Meet Support & Fund Progress</h2>
+                    <p style="color: var(--color-muted); max-width: 620px;">
+                        Together, our alumni community is supporting student bursaries, event hospitality, felicitation of revered faculty, and strengthening the SC&SS legacy.
+                    </p>
+                </div>
+                <div class="tracker-cta-box">
+                    <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-md">
+                        Contribute via Google Form {{ icon_external() }}
+                    </a>
+                    <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-navy btn-sm" style="margin-top: 0.5rem;">
+                        View Full Tracker & Roll →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Progress Meter -->
+            <div class="progress-container">
+                <div class="progress-meta-row">
+                    <span>
+                        <strong>Total Contributed:</strong> 
+                        <span class="highlight-navy">{{ tracker.stats.total_raised | currency_inr }}</span>
+                        {% if tracker.stats.pending_amount > 0 %}
+                            <small style="color: #64748B;">({{ tracker.stats.verified_amount | currency_inr }} verified)</small>
+                        {% endif %}
+                    </span>
+                    <span>
+                        <strong>Target Milestone:</strong> {{ tracker.stats.target_amount | currency_inr }}
+                        ({{ tracker.stats.progress_percent }}%)
+                    </span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: {{ tracker.stats.progress_percent }}%;"></div>
+                </div>
+            </div>
+
+            <!-- Summary KPI Tiles -->
+            <div class="tracker-kpi-grid">
+                <div class="kpi-mini-card">
+                    <span class="kpi-mini-num">{{ tracker.stats.total_contributors }}</span>
+                    <span class="kpi-mini-label">Generous Alumni Contributors</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <span class="kpi-mini-num">{{ tracker.stats.verified_count }}</span>
+                    <span class="kpi-mini-label">Verified Contributions</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <span class="kpi-mini-num">100%</span>
+                    <span class="kpi-mini-label">Transparent Allocation</span>
+                </div>
+                <div class="kpi-mini-card">
+                    <span class="kpi-mini-num">3 Tiers</span>
+                    <span class="kpi-mini-label">Strict Privacy Controls</span>
+                </div>
+            </div>
+
+            <!-- Recent Supporters Carousel/List -->
+            {% if tracker.recent_contributors %}
+            <div style="margin-top: 2rem; border-top: 1px solid #E2E8F0; padding-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0; font-size: 1.05rem; color: var(--color-navy);">Recent Contributors (Privacy Protected)</h4>
+                    <a href="{{ url_for('public.contribute') }}" style="font-size: 0.85rem; font-weight: 600; color: var(--color-gold-dark);">
+                        View All {{ tracker.stats.total_contributors }} Contributors →
+                    </a>
+                </div>
+                <div class="supporter-cards-grid">
+                    {% for c in tracker.recent_contributors %}
+                        <div class="supporter-badge-card {{ c.badge_class }}">
+                            <div class="supporter-card-top">
+                                <span class="supporter-name">{{ c.display_name }}</span>
+                                {% if c.is_amount_visible %}
+                                    <span class="supporter-amount">{{ c.amount | currency_inr }}</span>
+                                {% else %}
+                                    <span class="supporter-anon-tag">Protected</span>
+                                {% endif %}
+                            </div>
+                            <div class="supporter-card-sub">
+                                {% if c.graduation_year %}
+                                    <span>Batch of {{ c.graduation_year }}</span>
+                                    {% if c.course %}<span>· {{ c.course }}</span>{% endif %}
+                                {% else %}
+                                    <span>SC&SS Contributor</span>
+                                {% endif %}
+                                {{ icon_privacy_badge(c.privacy_mode, size=15) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Section 01: About the Meet -->
+<section class="section">
+    <div class="container">
+        <div class="section-ribbon">
+            <span class="ribbon-num">01</span>
+            <span>About the Meet</span>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h2>Years After Leaving JNU, the Connection Endures</h2>
+                <hr class="gold-rule">
+                <p class="lead-text" style="margin-top: var(--space-sm);">
+                    The SC&SS Alumni Meet 2026 is an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network.
+                </p>
+                <p>
+                    Whether you graduated in the early batches of MCA and M.Tech or recently completed your Ph.D., your presence enriches the school's legacy.
+                </p>
+            </div>
+            <div>
+                <div class="content-card" style="border-top: 3px solid var(--color-navy);">
+                    <h3>Event Highlights</h3>
+                    <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem;">
+                        <li><strong style="color: var(--color-navy);">Inaugural & Welcome Address</strong> by School Leadership</li>
+                        <li><strong style="color: var(--color-navy);">Felicitation</strong> of Former Deans & Revered Faculty</li>
+                        <li><strong style="color: var(--color-navy);">Open Dialogues</strong> on Systems, AI & Industry Evolutions</li>
+                        <li><strong style="color: var(--color-navy);">Batch Group Photographs</strong> & Memory Walks</li>
+                        <li><strong style="color: var(--color-navy);">High Tea & Networking Lunch</strong> at JNU Campus</li>
+                        <li><strong style="color: var(--color-navy);">Alumni Mentorship & Collaboration</strong> Initiatives</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 02: Institutional Heritage -->
+<section class="section section-white">
+    <div class="container">
+        <div class="section-ribbon">
+            <span class="ribbon-num">02</span>
+            <span>The SC&SS Story</span>
+        </div>
+
+        <div class="section-header" style="max-width: 800px; margin-bottom: var(--space-lg);">
+            <h2>A Tradition of Scientific Inquiry & Systems Leadership</h2>
+            <hr class="gold-rule">
+            <p class="lead-text">
+                Established as one of the premier computer and systems science schools in India, SC&SS JNU has continuously fostered rigorous academic inquiry and technological innovation.
+            </p>
+        </div>
+
+        <div class="grid-3">
+            <div class="content-card">
+                <span class="eyebrow">Pillar 01</span>
+                <h3>Academic Rigor</h3>
+                <p>
+                    Rooted in mathematical foundations, theoretical computer science, databases, and distributed systems, producing thinkers who excel worldwide.
+                </p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Pillar 02</span>
+                <h3>Vibrant Alumni</h3>
+                <p>
+                    Graduates leading technology organizations, research laboratories, universities, government bodies, and innovative startups globally.
+                </p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Pillar 03</span>
+                <h3>Future Vision</h3>
+                <p>
+                    Advancing research in artificial intelligence, cyber-physical systems, quantum computing, and data sciences while nurturing the next generation.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 03: Generations Timeline -->
+<section class="timeline-section">
+    <div class="container">
+        <div class="section-ribbon">
+            <span class="ribbon-num">03</span>
+            <span>Generations of Excellence</span>
+        </div>
+
+        <h3 style="font-size: 1.6rem; margin-bottom: var(--space-xs);">Spanning Decades of Computing Leadership</h3>
+        <hr class="gold-rule">
+
+        <div class="timeline-wrapper">
+            <div class="timeline-track">
+                <div class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">1975 – 1985</div>
+                    <div class="timeline-label">Pioneering Era</div>
+                </div>
+                <div class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">1986 – 1995</div>
+                    <div class="timeline-label">Expansion & Research</div>
+                </div>
+                <div class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">1996 – 2005</div>
+                    <div class="timeline-label">Digital Revolution</div>
+                </div>
+                <div class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">2006 – 2015</div>
+                    <div class="timeline-label">Global Horizons</div>
+                </div>
+                <div class="timeline-node">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-year">2016 – 2025</div>
+                    <div class="timeline-label">Modern Innovation</div>
+                </div>
+                <div class="timeline-node">
+                    <div class="timeline-dot" style="background-color: var(--color-gold); border-color: var(--color-gold);"></div>
+                    <div class="timeline-year" style="color: var(--color-navy); font-weight: 700;">2026</div>
+                    <div class="timeline-label" style="font-weight: 700; color: var(--color-gold-dark);">Alumni Meet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 04: Support the Meet CTA -->
+<section class="section">
+    <div class="container">
+        <div class="cta-banner">
+            <div class="section-ribbon" style="background-color: var(--color-gold); color: var(--color-navy);">
+                <span class="ribbon-num" style="color: var(--color-navy);">04</span>
+                <span>Support the Meet</span>
+            </div>
+            <h2>Help Us Bring the SC&SS Community Together</h2>
+            <hr class="gold-rule gold-rule-center">
+            <p>
+                Your voluntary contribution supports event arrangements, hospitality, student volunteer facilitation, and building a stronger alumni foundation for years to come.
+            </p>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
+                    Contribute & RSVP on Google Form {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-gold btn-lg">
+                    Learn More About Contributions
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

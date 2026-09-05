@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon_external %}
+
+{% block title %}Event Details — SC&SS JNU Alumni Meet 2026{% endblock %}
+
+{% block content %}
+<div class="container section">
+    <div class="container-narrow">
+        <div class="section-ribbon">
+            <span class="ribbon-num">01</span>
+            <span>Program & Venue</span>
+        </div>
+
+        <h1>SC&SS JNU Alumni Meet 2026</h1>
+        <hr class="gold-rule">
+        <p class="lead-text">
+            Key information regarding schedule, campus access, venue arrangements, and participation details.
+        </p>
+
+        <!-- Meta Summary Card -->
+        <div class="content-card" style="margin: var(--space-lg) 0; border-top: 3px solid var(--color-gold);">
+            <div class="grid-3" style="margin-bottom: 0;">
+                <div>
+                    <span class="eyebrow">Date</span>
+                    <h4>{{ meet.event_date | format_date("%A, %d %B %Y") }}</h4>
+                </div>
+                <div>
+                    <span class="eyebrow">Timing</span>
+                    <h4>09:30 AM – 05:00 PM IST</h4>
+                </div>
+                <div>
+                    <span class="eyebrow">Location</span>
+                    <h4>SC&SS Auditorium, JNU</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule -->
+        <h2 style="margin-bottom: var(--space-xs);">Tentative Schedule</h2>
+        <hr class="gold-rule">
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-md); margin-bottom: var(--space-xl);">
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">09:30 AM – 10:30 AM</span>
+                <h3>Arrival, Registration & Welcome Tea</h3>
+                <p>Badge pickup, registration desk check-in, alumni kit distribution, and informal morning refreshments at the SC&SS foyer.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">10:30 AM – 12:00 PM</span>
+                <h3>Inaugural Ceremony & Felicitations</h3>
+                <p>Welcome address by the Dean, retrospective reflections by distinguished faculty members, and felicitation of senior professors and alumni pioneers.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">12:00 PM – 01:15 PM</span>
+                <h3>Open House Dialogue & Batch Reminiscences</h3>
+                <p>Interactive sharing session across batches, updates on recent developments at SC&SS, and open forum on alumni-school collaborations.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">01:15 PM – 02:30 PM</span>
+                <h3>Alumni Lunch & Networking</h3>
+                <p>Special campus lunch organized for alumni, accompanying guests, scholars, and faculty.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">02:30 PM – 04:00 PM</span>
+                <h3>Batch Group Photographs & Campus Walk</h3>
+                <p>Revisiting laboratories, seminar rooms, campus landmarks, and batch photo captures.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow" style="color: var(--color-gold-dark);">04:00 PM – 05:00 PM</span>
+                <h3>High Tea & Closing Remarks</h3>
+                <p>Vote of thanks, concluding reflections, and informal farewell tea.</p>
+            </div>
+        </div>
+
+        <!-- Participation Card -->
+        <div class="cta-banner" style="text-align: left; padding: var(--space-lg);">
+            <h3 style="color: #FFF; margin-bottom: var(--space-xs);">Confirm Your Attendance</h3>
+            <p style="margin-bottom: var(--space-md); font-size: 1rem; color: rgba(247, 243, 234, 0.9);">
+                Please submit your RSVP, guest counts, dietary preferences, and optional contribution via our official Google Form.
+            </p>
+            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+                Open Official Google Form {{ icon_external() }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

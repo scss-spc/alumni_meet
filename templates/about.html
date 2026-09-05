@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon_external %}
+
+{% block title %}About SC&SS — Jawaharlal Nehru University{% endblock %}
+
+{% block content %}
+<div class="container section">
+    <div class="container-narrow">
+        <div class="section-ribbon">
+            <span class="ribbon-num">01</span>
+            <span>Institution</span>
+        </div>
+
+        <h1>School of Computer & Systems Sciences</h1>
+        <hr class="gold-rule">
+        <p class="lead-text">
+            A tradition of deep mathematical foundations, pathbreaking computer systems research, and high-impact alumni worldwide.
+        </p>
+
+        <section style="margin: var(--space-xl) 0;">
+            <h2>A Pioneer in Computing Education in India</h2>
+            <hr class="gold-rule">
+            <p>
+                The School of Computer & Systems Sciences (SC&SS) at Jawaharlal Nehru University was established to foster advanced education, research, and technical leadership in computer science, systems engineering, and data disciplines.
+            </p>
+            <p>
+                Over the decades, the School has produced thinkers and innovators across MCA, M.Tech, and Ph.D. programs who have significantly influenced software architecture, academic institutions, scientific research, and technological policy in India and abroad.
+            </p>
+        </section>
+
+        <section style="margin-bottom: var(--space-xl);">
+            <h2>Academic Focus & Research Groups</h2>
+            <hr class="gold-rule">
+            <p>
+                SC&SS has always emphasized strong theoretical underpinnings alongside practical systems engineering:
+            </p>
+            <div class="grid-2" style="margin-top: var(--space-md);">
+                <div class="content-card">
+                    <span class="eyebrow">Area 01</span>
+                    <h3>Theoretical Foundations</h3>
+                    <p style="font-size: 0.95rem;">Algorithms, formal methods, computational complexity, automata theory, and discrete mathematics.</p>
+                </div>
+                <div class="content-card">
+                    <span class="eyebrow">Area 02</span>
+                    <h3>Systems & Architecture</h3>
+                    <p style="font-size: 0.95rem;">Distributed computing, computer networks, cloud infrastructure, databases, and embedded systems.</p>
+                </div>
+                <div class="content-card">
+                    <span class="eyebrow">Area 03</span>
+                    <h3>AI & Data Sciences</h3>
+                    <p style="font-size: 0.95rem;">Machine learning, natural language processing, computer vision, and big data analytics.</p>
+                </div>
+                <div class="content-card">
+                    <span class="eyebrow">Area 04</span>
+                    <h3>Information Security</h3>
+                    <p style="font-size: 0.95rem;">Cryptography, cyber security, protocol verification, and secure software engineering.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-banner" style="text-align: center;">
+            <h3 style="color: #FFF; margin-bottom: var(--space-xs);">Be Part of the Alumni Network</h3>
+            <hr class="gold-rule gold-rule-center">
+            <p style="font-size: 1rem; margin-bottom: var(--space-md);">
+                Join the upcoming meet and help strengthen the ties between past scholars and the current school community.
+            </p>
+            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+                Register on Google Form {{ icon_external() }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

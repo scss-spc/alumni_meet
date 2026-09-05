@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon_location, icon_external %}
+
+{% block title %}Alumni Directory — SC&SS JNU{% endblock %}
+
+{% block content %}
+<div class="container section">
+    <div class="section-header">
+        <div class="section-ribbon">
+            <span class="ribbon-num">01</span>
+            <span>Directory</span>
+        </div>
+
+        <h1>Alumni Directory</h1>
+        <hr class="gold-rule">
+        <p class="lead-text">
+            Connecting across decades. Public profiles are displayed in accordance with individual privacy & recognition preferences.
+        </p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="alumni-filter-bar">
+        <form method="GET" action="{{ url_for('public.alumni_directory') }}" class="filter-form">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search by name or company..." 
+                value="{{ current_search }}"
+                class="form-control"
+                style="flex: 1; min-width: 220px;"
+            >
+
+            <select name="batch" class="form-control">
+                <option value="">All Graduation Years</option>
+                {% for b in batches %}
+                    <option value="{{ b }}" {% if current_batch == b %}selected{% endif %}>Batch {{ b }}</option>
+                {% endfor %}
+            </select>
+
+            <select name="course" class="form-control">
+                <option value="">All Programs / Courses</option>
+                {% for c in courses %}
+                    <option value="{{ c }}" {% if current_course == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if current_search or current_batch or current_course %}
+                <a href="{{ url_for('public.alumni_directory') }}" class="btn btn-secondary">Reset</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Alumni List Grid -->
+    {% if alumni %}
+        <div class="alumni-grid">
+            {% for person in alumni %}
+                <div class="alumnus-card">
+                    <div class="alumnus-name">{{ person.full_name }}</div>
+                    <div class="alumnus-batch">
+                        {% if person.course %}{{ person.course }}{% endif %}
+                        {% if person.graduation_year %}· Class of {{ person.graduation_year }}{% endif %}
+                    </div>
+                    {% if person.designation or person.organization %}
+                        <div class="alumnus-role">
+                            {% if person.designation %}{{ person.designation }}{% endif %}
+                            {% if person.designation and person.organization %} at {% endif %}
+                            {% if person.organization %}<strong>{{ person.organization }}</strong>{% endif %}
+                        </div>
+                    {% endif %}
+                    {% if person.current_location %}
+                        <div class="alumnus-location" style="display: flex; align-items: center; gap: 0.25rem;">{{ icon_location(size=13) }} {{ person.current_location }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="content-card" style="text-align: center; padding: var(--space-xl) var(--space-lg); border-top: 3px solid var(--color-gold);">
+            <h3>No alumni entries found</h3>
+            <p>
+                {% if current_search or current_batch or current_course %}
+                    No alumni records matched your filter criteria. Try clearing the filters.
+                {% else %}
+                    Alumni responses submitted via the official Google Form will appear here after verification.
+                {% endif %}
+            </p>
+            <div style="margin-top: var(--space-md);">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+                    Submit Your Details on Google Form {{ icon_external() }}
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

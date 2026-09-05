@@ -1,0 +1,149 @@
+{% extends "admin/base.html" %}
+{% from "macros/icons.html" import icon_phone %}
+
+{% block title %}Volunteers{% endblock %}
+{% block page_title %}Volunteer Management ({{ volunteers | length }} Total){% endblock %}
+
+{% block topbar_actions %}
+    <button class="btn btn-primary btn-sm" onclick="openVolunteerModal()">+ Add Volunteer</button>
+{% endblock %}
+
+{% block content %}
+<!-- Search & Status Filter -->
+<div class="admin-card">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('admin.volunteers') }}" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search volunteers by name, email, or role..." 
+                value="{{ current_search }}"
+                class="form-control"
+                style="flex: 1; min-width: 250px;"
+            >
+
+            <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="active" {% if current_status == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if current_status == 'inactive' %}selected{% endif %}>Inactive</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if current_search or current_status %}
+                <a href="{{ url_for('admin.volunteers') }}" class="btn btn-secondary">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- Volunteer Roster Table -->
+<div class="admin-card">
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Volunteer</th>
+                        <th>Contact</th>
+                        <th>Role / Committee</th>
+                        <th>Assignments</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if volunteers %}
+                        {% for v in volunteers %}
+                            <tr>
+                                <td><strong>{{ v.full_name }}</strong></td>
+                                <td>
+                                    <div><a href="mailto:{{ v.email }}">{{ v.email or '—' }}</a></div>
+                                    {% if v.phone %}<div style="font-size: 0.8rem; color: #666; display: flex; align-items: center; gap: 0.25rem;">{{ icon_phone(size=12) }} {{ v.phone }}</div>{% endif %}
+                                </td>
+                                <td>{{ v.role or 'General Volunteer' }}</td>
+                                <td>
+                                    <span class="badge badge-active">{{ v.assignment_count }} Activities</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-{{ v.status }}">{{ v.status }}</span>
+                                </td>
+                                <td>
+                                    <span style="font-size: 0.82rem; color: #666;">{{ v.notes or '—' }}</span>
+                                </td>
+                                <td>
+                                    <button 
+                                        class="btn btn-secondary btn-sm" 
+                                        onclick='openVolunteerModal({{ v | tojson }})'
+                                    >
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: #888; padding: 2.5rem;">
+                                No volunteer records registered yet. Click "+ Add Volunteer" to add organizers/helpers.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Volunteer Add/Edit Modal -->
+<div class="modal-overlay" id="volunteerModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title" id="volModalTitle">Add Volunteer</h4>
+            <button class="modal-close" onclick="closeModal('volunteerModal')">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('admin.volunteers') }}">
+            <input type="hidden" name="id" id="volId" value="">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="volFullName">Full Name *</label>
+                    <input type="text" name="full_name" id="volFullName" required class="form-control" style="width: 100%;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="volEmail">Email Address</label>
+                        <input type="email" name="email" id="volEmail" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="volPhone">Phone Number</label>
+                        <input type="text" name="phone" id="volPhone" class="form-control" style="width: 100%;">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="volRole">Role / Team</label>
+                        <input type="text" name="role" id="volRole" placeholder="e.g. Registration, Hospitality" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="volStatus">Status</label>
+                        <select name="status" id="volStatus" class="form-control" style="width: 100%;">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="volNotes">Notes / Special Responsibilities</label>
+                    <textarea name="notes" id="volNotes" rows="2" class="form-control" style="width: 100%;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('volunteerModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Volunteer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
