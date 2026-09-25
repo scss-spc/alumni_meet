@@ -1,4 +1,4 @@
-{% from "macros/icons.html" import icon_menu, icon_external %}
+{% from "macros/icons.html" import icon_menu, icon_external, icon_jnu_seal %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,28 +16,43 @@
     <header class="site-header">
         <div class="container header-container">
             <a href="{{ url_for('public.index') }}" class="brand-link">
-                <img src="{{ url_for('static', filename='images/jnu_logo_gold.svg') }}" alt="JNU Seal" class="brand-logo">
+                {{ icon_jnu_seal(size=40, class_name="brand-logo") }}
                 <div class="brand-text-wrapper">
-                    <span class="brand-title">SC&SS <span style="color: var(--color-gold);">·</span> JNU</span>
-                    <span class="brand-subtitle">School of Computer & Systems Sciences</span>
+                    <span class="brand-title">SC&amp;SS <span style="color: var(--color-accent);">·</span> JNU</span>
+                    <span class="brand-subtitle">School of Computer &amp; Systems Sciences</span>
                 </div>
             </a>
 
-            <button class="nav-toggle" aria-label="Toggle navigation">{{ icon_menu(size=22) }}</button>
-
-            <nav class="main-nav">
-                <ul class="nav-links">
+            <!-- Navigation Links (Desktop + Mobile Drawer) -->
+            <nav class="main-nav" id="mainNav">
+                <ul class="nav-links" id="navLinks">
                     <li><a href="{{ url_for('public.index') }}" class="nav-link {% if request.endpoint == 'public.index' %}active{% endif %}">Home</a></li>
                     <li><a href="{{ url_for('public.meet_detail') }}" class="nav-link {% if request.endpoint == 'public.meet_detail' %}active{% endif %}">Alumni Meet</a></li>
                     <li><a href="{{ url_for('public.contribute') }}" class="nav-link {% if request.endpoint == 'public.contribute' %}active{% endif %}">Contribution Tracker</a></li>
                     <li><a href="{{ url_for('public.about') }}" class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}">About</a></li>
-                    <li>
-                        <a href="{{ google_form_url | default('https://docs.google.com/forms/') }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm">
-                            Register & Contribute {{ icon_external(size=12) }}
+
+                    <!-- Mobile Drawer CTA (Hidden on desktop, shown inside mobile drawer) -->
+                    <li class="mobile-nav-cta">
+                        <a href="{{ google_form_url | default('https://docs.google.com/forms/') }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-md" style="width: 100%; justify-content: center;">
+                            Register &amp; Contribute {{ icon_external(size=14) }}
                         </a>
                     </li>
                 </ul>
             </nav>
+
+            <!-- Header Actions: Primary CTA for Desktop + Mobile Hamburger Toggle -->
+            <div class="header-actions">
+                <a href="{{ google_form_url | default('https://docs.google.com/forms/') }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm desktop-nav-cta">
+                    Register &amp; Contribute {{ icon_external(size=12) }}
+                </a>
+
+                <!-- Mobile Hamburger Toggle Button -->
+                <button type="button" class="nav-toggle" id="navToggle" aria-label="Toggle mobile navigation menu" aria-expanded="false" aria-controls="navLinks">
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+            </div>
         </div>
     </header>
 
@@ -60,7 +75,7 @@
             {% if error_title %}
                 <div class="container section" style="text-align: center;">
                     <h2>{{ error_title }}</h2>
-                    <hr class="gold-rule gold-rule-center">
+                    <hr class="editorial-rule editorial-rule-center">
                     <p class="lead-text">{{ error_message }}</p>
                     <a href="{{ url_for('public.index') }}" class="btn btn-primary">Return to Homepage</a>
                 </div>
@@ -71,16 +86,27 @@
     <!-- Site Footer -->
     <footer class="site-footer">
         <div class="container">
+            <!-- Active Development Notice Banner -->
+            <div class="footer-dev-banner">
+                <div class="footer-dev-badge">
+                    <span class="dev-pulse-dot"></span>
+                    <span>UNDER ACTIVE DEVELOPMENT</span>
+                </div>
+                <div class="footer-dev-text">
+                    Note: This website is currently under active development. Event details, schedule timelines, and features are continuously being refined ahead of the SC&amp;SS Alumni Meet 2026.
+                </div>
+            </div>
+
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                        <img src="{{ url_for('static', filename='images/jnu_logo_gold.svg') }}" alt="JNU Seal" style="width: 44px; height: 44px;">
-                        <h4 style="margin-bottom: 0;">School of Computer & Systems Sciences</h4>
+                        {{ icon_jnu_seal(size=44) }}
+                        <h4 style="margin-bottom: 0;">School of Computer &amp; Systems Sciences</h4>
                     </div>
-                    <hr class="gold-rule" style="margin: 0.5rem 0 1rem 0;">
+                    <hr class="editorial-rule" style="margin: 0.5rem 0 1rem 0; background-color: rgba(255, 255, 255, 0.2);">
                     <p>Jawaharlal Nehru University, New Delhi – 110067, India.</p>
-                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: rgba(247, 243, 234, 0.7);">
-                        Bringing together generations of researchers, engineers, and scholars who shaped the SC&SS legacy.
+                    <p style="margin-top: 0.5rem; font-size: 0.85rem; color: rgba(255, 255, 255, 0.7);">
+                        Bringing together generations of researchers, engineers, and scholars who shaped the SC&amp;SS legacy.
                     </p>
                 </div>
                 <div class="footer-links">
@@ -89,7 +115,7 @@
                         <li><a href="{{ url_for('public.index') }}">Home</a></li>
                         <li><a href="{{ url_for('public.meet_detail') }}">Alumni Meet 2026</a></li>
                         <li><a href="{{ url_for('public.contribute') }}">Contribution Tracker</a></li>
-                        <li><a href="{{ url_for('public.about') }}">About SC&SS</a></li>
+                        <li><a href="{{ url_for('public.about') }}">About SC&amp;SS</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">
@@ -104,13 +130,20 @@
 
             <div class="footer-bottom">
                 <div>© 2026 School of Computer and Systems Sciences, JNU. All rights reserved.</div>
-                <div>SC&SS JNU Placement & Alumni Network</div>
+                <div class="footer-bottom-dev-note">
+                    <span class="status-indicator"></span> <span>Status: Website is under active development</span>
+                </div>
+                <div>SC&amp;SS JNU Placement &amp; Alumni Network</div>
             </div>
         </div>
     </footer>
 
     <!-- Client JS -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% if is_edit_mode %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/visual_editor_preview.css') }}">
+        <script src="{{ url_for('static', filename='js/visual_editor_preview.js') }}"></script>
+    {% endif %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>

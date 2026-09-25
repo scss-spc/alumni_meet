@@ -1,92 +1,229 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_external %}
+{% from "macros/icons.html" import icon_external, icon_building, icon_location, icon_sparkle, icon_jnu_seal, icon_money %}
 
-{% block title %}Event Details — SC&SS JNU Alumni Meet 2026{% endblock %}
+{% block title %}Event Details — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
 {% block content %}
-<div class="container section">
-    <div class="container-narrow">
-        <div class="section-ribbon">
-            <span class="ribbon-num">01</span>
-            <span>Program & Venue</span>
-        </div>
-
-        <h1>SC&SS JNU Alumni Meet 2026</h1>
-        <hr class="gold-rule">
-        <p class="lead-text">
-            Key information regarding schedule, campus access, venue arrangements, and participation details.
-        </p>
-
-        <!-- Meta Summary Card -->
-        <div class="content-card" style="margin: var(--space-lg) 0; border-top: 3px solid var(--color-gold);">
-            <div class="grid-3" style="margin-bottom: 0;">
-                <div>
-                    <span class="eyebrow">Date</span>
-                    <h4>{{ meet.event_date | format_date("%A, %d %B %Y") }}</h4>
-                </div>
-                <div>
-                    <span class="eyebrow">Timing</span>
-                    <h4>09:30 AM – 05:00 PM IST</h4>
-                </div>
-                <div>
-                    <span class="eyebrow">Location</span>
-                    <h4>SC&SS Auditorium, JNU</h4>
-                </div>
-            </div>
-        </div>
-
-        <!-- Schedule -->
-        <h2 style="margin-bottom: var(--space-xs);">Tentative Schedule</h2>
-        <hr class="gold-rule">
-
-        <div style="display: flex; flex-direction: column; gap: var(--space-md); margin-bottom: var(--space-xl);">
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">09:30 AM – 10:30 AM</span>
-                <h3>Arrival, Registration & Welcome Tea</h3>
-                <p>Badge pickup, registration desk check-in, alumni kit distribution, and informal morning refreshments at the SC&SS foyer.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">10:30 AM – 12:00 PM</span>
-                <h3>Inaugural Ceremony & Felicitations</h3>
-                <p>Welcome address by the Dean, retrospective reflections by distinguished faculty members, and felicitation of senior professors and alumni pioneers.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">12:00 PM – 01:15 PM</span>
-                <h3>Open House Dialogue & Batch Reminiscences</h3>
-                <p>Interactive sharing session across batches, updates on recent developments at SC&SS, and open forum on alumni-school collaborations.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">01:15 PM – 02:30 PM</span>
-                <h3>Alumni Lunch & Networking</h3>
-                <p>Special campus lunch organized for alumni, accompanying guests, scholars, and faculty.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">02:30 PM – 04:00 PM</span>
-                <h3>Batch Group Photographs & Campus Walk</h3>
-                <p>Revisiting laboratories, seminar rooms, campus landmarks, and batch photo captures.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow" style="color: var(--color-gold-dark);">04:00 PM – 05:00 PM</span>
-                <h3>High Tea & Closing Remarks</h3>
-                <p>Vote of thanks, concluding reflections, and informal farewell tea.</p>
-            </div>
-        </div>
-
-        <!-- Participation Card -->
-        <div class="cta-banner" style="text-align: left; padding: var(--space-lg);">
-            <h3 style="color: #FFF; margin-bottom: var(--space-xs);">Confirm Your Attendance</h3>
-            <p style="margin-bottom: var(--space-md); font-size: 1rem; color: rgba(247, 243, 234, 0.9);">
-                Please submit your RSVP, guest counts, dietary preferences, and optional contribution via our official Google Form.
+<!-- Hero Section -->
+<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('meet.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
+            <h1 data-field-key="hero_title">{{ site_sections.get('meet.hero_title', 'Alumni Meet 2026 Details & Schedule') }}</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text" data-field-key="hero_lead">
+                {{ site_sections.get('meet.hero_lead', 'Key information regarding schedule, campus access, venue arrangements, faculty felicitation, and alumni participation.') }}
             </p>
-            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
-                Open Official Google Form {{ icon_external() }}
-            </a>
+
+            <div class="hero-meta-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-value" data-field-key="hero_date">{{ site_sections.get('meet.hero_date', meet.event_date | format_date("%A, %d %B %Y")) }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Timing</span>
+                    <span class="meta-value" data-field-key="hero_timing">{{ site_sections.get('meet.hero_timing', '09:30 AM – 05:00 PM IST') }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Venue</span>
+                    <span class="meta-value" data-field-key="hero_venue" style="color: var(--color-sepia-dark);">{{ site_sections.get('meet.hero_venue', 'SC&SS Auditorium, JNU') }}</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+                    <span data-field-key="hero_btn_primary">{{ site_sections.get('meet.hero_btn_primary', 'RSVP & Register via Google Form') }}</span> {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.contribute') }}" class="btn btn-secondary btn-lg">
+                    <span data-field-key="hero_btn_secondary">{{ site_sections.get('meet.hero_btn_secondary', 'View Contribution Tracker') }}</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
+                    <span class="hero-card-badge" data-field-key="hero_badge">{{ site_sections.get('meet.hero_badge', 'SC&SS · Event Summary') }}</span>
+                    {{ icon_jnu_seal(size=48) }}
+                </div>
+                <h3 data-field-key="hero_card_title">{{ site_sections.get('meet.hero_card_title', 'Gathering at JNU Campus') }}</h3>
+                <p data-field-key="hero_card_text">
+                    {{ site_sections.get('meet.hero_card_text', 'Bringing together alumni across MCA, M.Tech, and Ph.D. batches along with revered faculty and current scholars for a day of celebration, memories, and future collaboration.') }}
+                </p>
+                <div class="divider"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
+                    <span>{{ icon_location(size=14) }} <span data-field-key="hero_card_location">{{ site_sections.get('meet.hero_card_location', 'JNU Campus, New Delhi') }}</span></span>
+                    <span>{{ icon_building(size=14) }} <span data-field-key="hero_card_venue">{{ site_sections.get('meet.hero_card_venue', 'SC&SS Auditorium') }}</span></span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Section 01: Event Overview & Venue Cards -->
+<section class="section section-paper" data-editable-section="s1" data-section-title="Section 01 - Program &amp; Venue">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">01</span>
+            <span data-field-key="s1_label">{{ site_sections.get('meet.s1_label', 'Program & Venue') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s1_title">{{ site_sections.get('meet.s1_title', 'Event Logistics & Campus Access') }}</h2>
+        <hr class="editorial-rule">
+
+        <div class="grid-3" style="margin-top: var(--space-md);">
+            <div class="content-card">
+                <span class="eyebrow">Date &amp; Schedule</span>
+                <h4>{{ site_sections.get('meet.hero_date', meet.event_date | format_date("%A, %d %B %Y")) }}</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    {{ site_sections.get('meet.hero_timing', '09:30 AM – 05:00 PM IST') }}<br>Full-day gathering including registration tea, inaugural ceremony, lunch, and high tea.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Venue &amp; Entry</span>
+                <h4>{{ site_sections.get('meet.hero_venue', meet.venue | default('SC&SS Auditorium, JNU')) }}</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    Jawaharlal Nehru University, New Delhi.<br>Campus entry pass details and dedicated parking instructions provided to registered attendees.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Registration &amp; RSVP</span>
+                <h4>Official Google Form</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    RSVP, indicate guest count, provide dietary preferences, and optionally contribute to the meet fund.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 02: Full Program Schedule -->
+<section class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - Schedule">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">02</span>
+            <span data-field-key="s2_label">{{ site_sections.get('meet.s2_label', 'Schedule') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s2_title">{{ site_sections.get('meet.s2_title', 'Tentative Program & Activities') }}</h2>
+        <hr class="editorial-rule">
+        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);" data-field-key="s2_lead">
+            {{ site_sections.get('meet.s2_lead', 'A day filled with reconnecting, honoring revered faculty, interactive sessions, and memory walks across campus pathways:') }}
+        </p>
+
+        <div class="grid-2">
+            <div class="content-card">
+                <span class="eyebrow">09:30 AM – 10:30 AM</span>
+                <h3>Arrival, Registration &amp; Welcome Tea</h3>
+                <p style="font-size: 0.95rem;">Badge pickup, registration desk check-in, alumni kit distribution, and informal morning refreshments at the SC&amp;SS foyer.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">10:30 AM – 12:00 PM</span>
+                <h3>Inaugural Ceremony &amp; Felicitations</h3>
+                <p style="font-size: 0.95rem;">Welcome address by the Dean, retrospective reflections by distinguished faculty members, and felicitation of senior professors and alumni pioneers.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">12:00 PM – 01:15 PM</span>
+                <h3>Open House Dialogue &amp; Batch Reminiscences</h3>
+                <p style="font-size: 0.95rem;">Interactive sharing session across batches, updates on recent developments at SC&amp;SS, and open forum on alumni-school collaborations.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">01:15 PM – 02:30 PM</span>
+                <h3>Alumni Lunch &amp; Networking</h3>
+                <p style="font-size: 0.95rem;">Special campus lunch organized for alumni, accompanying guests, scholars, and faculty.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">02:30 PM – 04:00 PM</span>
+                <h3>Batch Group Photographs &amp; Campus Walk</h3>
+                <p style="font-size: 0.95rem;">Revisiting laboratories, seminar rooms, campus landmarks, and batch photo captures.</p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">04:00 PM – 05:00 PM</span>
+                <h3>High Tea &amp; Closing Remarks</h3>
+                <p style="font-size: 0.95rem;">Vote of thanks, concluding reflections, and informal farewell tea.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 03: Event Highlights -->
+<section class="section section-paper" data-editable-section="s3" data-section-title="Section 03 - Highlights">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">03</span>
+            <span data-field-key="s3_label">{{ site_sections.get('meet.s3_label', 'Highlights') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s3_title">{{ site_sections.get('meet.s3_title', 'What to Expect at the Meet') }}</h2>
+        <hr class="editorial-rule">
+
+        <div class="grid-3" style="margin-top: var(--space-md);">
+            <div class="content-card">
+                <span class="eyebrow">Recognition</span>
+                <h3>Faculty Felicitation</h3>
+                <p style="font-size: 0.92rem;">
+                    Honoring retired and serving professors who shaped generations of computing scholars and built the school's legacy.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Archives &amp; Kits</span>
+                <h3>Delegate Kits &amp; Keepsakes</h3>
+                <p style="font-size: 0.92rem;">
+                    Collect official alumni badges, souvenir memory books, identity passes, and event memorabilia.
+                </p>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Community</span>
+                <h3>Mentorship &amp; Collaborations</h3>
+                <p style="font-size: 0.92rem;">
+                    Build lasting connections between industry leaders, academic scholars, and current SC&amp;SS researchers.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 04: Attendance CTA Banner -->
+<section class="section section-paper" style="padding-top: 0;" data-editable-section="s4" data-section-title="Section 04 - Attendance Banner">
+    <div class="container">
+        <div class="cta-banner">
+            <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
+                <span class="label-num" style="color: var(--color-paper);">04</span>
+                <span style="color: rgba(244, 241, 234, 0.85);" data-field-key="s4_label">{{ site_sections.get('meet.s4_label', 'Attendance') }}</span>
+            </div>
+            <h2 data-field-key="s4_title">{{ site_sections.get('meet.s4_title', 'Confirm Your Attendance & RSVP') }}</h2>
+            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
+            <p data-field-key="s4_text">
+                {{ site_sections.get('meet.s4_text', 'Please submit your RSVP, guest counts, dietary preferences, and optional contribution via our official Google Form.') }}
+            </p>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
+                    Open Official Google Form {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-paper btn-lg">
+                    View Live Contribution Tracker
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Closing Section -->
+<section class="section section-paper" style="padding-top: var(--space-xs); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">
+    <div class="container" style="text-align: center;">
+        <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;" data-field-key="quote_text">
+            {{ site_sections.get('meet.quote_text', '"Reconnecting generations of scholars who share a common heritage."') }}
+        </p>
+        <span class="eyebrow" style="color: var(--color-sepia); font-size: 0.78rem; letter-spacing: 0.16em;">SC&amp;SS · Jawaharlal Nehru University</span>
+    </div>
+</section>
 {% endblock %}

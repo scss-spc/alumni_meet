@@ -1,20 +1,23 @@
+{% from "macros/icons.html" import icon_jnu_seal %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizer Sign In — SC&SS JNU Alumni Meet</title>
+    <title>Organizer Sign In — SC&amp;SS JNU Alumni Meet</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
-<body style="background-color: var(--color-cream); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+<body style="background-color: var(--color-paper); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
     <div style="max-width: 420px; width: 100%; padding: 1.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">
-            <img src="{{ url_for('static', filename='images/jnu_logo_gold.svg') }}" alt="JNU Seal" style="width: 72px; height: 72px; margin: 0 auto 1rem; display: block;">
-            <span class="eyebrow">School of Computer and Systems Sciences</span>
+            <div style="margin: 0 auto 1rem; display: inline-block;">
+                {{ icon_jnu_seal(size=64) }}
+            </div>
+            <span class="eyebrow">School of Computer &amp; Systems Sciences</span>
             <h2 style="font-size: 1.8rem; margin-top: 0.25rem;">Organizer Portal</h2>
-            <hr class="gold-rule gold-rule-center" style="margin: 0.5rem auto 1rem;">
-            <p style="font-size: 0.9rem; color: var(--admin-text-muted);">Sign in to manage alumni, verification & event operations.</p>
+            <hr class="editorial-rule editorial-rule-center" style="margin: 0.5rem auto 1rem;">
+            <p style="font-size: 0.9rem; color: var(--admin-text-muted);">Sign in to manage alumni, verification &amp; event operations.</p>
         </div>
 
         <!-- Flash Messages -->
@@ -28,7 +31,7 @@
             {% endif %}
         {% endwith %}
 
-        <div class="admin-card" style="border-top: 4px solid var(--color-gold);">
+        <div class="admin-card" style="border-top: 2px solid var(--color-ink);">
             <div class="card-body" style="padding: 2rem;">
                 <form method="POST" action="{{ url_for('admin.login', next=request.args.get('next')) }}">
                     <div class="form-group">
@@ -64,8 +67,8 @@
             </div>
         </div>
 
-        <div style="text-align: center; font-size: 0.85rem; color: #888;">
-            <a href="{{ url_for('public.index') }}" style="color: var(--color-navy); font-weight: 600;">← Back to Public Website</a>
+        <div style="text-align: center; font-size: 0.85rem; margin-top: 1.5rem;">
+            <a href="{{ url_for('public.index') }}" style="color: var(--color-ink); font-weight: 600;">← Back to Public Website</a>
         </div>
     </div>
 </body>

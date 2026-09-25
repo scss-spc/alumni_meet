@@ -6,6 +6,13 @@ from config import Config
 
 public_bp = Blueprint("public", __name__)
 
+@public_bp.route("/ping")
+@public_bp.route("/health")
+@public_bp.route("/healthz")
+def keep_alive_ping():
+    """Keep-alive endpoint for Render cron jobs & uptime monitors."""
+    return "ok", 200, {"Content-Type": "text/plain; charset=utf-8"}
+
 @public_bp.route("/")
 def index():
     """Homepage: Academic & modern hero, meet info, contribution tracker milestone, and CTA."""

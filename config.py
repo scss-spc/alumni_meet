@@ -18,10 +18,12 @@ class Config:
     DB_SSL_CA = os.environ.get("DB_SSL_CA")
 
     # Google Form & Storage Integration
-    GOOGLE_FORM_URL = os.environ.get(
-        "GOOGLE_FORM_URL",
-        "https://docs.google.com/forms/d/e/1FAIpQLScssJnuAlumniMeet2026/viewform"
+    ALUMNI_FORM_URL = (
+        os.environ.get("ALUMNI_FORM_URL", "").strip() or 
+        os.environ.get("GOOGLE_FORM_URL", "").strip() or 
+        "https://forms.gle/rfHgUFHzHUtkBBhL8"
     )
+    GOOGLE_FORM_URL = ALUMNI_FORM_URL
     GOOGLE_DRIVE_FOLDER_ID = os.environ.get("GOOGLE_DRIVE_FOLDER_ID", "")
     GOOGLE_SHEET_ID = os.environ.get("GOOGLE_SHEET_ID", "")
     GOOGLE_SHEET_NAME = os.environ.get("GOOGLE_SHEET_NAME", "Form Responses 1")

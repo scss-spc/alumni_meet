@@ -1,154 +1,99 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_public, icon_semi, icon_anon, icon_privacy_badge, icon_external, icon_search %}
+{% from "macros/icons.html" import icon_public, icon_semi, icon_anon, icon_privacy_badge, icon_external, icon_search, icon_sparkle, icon_money, icon_jnu_seal %}
 
-{% block title %}Contribution Tracker — SC&SS JNU Alumni Meet 2026{% endblock %}
+{% block title %}Contribution Tracker — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
 {% block content %}
-<!-- Header Hero Banner -->
-<section class="tracker-hero-section concentric-motif-bg">
-    <div class="container">
-        <div class="tracker-hero-inner">
-            <span class="eyebrow">SC&SS JNU Alumni Meet 2026 · Financial Transparency</span>
-            <h1>Contribution Tracker & Supporter Honor Roll</h1>
-            <hr class="gold-rule gold-rule-center">
-            <p class="lead-text" style="max-width: 760px; margin: 0 auto;">
-                Every contribution fuels our collective gathering, faculty felicitations, student subsidies, and legacy archives. Track our progress in real-time with full transparency.
+<!-- Header Hero Banner with 2-Column Hero Grid (Hero Content + Right Hero Card) -->
+<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+    <div class="container hero-grid">
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('contribute.hero_eyebrow', 'SC&SS JNU Alumni Meet 2026 · Financial Transparency') }}</span>
+            <h1 data-field-key="hero_title">{{ site_sections.get('contribute.hero_title', 'Contribution Tracker & Honor Roll') }}</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text" data-field-key="hero_lead">
+                {{ site_sections.get('contribute.hero_lead', 'Every contribution fuels our collective gathering, faculty felicitations, student subsidies, and legacy archives. Track our progress in real-time with full transparency.') }}
             </p>
-            <div class="btn-group" style="justify-content: center; margin-top: 1.5rem;">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
+            <div class="btn-group" style="margin-top: 1.5rem;">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
                     Contribute via Official Google Form {{ icon_external() }}
                 </a>
-                <a href="#supporter-roll" class="btn btn-outline-gold btn-lg">
+                <a href="#supporter-roll" class="btn btn-secondary btn-lg">
                     View Supporter Honor Roll ↓
                 </a>
+            </div>
+        </div>
+
+        <!-- Right Hero Visual Card -->
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; gap: 0.75rem;">
+                    <div>
+                        <span class="hero-card-badge" style="margin-bottom: 0.35rem; display: inline-block;">Live Alumni Support</span>
+                        <h3 style="margin: 0.2rem 0; color: var(--color-ink); font-size: 1.25rem;">SC&amp;SS Alumni Support &amp; Participation</h3>
+                    </div>
+                    {{ icon_jnu_seal(size=44) }}
+                </div>
+                
+                <p style="color: var(--color-muted); margin: 0 0 1rem 0; font-size: 0.88rem; line-height: 1.5;">
+                    Supporting auditorium arrangements, faculty felicitations, delegate kits, memory archives, and student volunteer facilitation.
+                </p>
+
+                <div class="divider" style="margin: 1rem 0;"></div>
+
+                <!-- 2 Metric Cards Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+                    <div class="metric-box" style="background: #FAF9F6; border: 1px solid var(--color-border); border-left: 3px solid var(--color-ink); padding: 0.85rem; border-radius: 6px;">
+                        <div class="metric-value" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--color-ink); line-height: 1;">{{ tracker.stats.total_contributors }}</div>
+                        <div class="metric-label" style="font-weight: 700; font-size: 0.82rem; color: var(--color-ink); margin-top: 0.35rem;">Alumni Contributors</div>
+                        <div class="metric-sub" style="font-size: 0.75rem; color: var(--color-muted); margin-top: 0.15rem;">Across diverse batches</div>
+                    </div>
+
+                    <div class="metric-box" style="background: #FAF9F6; border: 1px solid var(--color-border); border-left: 3px solid var(--color-sepia); padding: 0.85rem; border-radius: 6px;">
+                        <div class="metric-value" style="font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; color: var(--color-sepia); line-height: 1;">100%</div>
+                        <div class="metric-label" style="font-weight: 700; font-size: 0.82rem; color: var(--color-ink); margin-top: 0.35rem;">Rule-Based Privacy</div>
+                        <div class="metric-sub" style="font-size: 0.75rem; color: var(--color-muted); margin-top: 0.15rem;">Protected contributor data</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Financial Milestone & Metrics Grid -->
+<!-- Supporter Honor Roll Section -->
 <section class="section" style="padding-top: var(--space-lg);">
     <div class="container">
-        <div class="tracker-main-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-                <div>
-                    <span class="eyebrow" style="margin-bottom: 0.25rem;">Milestone Progress</span>
-                    <h3 style="margin: 0; color: var(--color-navy); font-size: 1.6rem;">Event Fund Goal</h3>
-                </div>
-                <div style="text-align: right;">
-                    <div style="font-size: 2rem; font-weight: 700; color: var(--color-navy); font-family: var(--font-serif);">
-                        {{ tracker.stats.total_raised | currency_inr }}
-                    </div>
-                    <div style="font-size: 0.88rem; color: var(--color-muted);">
-                        Raised of <strong>{{ tracker.stats.target_amount | currency_inr }}</strong> Goal ({{ tracker.stats.progress_percent }}%)
-                    </div>
-                </div>
-            </div>
-
-            <!-- Milestone Progress Bar -->
-            <div class="progress-track progress-track-lg">
-                <div class="progress-fill" style="width: {{ tracker.stats.progress_percent }}%;">
-                    <span class="progress-indicator-pill">{{ tracker.stats.progress_percent }}%</span>
-                </div>
-            </div>
-
-            <!-- Metric Cards -->
-            <div class="tracker-metrics-4grid">
-                <div class="metric-box">
-                    <div class="metric-value primary">{{ tracker.stats.total_contributors }}</div>
-                    <div class="metric-label">Alumni Contributors</div>
-                    <div class="metric-sub">Across diverse batches</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value success">{{ tracker.stats.verified_amount | currency_inr }}</div>
-                    <div class="metric-label">Verified Collections</div>
-                    <div class="metric-sub">{{ tracker.stats.verified_count }} payments confirmed</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value warning">{{ tracker.stats.pending_amount | currency_inr }}</div>
-                    <div class="metric-label">Under Verification</div>
-                    <div class="metric-sub">{{ tracker.stats.pending_count }} recent submissions</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-value gold">100%</div>
-                    <div class="metric-label">Rule-Based Privacy</div>
-                    <div class="metric-sub">Protected contributor data</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3-Tier Privacy Rules Explainer -->
-        <div class="privacy-tiers-explainer">
-            <h4 style="color: var(--color-navy); margin-bottom: 0.5rem; text-align: center;">Our 3-Tier Contributor Privacy Guarantee</h4>
-            <p style="text-align: center; color: var(--color-muted); font-size: 0.9rem; max-width: 700px; margin: 0 auto 1.5rem auto;">
-                When you contribute via the Google Form, you choose exactly how your support is represented on this public dashboard:
-            </p>
-            <div class="grid-3">
-                <div class="tier-card tier-public">
-                    <div class="tier-icon">{{ icon_public(size=24) }}</div>
-                    <h5>Public</h5>
-                    <div class="tier-subtitle">"Show my Name &amp; Contributed Amount"</div>
-                    <p>Your full name, graduation batch, and contributed amount are proudly recognized on the live dashboard.</p>
-                    <span class="privacy-pill badge-public">{{ icon_public(size=14) }} Name &amp; Amount Visible</span>
-                </div>
-                <div class="tier-card tier-semi">
-                    <div class="tier-icon">{{ icon_semi(size=24) }}</div>
-                    <h5>Semi-Anonymous</h5>
-                    <div class="tier-subtitle">"Show my Name only, hide amount"</div>
-                    <p>Your name and batch are displayed in the supporter roll, while your contribution amount is kept private.</p>
-                    <span class="privacy-pill badge-semi">{{ icon_semi(size=14) }} Name Only · Amount Hidden</span>
-                </div>
-                <div class="tier-card tier-anon">
-                    <div class="tier-icon">{{ icon_anon(size=24) }}</div>
-                    <h5>Fully Anonymous</h5>
-                    <div class="tier-subtitle">"Keep contribution completely anonymous"</div>
-                    <p>Listed strictly as <em>"Anonymous Alumnus"</em>. Name, batch, and amount are all completely shielded.</p>
-                    <span class="privacy-pill badge-anon">{{ icon_anon(size=14) }} Identity &amp; Amount Shielded</span>
-                </div>
-            </div>
-            <div class="security-guarantee-note" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                {{ icon_anon(size=16) }} <span><strong>Privacy Assurance:</strong> Contact numbers, email addresses, UPI transaction references, and payment screenshots are <em>never</em> publicly exposed under any circumstance.</span>
-            </div>
-        </div>
-
-        <!-- Supporter Honor Roll Section -->
-        <div id="supporter-roll" class="supporter-roll-container">
+        <div id="supporter-roll" class="supporter-roll-container" data-editable-section="s1" data-section-title="Section 01 - Honor Roll">
             <div class="roll-header">
                 <div>
-                    <span class="eyebrow">Honor Roll</span>
-                    <h2 style="margin: 0; color: var(--color-navy);">SC&SS Alumni Supporter Roll</h2>
+                    <div class="section-label" style="margin-bottom: 0.25rem;">
+                        <span class="label-num">01</span>
+                        <span>{{ site_sections.get('contribute.s1_label', 'Honor Roll') }}</span>
+                    </div>
+                    <h2 style="margin: 0; color: var(--color-ink); font-size: clamp(1.3rem, 2.8vw, 1.9rem);">{{ site_sections.get('contribute.s1_title', 'SC&SS Alumni Supporter Roll') }}</h2>
                 </div>
 
-                <!-- Live Search & Filter Controls -->
+                <!-- Live Search Controls -->
                 <div class="roll-filter-group">
                     <input 
                         type="text" 
                         id="supporterSearch" 
                         class="form-control supporter-search-input" 
-                        placeholder="Search supporter name or batch..."
+                        placeholder="Search supporter name or batch..." 
                         onkeyup="filterSupporters()"
                     >
                 </div>
             </div>
 
-            <!-- Filter Pills -->
-            <div class="roll-tabs">
-                <button class="roll-tab active" onclick="setRollFilter('all', this)">All Contributors ({{ tracker.stats.total_contributors }})</button>
-                <button class="roll-tab" onclick="setRollFilter('public', this)">Public Patrons ({{ tracker.stats.public_count }})</button>
-                <button class="roll-tab" onclick="setRollFilter('semi_anonymous', this)">Semi-Anonymous ({{ tracker.stats.semi_anon_count }})</button>
-                <button class="roll-tab" onclick="setRollFilter('fully_anonymous', this)">Anonymous ({{ tracker.stats.fully_anon_count }})</button>
-            </div>
-
             <!-- Supporter Table / List -->
-            <div class="table-responsive" style="margin-top: 1rem;">
+            <div class="table-responsive">
                 <table class="admin-table supporter-table" id="supporterTable">
                     <thead>
                         <tr>
-                            <th style="width: 5%;">#</th>
-                            <th style="width: 35%;">Contributor</th>
-                            <th style="width: 20%;">Batch / Program</th>
-                            <th style="width: 20%;">Privacy Setting</th>
-                            <th style="width: 20%; text-align: right;">Contribution</th>
+                            <th style="width: 10%;">#</th>
+                            <th style="width: 55%;">Contributor Name</th>
+                            <th style="width: 35%;">Batch / Program</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,9 +102,9 @@
                                 <tr class="supporter-row" data-mode="{{ c.privacy_mode }}" data-name="{{ c.display_name | lower }}" data-batch="{{ c.graduation_year or '' }}">
                                     <td>{{ loop.index }}</td>
                                     <td>
-                                        <div style="font-weight: 600; color: var(--color-navy); font-size: 0.95rem;">
+                                        <div style="font-weight: 600; color: var(--color-ink); font-size: 0.95rem;">
                                             {% if c.privacy_mode == 'fully_anonymous' %}
-                                                <span style="color: #64748B; display: inline-flex; align-items: center; gap: 0.35rem;">{{ icon_anon(size=14) }} {{ c.display_name }}</span>
+                                                <span style="color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.35rem;">{{ icon_anon(size=14) }} {{ c.display_name }}</span>
                                             {% else %}
                                                 {{ c.display_name }}
                                             {% endif %}
@@ -167,57 +112,47 @@
                                     </td>
                                     <td>
                                         {% if c.graduation_year %}
-                                            <span class="badge" style="background: #F1F5F9; color: #334155; font-size: 0.82rem;">
+                                            <span class="badge" style="background: var(--color-paper-light); border: 1px solid var(--color-border); color: var(--color-ink); font-size: 0.82rem;">
                                                 Batch {{ c.graduation_year }}
                                             </span>
-                                            {% if c.course %}<span style="font-size: 0.8rem; color: #64748B;">· {{ c.course }}</span>{% endif %}
+                                            {% if c.course %}<span style="font-size: 0.8rem; color: var(--color-muted);">· {{ c.course }}</span>{% endif %}
                                         {% else %}
-                                            <span style="color: #94A3B8; font-size: 0.85rem;">—</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ icon_privacy_badge(c.privacy_mode, size=16) }}
-                                    </td>
-                                    <td style="text-align: right;">
-                                        {% if c.is_amount_visible %}
-                                            <strong style="color: var(--color-navy); font-size: 1rem;">{{ c.amount | currency_inr }}</strong>
-                                        {% else %}
-                                            <span style="font-size: 0.85rem; color: #64748B; font-style: italic;">Amount Confidential</span>
+                                            <span style="color: var(--color-muted); font-size: 0.85rem;">—</span>
                                         {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="5" style="text-align: center; color: #888; padding: 2.5rem;">
+                                <td colspan="3" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
                                     No contributions recorded yet. Be the first to support the meet via the Google Form!
                                 </td>
                             </tr>
                         {% endif %}
                     </tbody>
                 </table>
-                <div id="noResultsMsg" style="display: none; text-align: center; padding: 2rem; color: #64748B;">
-                    No contributors match your filter criteria.
+                <div id="noResultsMsg" style="display: none; text-align: center; padding: 2rem; color: var(--color-muted);">
+                    No contributors match your search criteria.
                 </div>
             </div>
         </div>
 
         <!-- Transparency & Utilization Breakdown -->
-        <div style="margin-top: var(--space-xl);">
-            <div class="section-ribbon">
-                <span class="ribbon-num">02</span>
-                <span>Fund Utilization</span>
+        <div style="margin-top: var(--space-xl);" data-editable-section="s2" data-section-title="Section 02 - Fund Utilization">
+            <div class="section-label">
+                <span class="label-num">02</span>
+                <span data-field-key="s2_label">{{ site_sections.get('contribute.s2_label', 'Fund Utilization') }}</span>
             </div>
-            <h2>Transparent Allocation & Purpose</h2>
-            <hr class="gold-rule">
-            <p class="lead-text">
-                Every rupee contributed directly powers the event experience and student engagement.
+            <h2 data-field-key="s2_title">{{ site_sections.get('contribute.s2_title', 'Transparent Allocation & Purpose') }}</h2>
+            <hr class="editorial-rule">
+            <p class="lead-text" data-field-key="s2_lead">
+                {{ site_sections.get('contribute.s2_lead', 'Every contribution directly powers the event experience, faculty recognition, and student volunteer facilitation.') }}
             </p>
 
             <div class="grid-4" style="margin-top: var(--space-md);">
                 <div class="content-card">
                     <span class="eyebrow">40% Allocation</span>
-                    <h3>Venue & Catering</h3>
+                    <h3>Venue &amp; Catering</h3>
                     <p style="font-size: 0.9rem;">Auditorium staging, high tea, networking lunch, welcome reception, and hospitality arrangements.</p>
                 </div>
                 <div class="content-card">
@@ -227,7 +162,7 @@
                 </div>
                 <div class="content-card">
                     <span class="eyebrow">20% Allocation</span>
-                    <h3>Kits & Memory Archives</h3>
+                    <h3>Kits &amp; Memory Archives</h3>
                     <p style="font-size: 0.9rem;">Delegate kits, souvenir memory books, identity badges, and professional photo/video coverage.</p>
                 </div>
                 <div class="content-card">
@@ -239,13 +174,17 @@
         </div>
 
         <!-- Google Form CTA Banner -->
-        <div class="cta-banner" style="margin-top: var(--space-xl); text-align: center;">
-            <h2 style="color: #FFF; margin-bottom: var(--space-xs);">Support the SC&SS Alumni Meet 2026</h2>
-            <hr class="gold-rule gold-rule-center">
-            <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
-                Make your voluntary contribution and select your preferred privacy setting in the official intake form.
+        <div class="cta-banner" style="margin-top: var(--space-xl); text-align: center;" data-editable-section="s3" data-section-title="Section 03 - Support CTA">
+            <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
+                <span class="label-num" style="color: var(--color-paper);">03</span>
+                <span style="color: rgba(244, 241, 234, 0.85);" data-field-key="s3_label">{{ site_sections.get('contribute.s3_label', 'Support the Meet') }}</span>
+            </div>
+            <h2 data-field-key="s3_title">{{ site_sections.get('contribute.s3_title', 'Support the SC&SS Alumni Meet 2026') }}</h2>
+            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
+            <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;" data-field-key="s3_text">
+                {{ site_sections.get('contribute.s3_text', 'Make your voluntary contribution and participation submission in the official intake form.') }}
             </p>
-            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
+            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
                 Proceed to Official Google Form {{ icon_external() }}
             </a>
         </div>
@@ -255,29 +194,18 @@
 
 {% block extra_js %}
 <script>
-let currentFilter = 'all';
-
-function setRollFilter(mode, btn) {
-    currentFilter = mode;
-    document.querySelectorAll('.roll-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filterSupporters();
-}
-
 function filterSupporters() {
     const searchInput = document.getElementById('supporterSearch').value.toLowerCase().trim();
     const rows = document.querySelectorAll('.supporter-row');
     let visibleCount = 0;
 
     rows.forEach(row => {
-        const mode = row.getAttribute('data-mode');
         const name = row.getAttribute('data-name') || '';
         const batch = row.getAttribute('data-batch') || '';
 
-        const matchesFilter = (currentFilter === 'all' || mode === currentFilter);
         const matchesSearch = !searchInput || name.includes(searchInput) || batch.includes(searchInput);
 
-        if (matchesFilter && matchesSearch) {
+        if (matchesSearch) {
             row.style.display = '';
             visibleCount++;
         } else {

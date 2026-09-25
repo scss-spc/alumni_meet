@@ -7,6 +7,12 @@ from services.scheduler_service import get_scheduler_info
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
+@api_bp.route("/health", methods=["GET"])
+@api_bp.route("/ping", methods=["GET"])
+def api_health():
+    """API Keep-alive & Health Check endpoint."""
+    return jsonify({"status": "ok", "service": "alumni-meet"}), 200
+
 @api_bp.route("/public/contributions", methods=["GET"])
 def public_contributions_json():
     """Sanitized public contributions tracker JSON endpoint applying the 3-tier privacy engine."""

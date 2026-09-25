@@ -1,73 +1,261 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_external %}
+{% from "macros/icons.html" import icon_external, icon_building, icon_location, icon_sparkle, icon_jnu_seal, icon_alumni, icon_activities %}
 
-{% block title %}About SC&SS — Jawaharlal Nehru University{% endblock %}
+{% block title %}About SC&amp;SS — Jawaharlal Nehru University{% endblock %}
 
 {% block content %}
-<div class="container section">
-    <div class="container-narrow">
-        <div class="section-ribbon">
-            <span class="ribbon-num">01</span>
-            <span>Institution</span>
-        </div>
-
-        <h1>School of Computer & Systems Sciences</h1>
-        <hr class="gold-rule">
-        <p class="lead-text">
-            A tradition of deep mathematical foundations, pathbreaking computer systems research, and high-impact alumni worldwide.
-        </p>
-
-        <section style="margin: var(--space-xl) 0;">
-            <h2>A Pioneer in Computing Education in India</h2>
-            <hr class="gold-rule">
-            <p>
-                The School of Computer & Systems Sciences (SC&SS) at Jawaharlal Nehru University was established to foster advanced education, research, and technical leadership in computer science, systems engineering, and data disciplines.
+<!-- Hero Section -->
+<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="eyebrow">{{ site_sections.get('about.hero_eyebrow', 'Jawaharlal Nehru University · New Delhi') }}</span>
+            <h1>{{ site_sections.get('about.hero_title', 'School of Computer & Systems Sciences') }}</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text">
+                {{ site_sections.get('about.hero_lead', 'A tradition of deep mathematical foundations, pathbreaking computer systems research, and high-impact alumni worldwide.') }}
             </p>
-            <p>
-                Over the decades, the School has produced thinkers and innovators across MCA, M.Tech, and Ph.D. programs who have significantly influenced software architecture, academic institutions, scientific research, and technological policy in India and abroad.
-            </p>
-        </section>
 
-        <section style="margin-bottom: var(--space-xl);">
-            <h2>Academic Focus & Research Groups</h2>
-            <hr class="gold-rule">
-            <p>
-                SC&SS has always emphasized strong theoretical underpinnings alongside practical systems engineering:
-            </p>
-            <div class="grid-2" style="margin-top: var(--space-md);">
-                <div class="content-card">
-                    <span class="eyebrow">Area 01</span>
-                    <h3>Theoretical Foundations</h3>
-                    <p style="font-size: 0.95rem;">Algorithms, formal methods, computational complexity, automata theory, and discrete mathematics.</p>
+            <div class="hero-meta-bar">
+                <div class="meta-item">
+                    <span class="meta-label">Established</span>
+                    <span class="meta-value">1975 · JNU Campus</span>
                 </div>
-                <div class="content-card">
-                    <span class="eyebrow">Area 02</span>
-                    <h3>Systems & Architecture</h3>
-                    <p style="font-size: 0.95rem;">Distributed computing, computer networks, cloud infrastructure, databases, and embedded systems.</p>
+                <div class="meta-item">
+                    <span class="meta-label">Academic Programs</span>
+                    <span class="meta-value">MCA · M.Tech · Ph.D.</span>
                 </div>
-                <div class="content-card">
-                    <span class="eyebrow">Area 03</span>
-                    <h3>AI & Data Sciences</h3>
-                    <p style="font-size: 0.95rem;">Machine learning, natural language processing, computer vision, and big data analytics.</p>
-                </div>
-                <div class="content-card">
-                    <span class="eyebrow">Area 04</span>
-                    <h3>Information Security</h3>
-                    <p style="font-size: 0.95rem;">Cryptography, cyber security, protocol verification, and secure software engineering.</p>
+                <div class="meta-item">
+                    <span class="meta-label">Legacy</span>
+                    <span class="meta-value" style="color: var(--color-sepia-dark);">50+ Years of Excellence</span>
                 </div>
             </div>
-        </section>
 
-        <div class="cta-banner" style="text-align: center;">
-            <h3 style="color: #FFF; margin-bottom: var(--space-xs);">Be Part of the Alumni Network</h3>
-            <hr class="gold-rule gold-rule-center">
-            <p style="font-size: 1rem; margin-bottom: var(--space-md);">
-                Join the upcoming meet and help strengthen the ties between past scholars and the current school community.
-            </p>
-            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
-                Register on Google Form {{ icon_external() }}
-            </a>
+            <div class="btn-group">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+                    Register on Google Form {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
+                    View Meet Details
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
+                    <span class="hero-card-badge">SC&amp;SS · Institutional Spotlight</span>
+                    {{ icon_jnu_seal(size=48) }}
+                </div>
+                <h3>{{ site_sections.get('about.hero_card_title', 'A Pioneer in Computing Education in India') }}</h3>
+                <div class="vertical-rule">
+                    <p style="font-size: 0.95rem; font-style: italic; color: var(--color-ink); font-weight: 500;">
+                        {{ site_sections.get('about.hero_card_quote', '"Founded with a vision to build deep foundational computing and systems expertise, SC&SS continues to prepare scholars and engineers who lead global research and technological enterprise."') }}
+                    </p>
+                </div>
+                <div class="divider"></div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
+                    <span>{{ icon_location(size=14) }} JNU Campus, New Delhi</span>
+                    <span>{{ icon_building(size=14) }} SC&amp;SS Academic Complex</span>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Section 01: Institutional Mission & Overview -->
+<section class="section section-paper" data-editable-section="s1" data-section-title="Section 01 - Institution">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">01</span>
+            <span>{{ site_sections.get('about.s1_label', 'Institution') }}</span>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h2>{{ site_sections.get('about.s1_title', 'Fostering Academic Excellence & Systems Leadership') }}</h2>
+                <hr class="editorial-rule">
+                <p class="lead-text">
+                    {{ site_sections.get('about.s1_lead', 'The School of Computer & Systems Sciences (SC&SS) at Jawaharlal Nehru University was established to foster advanced education, research, and technical leadership in computer science, systems engineering, and data disciplines.') }}
+                </p>
+                <p>
+                    {{ site_sections.get('about.s1_body', 'Over the decades, the School has produced thinkers and innovators across MCA, M.Tech, and Ph.D. programs who have significantly influenced software architecture, academic institutions, scientific research, and technological policy in India and abroad.') }}
+                </p>
+            </div>
+            <div>
+                <div class="content-card" style="height: 100%; display: flex; flex-direction: column; justify-content: center; background-color: var(--color-surface);">
+                    <span class="eyebrow" style="color: var(--color-sepia);">Academic Legacy</span>
+                    <h3 style="margin-top: 0.25rem;">Core Foundations</h3>
+                    <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem; color: var(--color-muted);">
+                        <li><strong style="color: var(--color-ink);">Mathematical Foundations:</strong> Discrete math, automata theory, and algorithmic complexity.</li>
+                        <li><strong style="color: var(--color-ink);">Systems Engineering:</strong> Distributed networks, operating systems, cloud architecture.</li>
+                        <li><strong style="color: var(--color-ink);">Applied Innovation:</strong> Artificial intelligence, machine learning, and data analytics.</li>
+                        <li><strong style="color: var(--color-ink);">Cyber Security:</strong> Cryptography, network security, and secure software protocol.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 02: Research Focus & Disciplines -->
+<section class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - Research &amp; Focus">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">02</span>
+            <span>{{ site_sections.get('about.s2_label', 'Research & Focus') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('about.s2_title', 'Academic Focus & Research Groups') }}</h2>
+        <hr class="editorial-rule">
+        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
+            {{ site_sections.get('about.s2_lead', 'SC&SS has always emphasized strong theoretical underpinnings alongside practical systems engineering across four primary domain areas:') }}
+        </p>
+
+        <div class="grid-4">
+            <div class="content-card">
+                <span class="eyebrow">Area 01</span>
+                <h3>Theoretical Foundations</h3>
+                <p style="font-size: 0.95rem;">Algorithms, formal methods, computational complexity, automata theory, and discrete mathematics.</p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Area 02</span>
+                <h3>Systems &amp; Architecture</h3>
+                <p style="font-size: 0.95rem;">Distributed computing, computer networks, cloud infrastructure, databases, and embedded systems.</p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Area 03</span>
+                <h3>AI &amp; Data Sciences</h3>
+                <p style="font-size: 0.95rem;">Machine learning, natural language processing, computer vision, and big data analytics.</p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Area 04</span>
+                <h3>Information Security</h3>
+                <p style="font-size: 0.95rem;">Cryptography, cyber security, protocol verification, and secure software engineering.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 03: Degree Programs -->
+<section class="section section-paper" data-editable-section="s3" data-section-title="Section 03 - Programs">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">03</span>
+            <span>{{ site_sections.get('about.s3_label', 'Programs') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('about.s3_title', 'Academic Programs & Degree Pathways') }}</h2>
+        <hr class="editorial-rule">
+
+        <div class="grid-3" style="margin-top: var(--space-md);">
+            <div class="content-card">
+                <span class="eyebrow">Master's Program</span>
+                <h3>MCA Program</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.92rem;">
+                    A comprehensive postgraduate degree blending software engineering, computational foundations, algorithm design, and modern system development.
+                </p>
+                <div class="card-caption" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.5rem; font-size: 0.82rem; color: var(--color-muted);">
+                    <span class="meta-label">Focus:</span> Software Engineering &amp; Applications
+                </div>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Advanced Technical</span>
+                <h3>M.Tech Program</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.92rem;">
+                    Specialized postgraduate research degree emphasizing computer science engineering, network security, high-performance computing, and data science.
+                </p>
+                <div class="card-caption" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.5rem; font-size: 0.82rem; color: var(--color-muted);">
+                    <span class="meta-label">Focus:</span> Systems Architecture &amp; Research
+                </div>
+            </div>
+
+            <div class="content-card">
+                <span class="eyebrow">Doctoral Research</span>
+                <h3>Ph.D. Program</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.92rem;">
+                    Rigorous doctoral research programs preparing scholars who contribute foundational computer science discoveries and lead international academic R&amp;D.
+                </p>
+                <div class="card-caption" style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 0.5rem; font-size: 0.82rem; color: var(--color-muted);">
+                    <span class="meta-label">Focus:</span> Scientific Inquiry &amp; Publications
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 04: Legacy & Impact -->
+<section class="section section-off-white" data-editable-section="s4" data-section-title="Section 04 - Impact">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">04</span>
+            <span>{{ site_sections.get('about.s4_label', 'Impact') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('about.s4_title', 'Enduring Global Reach & Community Impact') }}</h2>
+        <hr class="editorial-rule">
+        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
+            {{ site_sections.get('about.s4_lead', 'SC&SS graduates have gone on to shape technological policy, advance computer science literature, and lead global industry enterprises.') }}
+        </p>
+
+        <div class="then-now-grid">
+            <div class="then-now-card">
+                <span class="eyebrow" style="color: var(--color-sepia);">Academia &amp; Research</span>
+                <h3 style="margin-top: 0.25rem;">Academic &amp; Scholarly Leadership</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    Alumni from SC&amp;SS serve as distinguished professors, department chairs, research scientists, and academic leaders in premiere universities and laboratories across India, North America, Europe, and Asia.
+                </p>
+                <div class="card-caption">
+                    <span class="meta-label">Domain:</span> University Faculty &amp; National Research Labs
+                </div>
+            </div>
+
+            <div class="then-now-card">
+                <span class="eyebrow" style="color: var(--color-ink);">Industry &amp; Enterprise</span>
+                <h3 style="margin-top: 0.25rem;">Global Technological Leadership</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    Graduates direct software engineering teams, build cloud infrastructure, found innovative technology startups, and guide strategic AI initiatives in Fortune 500 corporations worldwide.
+                </p>
+                <div class="card-caption">
+                    <span class="meta-label">Domain:</span> Tech Enterprises, Startups &amp; R&amp;D Centers
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 05: Support & Register CTA -->
+<section class="section section-paper" data-editable-section="s5" data-section-title="Section 05 - Alumni Community CTA">
+    <div class="container">
+        <div class="cta-banner">
+            <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
+                <span class="label-num" style="color: var(--color-paper);">05</span>
+                <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('about.s5_label', 'Alumni Community') }}</span>
+            </div>
+            <h2>{{ site_sections.get('about.s5_title', 'Be Part of the SC&SS Alumni Network') }}</h2>
+            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
+            <p>
+                {{ site_sections.get('about.s5_text', 'Join the upcoming meet and help strengthen the ties between past scholars, faculty, and the current school community.') }}
+            </p>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
+                    Register on Google Form {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.meet_detail') }}" class="btn btn-outline-paper btn-lg">
+                    Explore Meet Program
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Closing Section -->
+<section class="section section-paper" style="padding-top: var(--space-xs); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">
+    <div class="container" style="text-align: center;">
+        <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;">
+            {{ site_sections.get('about.quote_text', '"Building foundational computing knowledge, advancing research, and nurturing global leadership."') }}
+        </p>
+        <span class="eyebrow" style="color: var(--color-sepia); font-size: 0.78rem; letter-spacing: 0.16em;">SC&amp;SS · Jawaharlal Nehru University</span>
+    </div>
+</section>
 {% endblock %}

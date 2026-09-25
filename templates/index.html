@@ -1,41 +1,41 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_location, icon_building, icon_sparkle, icon_privacy_badge, icon_external %}
+{% from "macros/icons.html" import icon_location, icon_building, icon_sparkle, icon_privacy_badge, icon_external, icon_jnu_seal %}
 
-{% block title %}SC&SS JNU Alumni Meet 2026{% endblock %}
+{% block title %}SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero concentric-motif-bg">
+<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
     <div class="container hero-grid">
         <div class="hero-content">
-            <span class="eyebrow">School of Computer & Systems Sciences · JNU</span>
-            <h1>Alumni Meet 2026</h1>
-            <hr class="gold-rule">
-            <p class="lead-text">
-                Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.
+            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('index.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
+            <h1 data-field-key="hero_title">{{ site_sections.get('index.hero_title', 'Alumni Meet 2026') }}</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text" data-field-key="hero_lead">
+                {{ site_sections.get('index.hero_lead', 'Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.') }}
             </p>
 
             <div class="hero-meta-bar">
                 <div class="meta-item">
                     <span class="meta-label">Date</span>
-                    <span class="meta-value">{{ meet.event_date | format_date("%A, %d %B %Y") }}</span>
+                    <span class="meta-value" data-field-key="hero_date">{{ site_sections.get('index.hero_date', 'Saturday, 29 August 2026') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
-                    <span class="meta-value">{{ meet.venue | default('SC&SS Campus, JNU, New Delhi') }}</span>
+                    <span class="meta-value" data-field-key="hero_venue">{{ site_sections.get('index.hero_venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Status</span>
-                    <span class="meta-value" style="color: var(--color-gold-dark);">Registration Open</span>
+                    <span class="meta-value" data-field-key="hero_status" style="color: var(--color-sepia-dark);">{{ site_sections.get('index.hero_status', 'Registration Open') }}</span>
                 </div>
             </div>
 
             <div class="btn-group">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
-                    Register & Contribute via Google Form {{ icon_external() }}
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+                    <span data-field-key="hero_btn_primary">{{ site_sections.get('index.hero_btn_primary', 'Register & Contribute via Google Form') }}</span> {{ icon_external() }}
                 </a>
                 <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
-                    View Meet Schedule
+                    <span data-field-key="hero_btn_secondary">{{ site_sections.get('index.hero_btn_secondary', 'View Meet Schedule') }}</span>
                 </a>
             </div>
         </div>
@@ -43,17 +43,17 @@
         <div class="hero-visual">
             <div class="hero-card">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
-                    <span class="hero-card-badge">SC&SS · JNU Gathering</span>
-                    <img src="{{ url_for('static', filename='images/jnu_logo_gold.svg') }}" alt="JNU Seal" style="width: 54px; height: 54px;">
+                    <span class="hero-card-badge" data-field-key="hero_badge">{{ site_sections.get('index.hero_badge', 'SC&SS · JNU Gathering') }}</span>
+                    {{ icon_jnu_seal(size=48) }}
                 </div>
-                <h3>Reconnect. Reminisce. Re-engage.</h3>
-                <p>
-                    From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations.
+                <h3 data-field-key="hero_card_title">{{ site_sections.get('index.hero_card_title', 'An Enduring Academic Community') }}</h3>
+                <p data-field-key="hero_card_text">
+                    {{ site_sections.get('index.hero_card_text', 'From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations across the world.') }}
                 </p>
                 <div class="divider"></div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
-                    <span>{{ icon_location(size=14) }} JNU Campus, New Delhi</span>
-                    <span>{{ icon_building(size=14) }} SC&SS Auditorium</span>
+                    <span>{{ icon_location(size=14) }} <span data-field-key="hero_card_location">{{ site_sections.get('index.hero_card_location', 'JNU Campus, New Delhi') }}</span></span>
+                    <span>{{ icon_building(size=14) }} <span data-field-key="hero_card_venue">{{ site_sections.get('index.hero_card_venue', 'SC&SS Auditorium') }}</span></span>
                 </div>
             </div>
         </div>
@@ -66,68 +66,46 @@
         <div class="tracker-spotlight-card">
             <div class="tracker-header-grid">
                 <div>
-                    <div class="badge badge-gold-glow">{{ icon_sparkle(size=14) }} Live Contribution Tracker</div>
-                    <h2 style="margin-top: 0.5rem; color: var(--color-navy);">Alumni Meet Support & Fund Progress</h2>
+                    <div class="badge-archive-tag">Live Contribution Tracker</div>
+                    <h2 style="margin-top: 0.5rem; color: var(--color-ink);">Alumni Meet Support &amp; Fund Progress</h2>
                     <p style="color: var(--color-muted); max-width: 620px;">
-                        Together, our alumni community is supporting student bursaries, event hospitality, felicitation of revered faculty, and strengthening the SC&SS legacy.
+                        Together, our alumni community is supporting student bursaries, event hospitality, felicitation of revered faculty, and strengthening the SC&amp;SS legacy.
                     </p>
                 </div>
                 <div class="tracker-cta-box">
-                    <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-md">
+                    <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-md">
                         Contribute via Google Form {{ icon_external() }}
                     </a>
-                    <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-navy btn-sm" style="margin-top: 0.5rem;">
-                        View Full Tracker & Roll →
+                    <a href="{{ url_for('public.contribute') }}" class="btn btn-secondary btn-sm">
+                        View Full Tracker &amp; Roll →
                     </a>
                 </div>
             </div>
 
-            <!-- Progress Meter -->
-            <div class="progress-container">
-                <div class="progress-meta-row">
-                    <span>
-                        <strong>Total Contributed:</strong> 
-                        <span class="highlight-navy">{{ tracker.stats.total_raised | currency_inr }}</span>
-                        {% if tracker.stats.pending_amount > 0 %}
-                            <small style="color: #64748B;">({{ tracker.stats.verified_amount | currency_inr }} verified)</small>
-                        {% endif %}
-                    </span>
-                    <span>
-                        <strong>Target Milestone:</strong> {{ tracker.stats.target_amount | currency_inr }}
-                        ({{ tracker.stats.progress_percent }}%)
-                    </span>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" style="width: {{ tracker.stats.progress_percent }}%;"></div>
-                </div>
-            </div>
+
 
             <!-- Summary KPI Tiles -->
-            <div class="tracker-kpi-grid">
+            <div class="tracker-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                 <div class="kpi-mini-card">
                     <span class="kpi-mini-num">{{ tracker.stats.total_contributors }}</span>
                     <span class="kpi-mini-label">Generous Alumni Contributors</span>
-                </div>
-                <div class="kpi-mini-card">
-                    <span class="kpi-mini-num">{{ tracker.stats.verified_count }}</span>
-                    <span class="kpi-mini-label">Verified Contributions</span>
                 </div>
                 <div class="kpi-mini-card">
                     <span class="kpi-mini-num">100%</span>
                     <span class="kpi-mini-label">Transparent Allocation</span>
                 </div>
                 <div class="kpi-mini-card">
-                    <span class="kpi-mini-num">3 Tiers</span>
-                    <span class="kpi-mini-label">Strict Privacy Controls</span>
+                    <span class="kpi-mini-num">Strict</span>
+                    <span class="kpi-mini-label">Data Privacy Protection</span>
                 </div>
             </div>
 
-            <!-- Recent Supporters Carousel/List -->
+            <!-- Recent Supporters List -->
             {% if tracker.recent_contributors %}
-            <div style="margin-top: 2rem; border-top: 1px solid #E2E8F0; padding-top: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <h4 style="margin: 0; font-size: 1.05rem; color: var(--color-navy);">Recent Contributors (Privacy Protected)</h4>
-                    <a href="{{ url_for('public.contribute') }}" style="font-size: 0.85rem; font-weight: 600; color: var(--color-gold-dark);">
+            <div style="margin-top: 2rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <h4 style="margin: 0; font-size: 1.05rem; color: var(--color-ink);">Recent Contributors (Privacy Protected)</h4>
+                    <a href="{{ url_for('public.contribute') }}" style="font-size: 0.85rem; font-weight: 600; color: var(--color-sepia-dark);">
                         View All {{ tracker.stats.total_contributors }} Contributors →
                     </a>
                 </div>
@@ -136,20 +114,14 @@
                         <div class="supporter-badge-card {{ c.badge_class }}">
                             <div class="supporter-card-top">
                                 <span class="supporter-name">{{ c.display_name }}</span>
-                                {% if c.is_amount_visible %}
-                                    <span class="supporter-amount">{{ c.amount | currency_inr }}</span>
-                                {% else %}
-                                    <span class="supporter-anon-tag">Protected</span>
-                                {% endif %}
                             </div>
                             <div class="supporter-card-sub">
                                 {% if c.graduation_year %}
                                     <span>Batch of {{ c.graduation_year }}</span>
                                     {% if c.course %}<span>· {{ c.course }}</span>{% endif %}
                                 {% else %}
-                                    <span>SC&SS Contributor</span>
+                                    <span>SC&amp;SS Contributor</span>
                                 {% endif %}
-                                {{ icon_privacy_badge(c.privacy_mode, size=15) }}
                             </div>
                         </div>
                     {% endfor %}
@@ -161,34 +133,34 @@
 </section>
 
 <!-- Section 01: About the Meet -->
-<section class="section">
+<section class="section section-paper" data-editable-section="s1" data-section-title="Section 01 - About the Meet">
     <div class="container">
-        <div class="section-ribbon">
-            <span class="ribbon-num">01</span>
-            <span>About the Meet</span>
+        <div class="section-label">
+            <span class="label-num">01</span>
+            <span data-field-key="s1_label">{{ site_sections.get('index.s1_label', 'About the Meet') }}</span>
         </div>
 
         <div class="grid-2">
             <div>
-                <h2>Years After Leaving JNU, the Connection Endures</h2>
-                <hr class="gold-rule">
-                <p class="lead-text" style="margin-top: var(--space-sm);">
-                    The SC&SS Alumni Meet 2026 is an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network.
+                <h2 data-field-key="s1_title">{{ site_sections.get('index.s1_title', 'Years After Leaving JNU, the Connection Endures') }}</h2>
+                <hr class="editorial-rule">
+                <p class="lead-text" data-field-key="s1_lead">
+                    {{ site_sections.get('index.s1_lead', 'The SC&SS Alumni Meet 2026 is an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network.') }}
                 </p>
-                <p>
-                    Whether you graduated in the early batches of MCA and M.Tech or recently completed your Ph.D., your presence enriches the school's legacy.
+                <p data-field-key="s1_body">
+                    {{ site_sections.get('index.s1_body', "Whether you graduated in the early batches of MCA and M.Tech or recently completed your Ph.D., your presence enriches the school's legacy.") }}
                 </p>
             </div>
             <div>
-                <div class="content-card" style="border-top: 3px solid var(--color-navy);">
-                    <h3>Event Highlights</h3>
+                <div class="content-card">
+                    <h3 data-field-key="s1_highlights_title">{{ site_sections.get('index.s1_highlights_title', 'Event Highlights') }}</h3>
                     <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem;">
-                        <li><strong style="color: var(--color-navy);">Inaugural & Welcome Address</strong> by School Leadership</li>
-                        <li><strong style="color: var(--color-navy);">Felicitation</strong> of Former Deans & Revered Faculty</li>
-                        <li><strong style="color: var(--color-navy);">Open Dialogues</strong> on Systems, AI & Industry Evolutions</li>
-                        <li><strong style="color: var(--color-navy);">Batch Group Photographs</strong> & Memory Walks</li>
-                        <li><strong style="color: var(--color-navy);">High Tea & Networking Lunch</strong> at JNU Campus</li>
-                        <li><strong style="color: var(--color-navy);">Alumni Mentorship & Collaboration</strong> Initiatives</li>
+                        <li><strong style="color: var(--color-ink);">Inaugural &amp; Welcome Address</strong> by School Leadership</li>
+                        <li><strong style="color: var(--color-ink);">Felicitation</strong> of Former Deans &amp; Revered Faculty</li>
+                        <li><strong style="color: var(--color-ink);">Open Dialogues</strong> on Systems, AI &amp; Industry Evolutions</li>
+                        <li><strong style="color: var(--color-ink);">Batch Group Photographs</strong> &amp; Memory Walks</li>
+                        <li><strong style="color: var(--color-ink);">High Tea &amp; Networking Lunch</strong> at JNU Campus</li>
+                        <li><strong style="color: var(--color-ink);">Alumni Mentorship &amp; Collaboration</strong> Initiatives</li>
                     </ul>
                 </div>
             </div>
@@ -197,41 +169,41 @@
 </section>
 
 <!-- Section 02: Institutional Heritage -->
-<section class="section section-white">
+<section class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - Institutional Heritage">
     <div class="container">
-        <div class="section-ribbon">
-            <span class="ribbon-num">02</span>
-            <span>The SC&SS Story</span>
+        <div class="section-label">
+            <span class="label-num">02</span>
+            <span>{{ site_sections.get('index.s2_label', 'The School') }}</span>
         </div>
 
         <div class="section-header" style="max-width: 800px; margin-bottom: var(--space-lg);">
-            <h2>A Tradition of Scientific Inquiry & Systems Leadership</h2>
-            <hr class="gold-rule">
+            <h2>{{ site_sections.get('index.s2_title', 'A Tradition of Scientific Inquiry & Systems Leadership') }}</h2>
+            <hr class="editorial-rule">
             <p class="lead-text">
-                Established as one of the premier computer and systems science schools in India, SC&SS JNU has continuously fostered rigorous academic inquiry and technological innovation.
+                {{ site_sections.get('index.s2_lead', 'Established as one of the premier computer and systems science schools in India, SC&SS JNU has continuously fostered rigorous academic inquiry and technological innovation.') }}
             </p>
         </div>
 
         <div class="grid-3">
             <div class="content-card">
                 <span class="eyebrow">Pillar 01</span>
-                <h3>Academic Rigor</h3>
+                <h3>{{ site_sections.get('index.s2_p1_title', 'Academic Rigor') }}</h3>
                 <p>
-                    Rooted in mathematical foundations, theoretical computer science, databases, and distributed systems, producing thinkers who excel worldwide.
+                    {{ site_sections.get('index.s2_p1_text', 'Rooted in mathematical foundations, theoretical computer science, databases, and distributed systems, producing thinkers who excel worldwide.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 02</span>
-                <h3>Vibrant Alumni</h3>
+                <h3>{{ site_sections.get('index.s2_p2_title', 'Vibrant Alumni') }}</h3>
                 <p>
-                    Graduates leading technology organizations, research laboratories, universities, government bodies, and innovative startups globally.
+                    {{ site_sections.get('index.s2_p2_text', 'Graduates leading technology organizations, research laboratories, universities, government bodies, and innovative startups globally.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 03</span>
-                <h3>Future Vision</h3>
+                <h3>{{ site_sections.get('index.s2_p3_title', 'Future Vision') }}</h3>
                 <p>
-                    Advancing research in artificial intelligence, cyber-physical systems, quantum computing, and data sciences while nurturing the next generation.
+                    {{ site_sections.get('index.s2_p3_text', 'Advancing research in artificial intelligence, cyber-physical systems, quantum computing, and data sciences while nurturing the next generation.') }}
                 </p>
             </div>
         </div>
@@ -239,15 +211,15 @@
 </section>
 
 <!-- Section 03: Generations Timeline -->
-<section class="timeline-section">
+<section class="timeline-section" data-editable-section="s3" data-section-title="Section 03 - Timeline">
     <div class="container">
-        <div class="section-ribbon">
-            <span class="ribbon-num">03</span>
-            <span>Generations of Excellence</span>
+        <div class="section-label">
+            <span class="label-num">03</span>
+            <span>{{ site_sections.get('index.s3_label', 'Through the Years') }}</span>
         </div>
 
-        <h3 style="font-size: 1.6rem; margin-bottom: var(--space-xs);">Spanning Decades of Computing Leadership</h3>
-        <hr class="gold-rule">
+        <h3 style="font-size: 1.6rem; margin-bottom: var(--space-xs);">{{ site_sections.get('index.s3_title', 'Spanning Decades of Computing Leadership') }}</h3>
+        <hr class="editorial-rule">
 
         <div class="timeline-wrapper">
             <div class="timeline-track">
@@ -259,7 +231,7 @@
                 <div class="timeline-node">
                     <div class="timeline-dot"></div>
                     <div class="timeline-year">1986 – 1995</div>
-                    <div class="timeline-label">Expansion & Research</div>
+                    <div class="timeline-label">Expansion &amp; Research</div>
                 </div>
                 <div class="timeline-node">
                     <div class="timeline-dot"></div>
@@ -277,37 +249,118 @@
                     <div class="timeline-label">Modern Innovation</div>
                 </div>
                 <div class="timeline-node">
-                    <div class="timeline-dot" style="background-color: var(--color-gold); border-color: var(--color-gold);"></div>
-                    <div class="timeline-year" style="color: var(--color-navy); font-weight: 700;">2026</div>
-                    <div class="timeline-label" style="font-weight: 700; color: var(--color-gold-dark);">Alumni Meet</div>
+                    <div class="timeline-dot" style="background-color: var(--color-ink); border-color: var(--color-ink);"></div>
+                    <div class="timeline-year" style="color: var(--color-ink); font-weight: 700;">2026</div>
+                    <div class="timeline-label" style="font-weight: 700; color: var(--color-sepia-dark);">Alumni Meet</div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section 04: Support the Meet CTA -->
-<section class="section">
+<!-- Section 04: Then and Now -->
+<section class="section section-paper" data-editable-section="s4" data-section-title="Section 04 - Then &amp; Now">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">04</span>
+            <span>{{ site_sections.get('index.s4_label', 'Then & Now') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('index.s4_title', 'Memories & Milestones Across Generations') }}</h2>
+        <hr class="editorial-rule">
+        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
+            {{ site_sections.get('index.s4_lead', 'Reflecting on the foundations built over five decades and the enduring impact of SC&SS scholars in an ever-evolving digital world.') }}
+        </p>
+
+        <div class="then-now-grid">
+            <div class="then-now-card">
+                <span class="eyebrow" style="color: var(--color-sepia);">Then · Archival Foundations</span>
+                <h3 style="margin-top: 0.25rem;">{{ site_sections.get('index.s4_then_title', 'Pioneering Systems &amp; Computing Roots') }}</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    {{ site_sections.get('index.s4_then_text', 'From early mainframes, foundational programming laboratories, and chalkboard theoretical derivations to pioneering the MCA and M.Tech programs in India, the School set standards of academic rigor that stood the test of time.') }}
+                </p>
+                <div class="card-caption">
+                    <span class="meta-label">Era:</span> 1975–2000s · JNU Campus
+                </div>
+            </div>
+
+            <div class="then-now-card">
+                <span class="eyebrow" style="color: var(--color-ink);">Now · Contemporary Vanguard</span>
+                <h3 style="margin-top: 0.25rem;">{{ site_sections.get('index.s4_now_title', 'Global Leadership &amp; Modern Frontiers') }}</h3>
+                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
+                    {{ site_sections.get('index.s4_now_text', 'Today, SC&SS alumni lead world-class tech firms, top research laboratories, prestigious universities, and innovative startups, while the School continues to advance research in AI, cybersecurity, and distributed systems.') }}
+                </p>
+                <div class="card-caption">
+                    <span class="meta-label">Present:</span> 2026 &amp; Beyond · Worldwide Community
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 05: Meet Details Summary -->
+<section class="section section-off-white" data-editable-section="s5" data-section-title="Section 05 - Plan Your Visit">
+    <div class="container">
+        <div class="section-label">
+            <span class="label-num">05</span>
+            <span>{{ site_sections.get('index.s5_label', 'Meet Details') }}</span>
+        </div>
+
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('index.s5_title', 'Plan Your Visit') }}</h2>
+        <hr class="editorial-rule">
+
+        <div class="grid-3" style="margin-top: var(--space-md);">
+            <div class="content-card">
+                <span class="eyebrow">Date &amp; Time</span>
+                <h4>{{ meet.event_date | format_date("%A, %d %B %Y") }}</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">09:30 AM – 05:00 PM IST<br>Full-day schedule with lunch &amp; high tea.</p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Venue &amp; Campus Access</span>
+                <h4>{{ meet.venue | default('SC&SS Auditorium, JNU') }}</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Jawaharlal Nehru University, New Delhi.<br>Campus entry guidelines and parking provided.</p>
+            </div>
+            <div class="content-card">
+                <span class="eyebrow">Participation</span>
+                <h4>Registration Open</h4>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;">RSVP and optional contribution intake via our official Google Form.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section 06: Support the Meet CTA -->
+<section class="section section-paper" data-editable-section="s6" data-section-title="Section 06 - Support Banner">
     <div class="container">
         <div class="cta-banner">
-            <div class="section-ribbon" style="background-color: var(--color-gold); color: var(--color-navy);">
-                <span class="ribbon-num" style="color: var(--color-navy);">04</span>
-                <span>Support the Meet</span>
+            <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
+                <span class="label-num" style="color: var(--color-paper);">06</span>
+                <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('index.s6_label', 'Support the Meet') }}</span>
             </div>
-            <h2>Help Us Bring the SC&SS Community Together</h2>
-            <hr class="gold-rule gold-rule-center">
+            <h2>{{ site_sections.get('index.s6_title', 'Help Us Bring the SC&SS Community Together') }}</h2>
+            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
             <p>
-                Your voluntary contribution supports event arrangements, hospitality, student volunteer facilitation, and building a stronger alumni foundation for years to come.
+                {{ site_sections.get('index.s6_text', 'Your voluntary contribution supports event arrangements, hospitality, student volunteer facilitation, and building a stronger alumni foundation for years to come.') }}
             </p>
             <div class="btn-group" style="justify-content: center;">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-lg">
-                    Contribute & RSVP on Google Form {{ icon_external() }}
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
+                    Contribute &amp; RSVP on Google Form {{ icon_external() }}
                 </a>
-                <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-gold btn-lg">
+                <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-paper btn-lg">
                     Learn More About Contributions
                 </a>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- Closing Section -->
+<section class="section section-paper" style="padding-top: var(--space-lg); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">
+    <div class="container" style="text-align: center;">
+        <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;">
+            {{ site_sections.get('index.quote_text', '"The School remains a part of the journeys that began here."') }}
+        </p>
+        <span class="eyebrow" style="color: var(--color-sepia); font-size: 0.78rem; letter-spacing: 0.16em;">{{ site_sections.get('index.quote_sub', 'SC&SS · Jawaharlal Nehru University') }}</span>
     </div>
 </section>
 {% endblock %}

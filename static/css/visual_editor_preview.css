@@ -1,0 +1,151 @@
+/* ==========================================================================
+   SC&SS JNU Alumni Meet Platform — Pure Inline In-Place Preview Editor Styles
+   Direct on-page typing, floating section toolbars, and instant saving toasts.
+   ========================================================================== */
+
+[data-editable-section] {
+    position: relative !important;
+    transition: outline 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 4px;
+}
+
+[data-editable-section]:hover {
+    outline: 2px dashed #D97706 !important;
+    outline-offset: 4px;
+}
+
+[data-editable-section].section-preview-active {
+    outline: 2px solid #1E293B !important;
+    outline-offset: 4px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.1) !important;
+}
+
+/* Direct Inline Editable Elements */
+[data-inline-editable="true"] {
+    transition: background-color 0.15s ease, outline 0.15s ease;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+    cursor: text !important;
+}
+
+[data-inline-editable="true"]:hover {
+    background-color: rgba(254, 243, 199, 0.4);
+    outline: 1.5px dashed #F59E0B;
+}
+
+[data-inline-editable="true"]:focus,
+[data-inline-editable="true"].text-editing-active {
+    outline: 2px solid #D97706 !important;
+    background-color: #FEF3C7 !important;
+    color: #111827 !important;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+/* Floating Inline Section Control Toolbar */
+.inline-section-toolbar {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #1E293B;
+    color: #F8FAFC;
+    padding: 0.4rem 0.85rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.25);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    opacity: 0.85;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+[data-editable-section]:hover .inline-section-toolbar,
+[data-editable-section].section-preview-active .inline-section-toolbar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toolbar-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+}
+
+.toolbar-title {
+    color: #F1F5F9;
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-inline-save {
+    background: #059669;
+    color: #FFFFFF;
+    border: none;
+    padding: 0.3rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn-inline-save:hover {
+    background: #10B981;
+    transform: scale(1.03);
+}
+
+.btn-inline-save:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Floating Toast Notifications inside Preview Frame */
+.inline-editor-toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: none;
+}
+
+.inline-editor-toast {
+    background: #1E293B;
+    color: #FFFFFF;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.inline-editor-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.inline-editor-toast.toast-success {
+    background: #065F46;
+    border-left: 4px solid #10B981;
+}
+
+.inline-editor-toast.toast-danger {
+    background: #991B1B;
+    border-left: 4px solid #F87171;
+}

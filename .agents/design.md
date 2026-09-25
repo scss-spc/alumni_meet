@@ -1,1265 +1,1463 @@
-# SC&SS JNU Alumni Meet Platform — Design System
+# SC&SS JNU Alumni Meet --- Design System
 
-## 1. Design Intent
+## 1. Design Direction
 
-The SC&SS JNU Alumni Meet website should feel like a digital extension of the School's existing visual identity, not a generic alumni-event template.
+The website should use **one visual theme only**:
 
-The primary visual reference is the **SC&SS JNU Placement Brochure 2026–27**.
+> **SC&SS Editorial Heritage**
 
-The brochure establishes a much stronger direction than the previous website concept:
+The visual direction is inspired by the SC&SS JNU Placement Brochure
+2026--27: an institutional editorial style built around deep navy, warm
+ivory, muted academic gold, refined serif typography, clean sans-serif
+supporting text, strong photography, thin rules, generous whitespace,
+and disciplined layouts.
 
-- Deep JNU/SC&SS navy as the anchor color
-- Warm cream/off-white page backgrounds
-- Restrained gold accents
-- Serif display typography paired with a clean sans-serif
-- Strong horizontal section ribbons
-- Editorial grids
-- Real campus photography
-- Thin gold rules
-- Small uppercase labels with generous tracking
-- White content cards sitting on cream
-- Concentric-circle / geometric motifs used sparingly
-- Strong visual hierarchy without decorative clutter
+The website should feel like a **digital extension of the brochure**,
+not a separate visual identity.
 
-The alumni website should **translate this language to the web**, not copy the brochure page-for-page.
+### Desired character
 
----
+-   Institutional
+-   Academic
+-   Editorial
+-   Warm
+-   Sophisticated
+-   Human
+-   Spacious
+-   Timeless
+-   Modern without looking technological
 
-# 2. Primary Reference
+### Avoid
 
-Reference:
+-   SaaS aesthetics
+-   Startup landing-page styling
+-   Glassmorphism
+-   Neon colours
+-   Large gradients
+-   3D effects
+-   AI-style decorative interfaces
+-   Excessive pills
+-   Excessive rounded cards
+-   Generic conference templates
+-   Loud animations
+-   Decorative elements without purpose
 
-**SC&SS · JNU · Placement Brochure 2026–27**
+------------------------------------------------------------------------
 
-The cover uses a dark navy field, the JNU seal, cream/white typography, gold accents, and a large photograph of the SC&SS building.
+# 2. Visual Reference
 
-The interior pages consistently use a cream background, navy section ribbons, gold rules/details, serif headings, and structured content blocks.
+The primary visual reference is the **SC&SS JNU Placement Brochure
+2026--27**.
 
-The campus page demonstrates the intended photography treatment: multiple real JNU photographs arranged in a clean editorial grid.
+Key characteristics to carry into the website:
 
-These characteristics should form the basis of the Alumni Meet website.
+-   Deep navy section headers and large colour blocks
+-   Warm ivory paper-like backgrounds
+-   Muted gold accents
+-   Serif display headlines
+-   Clean sans-serif body typography
+-   Small uppercase editorial labels with letter spacing
+-   Thin gold rules and dividers
+-   Strong architectural and campus photography
+-   Structured white information cards used selectively
+-   Generous whitespace
+-   Formal but human presentation
+-   Consistent alignment and visual rhythm
 
----
+The brochure's cover establishes the core palette and institutional
+tone, while its contents, institution, alumni, campus, and contact pages
+establish the recurring layout language. fileciteturn0file0L1-L10
 
-# 3. Visual Personality
+------------------------------------------------------------------------
 
-The website should communicate:
+# 3. Colour System
 
-```text
-JNU
-Institution
-History
-Academic credibility
-        +
-SC&SS
-Computer science
-Systems
-Technology
-Precision
-        +
-Alumni
-People
-Memory
-Community
-Continuity
-```
+Use one fixed palette throughout the website.
 
-The resulting personality should be:
+## Primary Colours
 
-```text
-Editorial
-Academic
-Warm
-Institutional
-Confident
-Modern
-Human
-```
+``` text
+Navy
+#102653
 
-It should NOT feel:
+Deep Navy
+#0B1B3A
 
-```text
-AI-generated
-Startup-like
-SaaS-like
-Corporate
-Overly futuristic
-Generic event-template
-```
+Warm Ivory
+#F6F1E7
 
----
+Paper
+#FBF9F4
 
-# 4. Color System
+Muted Gold
+#C7A84B
 
-The previous maroon/red direction is **discarded**.
+Dark Ink
+#182033
 
-The website should use the navy/gold/cream visual language established by the SC&SS placement brochure.
+Muted Ink
+#5E6270
 
-## 4.1 Primary Navy
-
-```text
-#0B1F4D
-```
-
-Use for:
-
-- Header
-- Section ribbons
-- Major headings where appropriate
-- Primary navigation states
-- Dark feature sections
-- Important UI elements
-- Footer
-- Large statistic bands
-
-This is the principal identity color.
-
----
-
-## 4.2 Gold Accent
-
-```text
-#D4A745
-```
-
-Use sparingly for:
-
-- Small rules
-- Section accents
-- Numbers
-- Dates
-- Active indicators
-- Important metadata
-- Decorative lines
-- Selected UI states
-
-Gold is an accent, not a body-text color.
-
-Never use gold for long paragraphs.
-
----
-
-## 4.3 Warm Cream
-
-```text
-#F7F3EA
-```
-
-Primary page background.
-
-This should replace a generic pure-white website background wherever possible.
-
-It gives the interface the same warm editorial quality seen in the brochure.
-
----
-
-## 4.4 White
-
-```text
+White
 #FFFFFF
 ```
 
-Use for:
+### Roles
 
-- Content cards
-- Form surfaces
-- Photo frames
-- Navigation surfaces where appropriate
-- Contrast sections
+  -----------------------------------------------------------------------
+  Token                               Use
+  ----------------------------------- -----------------------------------
+  `Navy`                              Primary section backgrounds,
+                                      navigation accents, major headings
 
-White should generally sit against cream rather than dominate the entire page.
+  `Deep Navy`                         Hero blocks, strong contrast areas,
+                                      footer
 
----
+  `Warm Ivory`                        Main page background
 
-## 4.5 Body Text
+  `Paper`                             Content surfaces and image captions
 
-```text
-#1A1A1A
-```
+  `Muted Gold`                        Rules, labels, dates, highlights,
+                                      small accents
 
-Use for running text.
+  `Dark Ink`                          Main text
 
----
+  `Muted Ink`                         Supporting text
 
-## 4.6 Muted Text
+  `White`                             Text on navy and clean card
+                                      surfaces
+  -----------------------------------------------------------------------
 
-```text
-#5A6478
-```
+### Colour rules
 
-Use for:
+-   Ivory should be the dominant page background.
+-   Navy should provide the strongest visual anchor.
+-   Gold should remain restrained.
+-   Gold is an accent, not a large background colour.
+-   Do not introduce additional theme colours unless required for
+    functional states.
+-   Avoid pure black as the dominant visual colour.
 
-- Metadata
-- Captions
-- Secondary information
-- Supporting UI text
+------------------------------------------------------------------------
 
----
+# 4. Typography
 
-## 4.7 Supporting Blues
+Typography should reproduce the brochure's editorial contrast.
 
-Where additional visual differentiation is required:
+## Display Typeface
 
-```text
-#2E4D8B
-#5B7BB8
-#8FA8D4
-```
-
-These should be used only where necessary, particularly for data visualization or subtle interface states.
-
-Do not turn the site into a blue gradient.
-
----
-
-# 5. Color Rules
-
-### Always
-
-```text
-Navy + Cream + White + Gold
-```
-
-### Sometimes
-
-```text
-Supporting blues
-```
-
-### Never as the main identity
-
-```text
-Red
-Maroon
-Teal
-Cyan
-Neon purple
-Neon blue
-Black + yellow
-```
-
-Do not introduce a new dominant color without updating this design document.
-
----
-
-# 6. Typography
-
-The placement brochure's typography is a strong reference and should be carried into the website.
-
-Use two families.
-
-## 6.1 Display / Editorial Font
+Use a refined serif for major headings.
 
 Preferred:
 
-```text
+``` text
 Playfair Display
 ```
 
-Fallback:
+Acceptable equivalent:
 
-```text
-'Playfair Display', 'Source Serif Pro', Georgia, serif
+``` text
+Cormorant Garamond
 ```
 
-Use for:
+Use serif typography for:
 
-- Hero titles
-- Major page headings
-- Editorial statements
-- Important numbers
-- Historical moments
-- Section introductions
+-   Hero headlines
+-   Major section statements
+-   Important event titles
+-   Editorial pull quotes
+-   Large numerical or historical moments where appropriate
 
-The serif is important because it gives the site a more institutional and editorial character.
+## Supporting Typeface
 
----
-
-## 6.2 UI / Body Font
+Use a clean sans-serif for supporting information.
 
 Preferred:
 
-```text
+``` text
 Inter
 ```
 
-Fallback:
-
-```text
-Inter, system-ui, sans-serif
-```
-
-Use for:
-
-- Navigation
-- Labels
-- Buttons
-- Forms
-- Body text
-- Tables
-- Metadata
-- Admin interface
-
----
-
-# 7. Typography Style
-
-The brochure uses small uppercase labels with generous tracking.
-
-Carry that pattern into the website.
-
-Example:
-
-```text
-SCHOOL OF COMPUTER & SYSTEMS SCIENCES
-```
-
-Then:
-
-```text
-Alumni Meet 2026
-```
-
-Then supporting text.
-
-The hierarchy should generally be:
-
-```text
-EYEBROW
-small / uppercase / tracked
-
-H1
-large serif
-
-BODY
-clean sans-serif
-
-METADATA
-small / muted / tracked
-```
-
-Avoid making every heading uppercase.
-
----
-
-# 8. Signature Visual Elements
-
-The website should use several recognizable elements from the brochure.
-
-## 8.1 Navy Section Ribbon
-
-A navy horizontal bar can introduce major sections.
-
-Example:
-
-```text
-┌─────────────────────────────────────────────┐
-│  02   THE ALUMNI MEET                       │
-└─────────────────────────────────────────────┘
-```
-
-The ribbon can have the brochure-inspired angled/diagonal end treatment.
-
-This should be used for major sections, not every small subsection.
-
----
-
-## 8.2 Gold Rule
-
-A short gold line should sit near major headings.
-
-Example:
-
-```text
-ABOUT THE MEET
-
-Alumni Meet 2026
-────────
-```
-
-The rule should be short and intentional.
-
----
-
-## 8.3 Concentric Circle Motif
-
-The brochure uses concentric arcs/circles as a subtle signature.
-
-For the website:
-
-- Use as a background watermark
-- Use in the hero
-- Use on major section transitions
-- Use in empty visual space
-
-Opacity should remain low.
-
-The motif must never compete with the content.
-
----
-
-## 8.4 Vertical Gold Rule
-
-A thin gold vertical rule can be used selectively in editorial sections.
-
-Example:
-
-```text
-│
-│  About the School
-│
-│  Content...
-```
-
-This is particularly useful for:
-
-- History
-- Timeline
-- Alumni stories
-- Quotes
-
-Do not use it everywhere.
-
----
-
-# 9. Photography
-
-Photography should be one of the major visual elements of the site.
-
-The brochure demonstrates that SC&SS/JNU's own campus imagery works very well.
-
-Prefer:
-
-1. SC&SS building
-2. JNU campus
-3. Alumni photographs
-4. Historical SC&SS photographs
-5. Alumni Meet photographs
-6. Faculty photographs where relevant
-
-Avoid:
-
-- Stock photos
-- Generic laptop photos
-- Generic office photos
-- AI-generated people
-- Generic technology imagery
-
-If there is no suitable photograph, use typography, whitespace, rules, or the concentric motif instead of filling the space with generic imagery.
-
----
-
-# 10. Image Treatment
-
-Images should generally be:
-
-- Rectangular
-- Editorially cropped
-- High quality
-- Naturally colored
-- Free of heavy filters
-
-Avoid:
-
-```text
-Huge shadow
-Heavy gradient overlay
-Excessive rounded corners
-Artificial glow
-```
-
-Photo grids can use small or no gaps depending on the composition.
-
----
-
-# 11. Homepage
-
-The homepage should feel closer to a **digital editorial publication** than a startup landing page.
-
-Recommended structure:
-
-```text
-01  Header
-02  Hero
-03  About the Alumni Meet
-04  SC&SS / JNU story
-05  Alumni generations
-06  Meet information
-07  Contribution
-08  Closing / contact
-09  Footer
-```
-
----
-
-# 12. Header
-
-The header should be visually connected to the brochure.
-
-Suggested structure:
-
-```text
-┌─────────────────────────────────────────────────────┐
-│ SC&SS                         ALUMNI MEET   ABOUT   │
-│ School of Computer & Systems Sciences       ...    │
-└─────────────────────────────────────────────────────┘
-```
-
-Use:
-
-- Navy text
-- Cream background
-- Thin gold detail
-- Official logo/seal when the correct asset is available
-
-The header should become slightly more compact when scrolling.
-
-Do not use a giant sticky navbar.
-
----
-
-# 13. Hero
-
-The hero should be the strongest visual section.
-
-Use a real SC&SS/JNU photograph.
-
-Preferred direction:
-
-```text
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│ SCHOOL OF COMPUTER & SYSTEMS SCIENCES                │
-│                                                     │
-│ Alumni Meet 2026                    ┌────────────┐  │
-│                                     │            │  │
-│ Returning to the place where        │ SC&SS /    │  │
-│ many of our journeys began.         │ JNU PHOTO  │  │
-│                                     │            │  │
-│ 29 AUGUST 2026                      └────────────┘  │
-│                                                     │
-│ [ REGISTER ]                                        │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
-
-The exact copy remains content-dependent.
-
-The hero should not use generic slogans such as:
-
-```text
-RECONNECT.
-REIMAGINE.
-REDEFINE.
-```
-
-The language should sound like a university alumni invitation.
-
----
-
-# 14. Hero Visual Treatment
-
-The brochure cover provides the strongest reference.
-
-Possible treatment:
-
-```text
-Navy field
-      +
-Large campus photograph
-      +
-Cream/white typography
-      +
-Gold date/accent
-      +
-Subtle concentric motif
-```
-
-A full-bleed photograph is acceptable.
-
-However, the website should not simply recreate the PDF cover.
-
-The web hero can use a more responsive composition.
-
----
-
-# 15. About the Meet
-
-This section should have strong editorial typography.
-
-Example:
-
-```text
-01  ABOUT THE MEET
-
-A return to SC&SS.
-
-Years after leaving the School,
-the connection continues.
-
-[short paragraph]
-```
-
-Use a two-column layout where useful.
-
-Do not put this content inside a generic card.
-
----
-
-# 16. SC&SS / JNU Story
-
-Use a layout inspired by the brochure's institution page.
-
-Recommended:
-
-```text
-┌──────────────────────┬────────────────────────────┐
-│                      │ INSTITUTION                │
-│ SC&SS/JNU photograph │                            │
-│                      │ A short verified history   │
-│                      │ of JNU and SC&SS.          │
-│                      │                            │
-└──────────────────────┴────────────────────────────┘
-```
-
-Follow with a navy statistic band only when actual verified statistics exist.
-
-Do not invent statistics.
-
----
-
-# 17. Alumni Generations
-
-The alumni meet is fundamentally about continuity.
-
-Use graduation years as a visual device.
-
-Example:
-
-```text
-1980       1990       2000       2010       2020       2026
-  │          │          │          │          │          │
-──●──────────●──────────●──────────●──────────●──────────●
-```
-
-The timeline should be understated.
-
-It should feel like an institutional archive rather than a software timeline component.
-
----
-
-# 18. Alumni Profiles
-
-If public alumni recognition is enabled, use restrained editorial cards.
-
-Example:
-
-```text
-┌────────────────────────────┐
-│                            │
-│       PHOTO                │
-│                            │
-│  FULL NAME                 │
-│  MCA · 2012                │
-│  Current Organization      │
-│  Current Position          │
-│                            │
-└────────────────────────────┘
-```
-
-Only information explicitly approved for public recognition may appear.
-
-Private email, phone, payment, and other internal fields must never appear.
-
----
-
-# 19. Meet Information
-
-Use a structured editorial block rather than four large marketing cards.
-
-Example:
-
-```text
-MEET DETAILS
-
-29 AUGUST 2026
-────────────────────
-
-VENUE
-[Confirmed venue]
-
-TIME
-[Confirmed time]
-
-REGISTRATION
-[Registration information]
-```
-
-Use navy headings and gold rules.
-
----
-
-# 20. Contribution
-
-Contribution currently happens through Google Forms.
-
-Therefore the website does not contain a payment form in the MVP.
-
-Use a strong but simple CTA:
-
-```text
-SUPPORT THE MEET
-
-Help us bring the SC&SS community together.
-
-Your contribution supports the Alumni Meet
-and its arrangements.
-
-[ CONTRIBUTE VIA GOOGLE FORM ]
-```
-
-The CTA should open the configured Google Form.
-
-Do not place these fields on the website:
-
-```text
-UTR
-Payment screenshot
-UPI transaction form
-Payment verification form
-```
-
-Those remain in Google Forms / Google Drive.
-
----
-
-# 21. Contribution CTA Design
-
-This can be a navy section with cream text and gold accents.
-
-Example:
-
-```text
-┌─────────────────────────────────────────────────────┐
-│                                                     │
-│ SUPPORT THE MEET                                    │
-│                                                     │
-│ Help us bring the SC&SS community together.         │
-│                                                     │
-│                         [ CONTRIBUTE VIA FORM ]     │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
-
-This provides a strong visual break without introducing another color.
-
----
-
-# 22. Footer
-
-The footer should resemble an institutional closing page.
-
-Use navy background.
-
-Example:
-
-```text
-SC&SS
-School of Computer & Systems Sciences
-Jawaharlal Nehru University, New Delhi
-
-Alumni Meet 2026
-
-About     Alumni     Meet     Contact
-
-──────────────────────────────────────
-
-School of Computer & Systems Sciences
-Jawaharlal Nehru University
-```
-
-Gold can be used for small rules and accents.
-
----
-
-# 23. Cards
-
-Cards should be used more deliberately than in the previous design.
-
-The brochure uses white cards against cream.
-
-Carry that pattern into the web interface.
-
-Card:
-
-```text
-background: white
-border: subtle navy
-radius: modest
-padding: generous
-shadow: none or extremely subtle
-```
-
-Do not turn every section into cards.
-
----
-
-# 24. Border Radius
-
-Use restrained corner radii.
-
-Recommended direction:
-
-```text
-Small radius
-```
-
-Avoid:
-
-```text
-Large pill shapes
-Fully rounded cards
-Bubble UI
-```
-
-The brochure is structured and editorial, not playful.
-
----
-
-# 25. Buttons
-
-Primary button:
-
-```text
-[ REGISTER FOR THE MEET ]
-```
-
-Style:
-
-- Navy fill
-- Cream/white text
-- Small/modest radius
-- Clear typography
-- Gold hover/detail where appropriate
-
-Secondary button:
-
-```text
-[ LEARN MORE ]
-```
-
-Can use a navy border and transparent/cream background.
-
-Avoid excessive pill buttons.
-
----
-
-# 26. Data and Statistics
-
-When actual alumni data becomes available, statistics can be presented visually.
-
-Examples:
-
-```text
-2012
-MCA
-
-47
-Alumni attending
-
-₹X
-Verified contributions
-```
-
-Numbers can use the serif display font.
-
-Gold should be used for emphasis.
-
-Do not show statistics until there is real data.
-
----
-
-# 27. Admin Dashboard
-
-The admin dashboard should use the same palette but be more functional.
-
-Suggested:
-
-```text
-Navy sidebar
-Cream workspace
-White content surfaces
-Gold status accents
+Use sans-serif typography for:
+
+-   Body copy
+-   Navigation
+-   Metadata
+-   Labels
+-   Buttons
+-   Forms
+-   Captions
+-   Utility information
+
+------------------------------------------------------------------------
+
+# 5. Type Hierarchy
+
+## Editorial Label
+
+``` text
+11–12px
+uppercase
+letter-spacing: 0.18em–0.24em
+font-weight: 600
+sans-serif
+muted gold or navy
 ```
 
 Example:
 
-```text
-┌──────────────┬──────────────────────────────────────┐
-│ SC&SS        │ Dashboard                            │
-│              │                                      │
-│ Dashboard    │ Alumni        Attendance              │
-│ Alumni       │  —             —                     │
-│ Contributions│                                      │
-│ Volunteers   │ Contributions   Pending              │
-│ Activities   │  —              —                    │
-│ Invitations  │                                      │
-│              │ Recent records                       │
-└──────────────┴──────────────────────────────────────┘
+``` text
+A L U M N I   M E E T
 ```
 
-The dashboard can be denser than the public website.
+## Display XL
 
----
+``` text
+56–72px desktop
+38–46px mobile
+serif
+font-weight: 600
+line-height: 0.95–1.05
+```
 
-# 28. Status Colors
+## Display / Section Heading
 
-Status should not rely on color alone.
+``` text
+40–52px desktop
+30–36px mobile
+serif
+font-weight: 600
+line-height: 1.05–1.15
+```
+
+## Subheading
+
+``` text
+20–28px
+serif or sans-serif depending on context
+```
+
+## Body
+
+``` text
+15–18px
+sans-serif
+line-height: 1.55–1.7
+```
+
+## Metadata
+
+``` text
+11–13px
+uppercase where appropriate
+letter-spacing: 0.08em–0.16em
+sans-serif
+```
+
+Typography should create the hierarchy. Do not compensate for weak
+hierarchy with excessive colour, borders, shadows, or decorative UI.
+
+------------------------------------------------------------------------
+
+# 6. Editorial Section Header
+
+Use a consistent section-header language inspired directly by the
+brochure.
 
 Example:
 
-```text
-VERIFIED
-PENDING
-REJECTED
+``` text
+01   T H E   L E G A C Y
+────────────────────────────
+
+A school.
+A community.
+Generations of people.
 ```
 
-Use:
+Structure:
 
-- Text
-- Icons
-- Borders
-- Subtle color differences
+1.  Small uppercase category
+2.  Optional section number
+3.  Thin rule
+4.  Large serif heading
+5.  Short supporting introduction
 
-Do not introduce a large unrelated color palette.
+Section numbers should be subtle and should never dominate the content.
 
----
+------------------------------------------------------------------------
 
-# 29. Volunteer Interface
+# 7. Layout
 
-Volunteer management belongs to the organizer side.
-
-It should not be prominent on the alumni website.
-
-Organizer interface:
-
-```text
-VOLUNTEERS
-
-Name
-Contact
-Assigned Activity
-Status
-```
-
-Activities:
-
-```text
-Registration
-Catering
-Venue
-Photography
-Technical
-Coordination
-```
-
-The visual system remains consistent with the admin dashboard.
-
----
-
-# 30. Future Invitation Interface
-
-When invitation functionality is introduced:
-
-```text
-INVITATIONS
-
-Audience
-Message
-Channel
-Schedule
-Preview
-Send
-```
-
-Keep it functional and editorial.
-
-Do not introduce a separate visual identity for invitations.
-
----
-
-# 31. Responsive Design
+Use a disciplined editorial grid.
 
 ## Desktop
 
-Use:
-
-- Wide editorial layouts
-- Large photography
-- Two-column compositions
-- Strong section ribbons
-- Generous whitespace
+``` text
+Maximum content width: 1180–1240px
+12-column grid
+Large horizontal margins
+```
 
 ## Tablet
 
-Collapse secondary columns while preserving hierarchy.
+``` text
+8-column grid
+Reduced gutters
+```
 
 ## Mobile
 
-Use:
-
-```text
-Header
-Hero
-Image
-Meet information
-Story
-Alumni
-Contribution
-Footer
+``` text
+Single-column layout
+16–20px horizontal padding
 ```
 
-The mobile version should preserve the visual language rather than simply stacking desktop cards.
+### Layout principles
 
----
+-   Maintain strong left alignment.
+-   Use consistent content edges.
+-   Allow large areas of negative space.
+-   Use asymmetric image compositions only when they feel editorial and
+    intentional.
+-   Do not create a new layout pattern for every section.
+-   Reuse the same spacing and alignment language throughout the site.
 
-# 32. Animation
+------------------------------------------------------------------------
 
-Animation should be minimal.
+# 8. Spacing
 
-Good:
+Use an editorial spacing rhythm.
 
-- Section fade/reveal
-- Image reveal
-- Navigation transition
-- Subtle hover movement
-- Smooth scrolling
+``` text
+4px
+8px
+12px
+16px
+24px
+32px
+48px
+64px
+80px
+96px
+120px
+```
+
+### Section spacing
+
+Desktop:
+
+``` text
+80–120px
+```
+
+Mobile:
+
+``` text
+56–80px
+```
+
+Large sections should breathe.
+
+Whitespace is a deliberate part of the design and should not be filled
+simply because space is available.
+
+------------------------------------------------------------------------
+
+# 9. Navigation
+
+The navigation should be restrained and institutional.
+
+### Desktop
+
+``` text
+SC&SS · JNU
+
+About     Alumni     Memories     Event
+
+                                      Register
+```
+
+Use:
+
+-   Ivory or white base
+-   Navy text
+-   Small gold detail or rule
+-   Minimal hover treatment
+
+The navigation must not become visually louder than the page content.
+
+### Mobile
+
+``` text
+SC&SS · JNU                         MENU
+```
+
+Keep the mobile navigation simple and uncluttered.
+
+------------------------------------------------------------------------
+
+# 10. Hero
+
+The hero should take inspiration from the brochure cover.
+
+The brochure combines a strong navy field, institutional identity, serif
+typography, muted gold detail, and a prominent SC&SS/JNU photograph.
+fileciteturn0file0L1-L10
+
+Translate that language into a digital hero.
+
+### Recommended composition
+
+``` text
+SC&SS · JNU
+
+ALUMNI MEET
+2026
+
+Where memories meet again.
+
+DATE · VENUE · CITY
+
+[ PRIMARY ACTION ]
+```
+
+Use a strong campus or archival photograph.
+
+The photograph may be:
+
+-   Full-width
+-   Split with a navy text block
+-   Placed beneath a navy editorial header
+
+The hero should feel like the opening page of a premium institutional
+publication.
+
+------------------------------------------------------------------------
+
+# 11. Photography
+
+Photography is one of the primary visual elements.
+
+Prioritize:
+
+-   SC&SS building photography
+-   JNU campus photography
+-   Alumni photographs
+-   Historical photographs
+-   Alumni meet photographs
+-   Faculty or institutional photographs
+-   Candid event photographs
+
+The brochure's campus page demonstrates a strong editorial photo-grid
+approach using multiple campus images. fileciteturn0file0L692-L696
+
+### Image treatment
+
+-   Natural colours
+-   Minimal processing
+-   Consistent cropping
+-   Strong architectural compositions
+-   Slightly warm presentation where appropriate
+-   No artificial overlays unless needed for readability
+
+Do not use generic stock photographs of laptops, technology, handshakes,
+or corporate offices.
+
+------------------------------------------------------------------------
+
+# 12. Image Grids
+
+Use editorial photo compositions rather than generic card grids.
+
+A typical composition may use:
+
+``` text
+┌──────────────────────┬───────────┐
+│                      │           │
+│      LARGE IMAGE     │  IMAGE    │
+│                      │           │
+├────────────┬─────────┴───────────┤
+│            │                     │
+│   IMAGE    │       IMAGE         │
+│            │                     │
+└────────────┴─────────────────────┘
+```
+
+Image grids should have:
+
+-   Consistent gutters
+-   Controlled aspect ratios
+-   Minimal borders
+-   No excessive rounded corners
+
+------------------------------------------------------------------------
+
+# 13. Alumni Visual Language
+
+The brochure presents alumni through compact, structured profiles
+containing identity, role, organisation, and location.
+fileciteturn0file0L436-L545
+
+The website should retain that structured editorial quality.
+
+### Alumni profile
+
+``` text
+[ PHOTO / INITIALS ]
+
+NAME
+
+ROLE
+ORGANISATION
+
+LOCATION
+```
+
+Use a clean grid.
+
+Cards should be:
+
+-   Flat or very lightly elevated
+-   White/paper surface
+-   Thin border or subtle rule
+-   Small radius, approximately 4--10px
+-   Generous but controlled padding
+
+Avoid large rounded profile cards or glossy social-media styling.
+
+------------------------------------------------------------------------
+
+# 14. Institutional Information
+
+Institutional sections should feel like pages from an academic
+publication.
+
+Use:
+
+``` text
+SMALL EDITORIAL LABEL
+
+Large serif statement.
+
+Short explanatory paragraph.
+
+────────────────────────
+
+Supporting information
+```
+
+The placement brochure uses this pattern effectively on the institution
+page, combining a strong serif statement, explanatory text, photography,
+and compact statistics. fileciteturn0file0L72-L108
+
+------------------------------------------------------------------------
+
+# 15. Timeline
+
+Historical information should use typography and rules rather than heavy
+UI.
+
+Example:
+
+``` text
+1969
+──────────────
+JNU established
+
+1970s
+──────────────
+SC&SS begins its journey
+
+2026
+──────────────
+Alumni Meet
+```
+
+Use:
+
+-   Large serif year
+-   Thin gold rule
+-   Short description
+-   Generous vertical spacing
+
+Avoid glowing dots, animated progress bars, 3D timelines, or excessive
+connector graphics.
+
+------------------------------------------------------------------------
+
+# 16. Cards
+
+Cards are a supporting component, not the primary visual language.
+
+Use cards for:
+
+-   Alumni profiles
+-   Event information where grouping is useful
+-   Registration fields
+-   Compact structured information
+
+Do not turn ordinary text sections into cards.
+
+### Card style
+
+``` text
+background: #FFFFFF
+border: 1px solid rgba(16, 38, 83, 0.10)
+border-radius: 6–10px
+shadow: none or extremely subtle
+```
 
 Avoid:
 
-- Floating blobs
-- Glowing elements
-- Constant parallax
-- 3D objects
-- Cursor effects
-- Large text animations
+-   Large 24px+ rounded corners
+-   Glass cards
+-   Gradient cards
+-   Floating card stacks
+-   Cards inside cards
+-   Decorative card headers
 
-The website should look good with animation disabled.
+------------------------------------------------------------------------
 
----
+# 17. Buttons
 
-# 33. Iconography
+Buttons should feel institutional rather than app-like.
 
-Use a consistent outline icon set such as:
+## Primary
 
-```text
-Lucide
+``` text
+Navy background
+White text
+Small radius: 4–6px
+Medium horizontal padding
 ```
 
-or another restrained outline set.
+Optional gold detail can be used through a thin underline or small
+arrow.
 
-Use icons only when they communicate meaning.
+## Secondary
 
-Do not use emoji as interface decoration.
-
----
-
-# 34. Accessibility
-
-Requirements:
-
-- Semantic HTML
-- Correct heading hierarchy
-- Keyboard navigation
-- Visible focus states
-- Adequate contrast
-- Form labels
-- Alt text
-- Reduced-motion support
-- Status conveyed through text as well as color
-
-The cream/navy/gold palette must be tested for accessible contrast.
-
----
-
-# 35. Content Style
-
-The writing should sound like an institution speaking to its alumni.
-
-Prefer:
-
-```text
-The School welcomes its alumni back to campus.
+``` text
+Transparent or ivory background
+Navy text
+Thin navy/gold border
 ```
 
-over:
+Avoid oversized pill buttons.
 
-```text
-Get ready for an unforgettable experience.
+### Hover
+
+Use subtle transitions:
+
+``` text
+150–250ms
+small colour shift
+small translate or opacity change
 ```
 
-Prefer:
+No dramatic scaling or spring animations.
 
-```text
-Join fellow SC&SS alumni at the Alumni Meet 2026.
+------------------------------------------------------------------------
+
+# 18. Forms
+
+Forms should visually belong to the same editorial system.
+
+Use:
+
+-   Ivory or white surfaces
+-   Navy text
+-   Thin neutral borders
+-   Small radius
+-   Clear labels
+-   Gold or navy focus treatment
+
+Example:
+
+``` text
+FULL NAME
+────────────────────────
+
+EMAIL ADDRESS
+────────────────────────
+
+BATCH / PROGRAMME
+────────────────────────
 ```
 
-over:
+Avoid highly rounded SaaS-style form controls.
 
-```text
-Let's make memories together.
+------------------------------------------------------------------------
+
+# 19. Rules and Dividers
+
+Thin rules are an important part of the visual identity.
+
+Use:
+
+``` text
+1px solid #C7A84B
 ```
 
-The tone should be warm without becoming promotional.
+or a subdued navy/grey rule when gold would be too strong.
 
----
+Rules can separate:
 
-# 36. Design Language Summary
+-   Editorial sections
+-   Metadata
+-   Timeline entries
+-   Footer groups
+-   Image captions
 
-The core visual vocabulary is:
+They should remain thin and understated.
 
-```text
-NAVY
-████████████
+------------------------------------------------------------------------
 
-CREAM
-░░░░░░░░░░░░
+# 20. Surfaces and Depth
 
-GOLD
-────────────
+The design should be mostly flat.
 
-SERIF
-Alumni Meet 2026
+Use:
 
-SANS
-SCHOOL OF COMPUTER & SYSTEMS SCIENCES
+-   Ivory page background
+-   White/paper content surfaces
+-   Navy blocks
+-   Thin borders
+-   Photography
 
-PHOTOGRAPHY
-Real SC&SS / JNU
+Avoid heavy shadows.
 
-MOTIF
-Concentric circles / subtle geometry
+If elevation is required:
 
-STRUCTURE
-Editorial grids + section ribbons + whitespace
+``` text
+box-shadow:
+0 4px 16px rgba(16, 38, 83, 0.06)
 ```
 
----
+No glassmorphism.
 
-# 37. What Makes This Different From a Generic AI Website
+No backdrop blur.
 
-The following characteristics should be visible throughout the site:
+No floating translucent panels.
 
-1. **The SC&SS/JNU palette is the source of identity.**
-2. **The placement brochure is the visual reference.**
-3. **Real campus imagery carries emotional weight.**
-4. **Typography does most of the visual work.**
-5. **Gold is used as a restrained editorial accent.**
-6. **The layout uses rules, ribbons, grids, and whitespace.**
-7. **The interface does not depend on gradients or glassmorphism.**
-8. **Content and institutional history drive the design.**
-9. **The alumni community is represented through years, people, and stories.**
-10. **The design should still look believable when all decorative effects are removed.**
+------------------------------------------------------------------------
 
----
+# 21. Border Radius
 
-# 38. Implementation Tokens
+Keep geometry restrained.
 
-The CSS design tokens should start from:
+Preferred:
+
+``` text
+0px     editorial image blocks / major compositions
+4–6px   buttons / small controls
+6–10px  cards / form surfaces
+50%     circular portraits or avatars
+```
+
+Avoid making every element rounded.
+
+The brochure's visual language is primarily editorial and rectangular,
+with rounded cards used selectively.
+
+------------------------------------------------------------------------
+
+# 22. Icons
+
+Icons should be minimal.
+
+Use icons only when they improve comprehension.
+
+Preferred:
+
+-   Location
+-   Calendar
+-   Clock
+-   Email
+-   Phone
+-   External link
+-   Menu
+
+Use simple line icons.
+
+Avoid:
+
+-   Decorative icon collections
+-   Oversized icons
+-   Emoji as interface elements
+-   Filled colourful iconography
+
+------------------------------------------------------------------------
+
+# 23. Motion
+
+Motion should be subtle and editorial.
+
+Allowed:
+
+-   Fade-in
+-   Small vertical reveal
+-   Image reveal
+-   Underline movement
+-   Subtle hover transitions
+
+Typical duration:
+
+``` text
+180–450ms
+```
+
+Avoid:
+
+-   Parallax-heavy sections
+-   Floating objects
+-   Bouncing elements
+-   Constant animation
+-   Large entrance effects
+-   Scroll-jacking
+-   Decorative particle systems
+
+The website should still feel complete with animations disabled.
+
+------------------------------------------------------------------------
+
+# 24. Responsive Design Contract
+
+Responsive behaviour is a **first-class implementation requirement**, not an optional visual refinement.
+
+The same **SC&SS Editorial Heritage** theme must work across phone, tablet, laptop, and large desktop screens.
+
+The implementation must satisfy the rules in this section before a page is considered complete.
+
+## 24.1 Breakpoints
+
+Use these breakpoint states:
+
+```text
+MOBILE
+< 768px
+
+TABLET
+768px–1023px
+
+DESKTOP
+>= 1024px
+```
+
+A special small-phone check must also be performed at:
+
+```text
+320px
+360px
+375px
+390px
+430px
+```
+
+Do not create separate themes for these sizes. They are validation widths within the same responsive system.
+
+## 24.2 Responsive Layout Rules
+
+### Desktop
+
+```text
+Maximum content width: 1180–1240px
+Grid: 12 columns
+Large editorial compositions allowed
+Generous horizontal whitespace
+```
+
+### Tablet
+
+```text
+Grid: 8 columns where useful
+Reduced gutters
+Reduced image compositions
+Columns may stack when content becomes constrained
+```
+
+### Mobile
+
+```text
+Grid: 1 column by default
+Horizontal padding: 16–20px
+Content width: 100% of available container
+Sections stack vertically
+No horizontal page scrolling
+```
+
+## 24.3 Non-Negotiable Rules
+
+The implementation MUST:
+
+- prevent horizontal page overflow at every supported viewport
+- keep all primary content inside the viewport
+- allow text to wrap naturally
+- allow grids and flex layouts to reflow
+- keep images within their containers
+- preserve readable body text
+- preserve the information hierarchy
+- keep interactive controls comfortably tappable
+- preserve the same visual theme
+- maintain adequate vertical spacing on mobile
+- preserve important content rather than deleting it for mobile
+- use CSS Grid/Flexbox or another fluid layout mechanism for primary layout
+- use relative, percentage, `max-width`, `minmax()`, `clamp()`, or similar responsive sizing where appropriate
+
+The implementation MUST NOT:
+
+- create horizontal scrolling as part of normal page use
+- depend on fixed desktop widths for primary content
+- use fixed pixel positioning for major page layout
+- allow images to force a container wider than the viewport
+- create separate mobile-only visual identities
+- simply shrink the desktop layout until it fits
+- hide important information solely because the screen is smaller
+- introduce a second colour palette on mobile
+- introduce different typography systems on mobile
+- use oversized headings that overflow or create awkward wrapping
+- create dense multi-column layouts on narrow screens
+
+## 24.4 Component Responsive Contract
+
+Every major component must have an explicit responsive behaviour.
+
+### Navigation
+
+```text
+Desktop:
+Logo/identity + navigation links + primary action
+
+Tablet:
+Reduced navigation spacing
+
+Mobile:
+Logo/identity + menu control
+Navigation links become a vertical menu when opened
+```
+
+The mobile menu must not cause horizontal overflow.
+
+### Hero
+
+```text
+Desktop:
+Editorial split/composed layout is allowed
+
+Tablet:
+Composition may simplify
+
+Mobile:
+Text and image stack vertically
+Primary action remains visible
+Important event information remains visible
+```
+
+Do not solve mobile overflow by hiding the hero content.
+
+### Editorial Sections
+
+```text
+Desktop:
+Two-column or asymmetric editorial layouts where appropriate
+
+Tablet:
+Columns reduce or stack
+
+Mobile:
+Single-column reading flow
+```
+
+The section hierarchy, label, heading, body, and supporting content must remain intact.
+
+### Alumni Profiles
+
+```text
+Desktop:
+Multi-column grid
+
+Tablet:
+Reduced-column grid
+
+Mobile:
+Single-column layout by default
+```
+
+Profile content must remain readable without horizontal scrolling.
+
+### Image Grids
+
+```text
+Desktop:
+Editorial multi-image compositions
+
+Tablet:
+Simplified grid
+
+Mobile:
+Single-column or controlled two-column composition only where
+the images remain large enough to be useful
+```
+
+Never allow an image grid to force the page wider than the viewport.
+
+### Timeline
+
+```text
+Desktop:
+Year + rule + description can use an editorial horizontal relationship
+
+Mobile:
+Year, rule, and description stack vertically
+```
+
+### Cards
+
+Cards may reduce padding and stack vertically on mobile.
+
+Cards must not become tiny compressed boxes.
+
+### Buttons
+
+Desktop buttons may sit inline.
+
+Mobile buttons must:
+
+- remain comfortably tappable
+- wrap or stack when necessary
+- never overflow their container
+- never depend on a fixed width that exceeds the viewport
+
+### Forms
+
+Form fields must use:
+
+```text
+width: 100%
+max-width: 100%
+```
+
+where appropriate.
+
+Labels and validation messages must remain readable on narrow screens.
+
+## 24.5 Responsive Typography
+
+Typography must be responsive, but not mechanically scaled.
+
+Use fluid sizing where appropriate:
 
 ```css
-:root {
-    --color-navy: #0B1F4D;
-    --color-gold: #D4A745;
-    --color-cream: #F7F3EA;
-    --color-white: #FFFFFF;
-    --color-text: #1A1A1A;
-    --color-muted: #5A6478;
+font-size: clamp(min, preferred, max);
+```
 
-    --color-blue-2: #2E4D8B;
-    --color-blue-3: #5B7BB8;
-    --color-blue-4: #8FA8D4;
+Recommended principles:
 
-    --font-display: "Playfair Display", "Source Serif Pro", Georgia, serif;
-    --font-body: "Inter", system-ui, sans-serif;
+```text
+Display XL:
+Desktop 56–72px
+Mobile 38–46px
+
+Section heading:
+Desktop 40–52px
+Mobile 30–36px
+
+Body:
+15–18px
+```
+
+The exact rendered value may vary by component.
+
+The following take priority:
+
+1. Readability
+2. Hierarchy
+3. Line length
+4. Vertical rhythm
+5. Visual balance
+
+No heading may overflow the viewport.
+
+No important body text may become unreadably small.
+
+## 24.6 Responsive Spacing
+
+Use the existing spacing rhythm.
+
+Desktop section spacing:
+
+```text
+80–120px
+```
+
+Mobile section spacing:
+
+```text
+56–80px
+```
+
+Mobile should contain fewer simultaneous visual elements, not less breathing room.
+
+```text
+Less width
+≠
+Less whitespace
+```
+
+## 24.7 Responsive Images
+
+Images must be fluid:
+
+```css
+img {
+    max-width: 100%;
+    height: auto;
 }
 ```
 
-Spacing, radius, shadows, and type sizes should be centralized rather than scattered through individual components.
+Where images are cropped inside designed containers:
 
----
-
-# 39. Design Decision Status
-
-```text
-Visual direction:
-DECIDED
-
-Reference:
-SC&SS JNU Placement Brochure 2026–27
-
-Primary color:
-#0B1F4D Navy
-
-Accent:
-#D4A745 Gold
-
-Background:
-#F7F3EA Cream
-
-Display font:
-Playfair Display
-
-Body/UI font:
-Inter
-
-Photography:
-Real SC&SS/JNU imagery preferred
-
-Contribution:
-Google Form only in MVP
-
-Public website:
-Editorial / institutional
-
-Admin:
-Functional / information-dense
+```css
+object-fit: cover;
 ```
 
----
+Use controlled aspect ratios rather than arbitrary fixed heights.
 
-# 40. Design Change Rule
+Hero and editorial images may use different aspect ratios between desktop and mobile, but the subject and visual intent must remain recognizable.
 
-If a new visual pattern, color, typography decision, component, page, interaction pattern, or branding requirement is introduced, update this document.
+## 24.8 Overflow Protection
 
-Do not let important design decisions exist only in implementation code or chat history.
-
-Before implementing a new page:
+Every page must be checked for:
 
 ```text
-Read PROJECT_INSTRUCTIONS.md
-        ↓
-Read this design.md
-        ↓
-Check architecture.md if routing/integration changes
-        ↓
-Check database_design.md if data changes
-        ↓
-Implement
-        ↓
-Update affected documentation
+body width
+viewport width
+horizontal scroll
+long headings
+long URLs
+buttons
+navigation
+tables
+images
+cards
+forms
 ```
+
+No component may intentionally extend beyond the viewport unless horizontal scrolling is itself the documented interaction.
+
+For the public website, normal page-level horizontal scrolling is prohibited.
+
+## 24.9 Responsive Behaviour Matrix
+
+Every new major component must be documented using this model:
+
+```text
+Component:
+Desktop:
+Tablet:
+Mobile:
+Overflow risk:
+Content preserved:
+```
+
+Example:
+
+```text
+Component: Alumni Grid
+
+Desktop:
+4-column editorial grid
+
+Tablet:
+2-column grid
+
+Mobile:
+1-column grid
+
+Overflow risk:
+Card width / long organisation names
+
+Content preserved:
+Photo, name, role, organisation, location
+```
+
+If a new component has no defined mobile behaviour, it is not implementation-ready.
+
+## 24.10 Responsive Acceptance Criteria
+
+A responsive implementation is complete only when all of the following are true:
+
+```text
+[ ] 320px tested
+[ ] 360px tested
+[ ] 375px tested
+[ ] 390px tested
+[ ] 430px tested
+[ ] 768px tested
+[ ] 820px tested
+[ ] 1024px tested
+[ ] 1280px tested
+[ ] 1440px tested
+
+[ ] No horizontal page overflow
+[ ] No clipped primary content
+[ ] No text escaping containers
+[ ] No broken navigation
+[ ] No broken hero
+[ ] No broken image grids
+[ ] No broken alumni grids
+[ ] No overflowing buttons
+[ ] No overflowing form fields
+[ ] Touch controls remain usable
+[ ] Typography remains readable
+[ ] Important content remains present
+[ ] SC&SS Editorial Heritage remains visually consistent
+```
+
+A page that works on desktop but fails any of the mobile acceptance criteria is **not complete**.
+
+## 24.11 Implementation Priority
+
+When resolving responsive problems, use this order:
+
+```text
+1. Prevent overflow
+2. Preserve content
+3. Establish correct layout/reflow
+4. Fix typography
+5. Fix spacing
+6. Fix image crops
+7. Refine visual polish
+```
+
+Do not spend time on animation or decorative polish while the layout still overflows or breaks at mobile widths.
 
 ---
 
-# 41. Final Direction
+# 26. Responsive Implementation Enforcement
 
-The website should feel like:
+`design.md` is the visual source of truth, but documentation alone does not enforce CSS behaviour.
 
-> **SC&SS JNU, brought onto the web for its alumni.**
+The implementation process must therefore treat Section 24 as an **acceptance contract**.
+
+## 25.1 Agent / Developer Rule
+
+When modifying a page:
+
+```text
+READ:
+PROJECT_INSTRUCTIONS.md
+design.md
+
+IDENTIFY:
+Affected components
+
+IMPLEMENT:
+Responsive behaviour
+
+VERIFY:
+Required viewport widths
+
+FIX:
+All failed acceptance criteria
+
+ONLY THEN:
+Consider the task complete
+```
+
+Do not report a responsive task as complete merely because responsive CSS was added.
+
+It is complete only after the acceptance criteria have been checked.
+
+## 25.2 Change Rule
+
+Any change that affects:
+
+- layout
+- width
+- height
+- grid
+- flexbox
+- typography
+- navigation
+- images
+- cards
+- forms
+- buttons
+- spacing
+- positioning
+
+must be checked at both mobile and desktop widths.
+
+If the change affects a shared component, test every page that uses that component where practical.
+
+## 25.3 No Silent Exceptions
+
+If a component cannot satisfy a rule, do not silently ignore the contract.
+
+Document the exception explicitly:
+
+```text
+RESPONSIVE EXCEPTION
+
+Component:
+Reason:
+Affected viewport:
+Why the normal rule cannot be used:
+Approved alternative:
+```
+
+An exception must be intentional and documented.
+
+## 25.4 Definition of Done
+
+A responsive task is DONE only when:
+
+```text
+1. The implementation follows Section 24.
+2. Mobile and desktop layouts both render correctly.
+3. Required viewport widths have been checked.
+4. No unintended horizontal overflow exists.
+5. Important content is preserved.
+6. The visual identity remains SC&SS Editorial Heritage.
+7. No new undocumented responsive pattern has been introduced.
+```
+
+## 25.5 Source-of-Truth Priority
+
+For visual and responsive decisions:
+
+```text
+PROJECT_INSTRUCTIONS.md
+        ↓
+design.md
+        ↓
+actual implementation
+        ↓
+visual verification
+```
+
+If the implementation contradicts `design.md`, the implementation must be corrected or the design decision must be explicitly updated.
+
+Do not solve contradictions by silently inventing a third behaviour.
+
+------------------------------------------------------------------------
+
+# 27. Accessibility
+
+
+Maintain:
+
+-   Strong colour contrast
+-   Semantic typography hierarchy
+-   Visible keyboard focus
+-   Comfortable touch targets
+-   Readable body text
+-   Meaningful image alt text
+-   Reduced-motion support
+-   Clear form labels
+
+Accessibility should not be sacrificed for visual minimalism.
+
+------------------------------------------------------------------------
+
+# 27. Design Consistency Rules
+
+Every new visual element must belong to the same system.
+
+Before introducing a component, check:
+
+1.  Does it use the navy / ivory / muted-gold palette?
+2.  Does its typography follow the serif + sans-serif hierarchy?
+3.  Does its geometry match the restrained editorial language?
+4.  Does it use whitespace appropriately?
+5.  Does it look like it belongs in the SC&SS placement brochure?
+6.  Is the component necessary rather than decorative?
+
+If the answer is no, do not introduce it.
+
+------------------------------------------------------------------------
+
+# 28. What This Website Should Feel Like
+
+The final impression should be:
+
+``` text
+SC&SS
+      ×
+JNU heritage
+      ×
+editorial publication
+      ×
+alumni gathering
+```
+
+It should feel like a carefully designed **digital alumni publication
+and event experience**.
 
 Not:
 
-> an alumni template customized with the SC&SS name.
+``` text
+startup website
+conference template
+SaaS dashboard
+generic college website
+AI-generated landing page
+```
 
-The placement brochure already provides a strong institutional visual language. The website should preserve its navy, cream, gold, typography, photography, rules, grids, and editorial structure while adding the usability and responsiveness expected from a modern web application.
+------------------------------------------------------------------------
+
+# 29. Single Theme Rule
+
+There is only **one theme**.
+
+Do not introduce alternate themes, theme variants, visual modes, or
+unrelated design systems.
+
+All pages and components must use:
+
+> **SC&SS Editorial Heritage**
+
+The same:
+
+-   Colours
+-   Typography
+-   Spacing
+-   Image treatment
+-   Borders
+-   Radius
+-   Buttons
+-   Navigation
+-   Section headers
+-   Editorial rules
+-   Motion language
+
+must remain consistent across the entire website.
+
+The goal is not to make every page look identical.
+
+The goal is to make every page feel like it belongs to the **same
+publication**.
+
+------------------------------------------------------------------------
+
+# 30. Final Design Principle
+
+> **Design it like the Placement Brochure became a website.**
+
+Preserve its restraint.
+
+Preserve its editorial hierarchy.
+
+Preserve its navy, ivory, and gold identity.
+
+Preserve its typography contrast.
+
+Preserve its photography-led storytelling.
+
+Preserve its generous whitespace.
+
+Then adapt those principles naturally to an interactive web experience.
+
+The website should feel unmistakably **SC&SS · JNU**, even without
+seeing the logo.

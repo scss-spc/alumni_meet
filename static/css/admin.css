@@ -1,16 +1,17 @@
 /* ==========================================================================
    SC&SS JNU Alumni Meet Platform — Admin & Organizer Dashboard Styles
-   Navy / Gold / Cream Institutional Identity
+   Warm Paper & Monochrome Editorial Identity
+   Soft Black (#1C1C1C) · Warm Paper (#F4F1EA) · Off-White (#FAF9F6)
    ========================================================================== */
 
 :root {
     --admin-sidebar-width: 260px;
     --admin-header-height: 64px;
-    --admin-bg: #F7F3EA;
-    --admin-card-bg: #FFFFFF;
-    --admin-border: #DCD6C7;
-    --admin-text-main: #1A1A1A;
-    --admin-text-muted: #5A6478;
+    --admin-bg: #F4F1EA;
+    --admin-card-bg: #FAF9F6;
+    --admin-border: #D8D4CC;
+    --admin-text-main: #111111;
+    --admin-text-muted: #77736D;
 }
 
 body.admin-body {
@@ -24,8 +25,8 @@ body.admin-body {
 /* Sidebar Layout */
 .admin-sidebar {
     width: var(--admin-sidebar-width);
-    background-color: #0B1F4D;
-    color: #F7F3EA;
+    background-color: #1C1C1C;
+    color: #F4F1EA;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -33,12 +34,14 @@ body.admin-body {
     bottom: 0;
     left: 0;
     z-index: 1000;
-    border-right: 2px solid var(--color-gold);
+    border-right: 1px solid rgba(244, 241, 234, 0.1);
+    transition: width 0.25s ease;
 }
 
 .sidebar-header {
     padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid rgba(247, 243, 234, 0.15);
+    border-bottom: 1px solid rgba(244, 241, 234, 0.1);
+    transition: padding 0.25s ease;
 }
 
 .sidebar-brand-title {
@@ -49,8 +52,8 @@ body.admin-body {
 }
 
 .sidebar-brand-sub {
-    font-size: 0.72rem;
-    color: var(--color-gold);
+    font-size: 0.7rem;
+    color: rgba(244, 241, 234, 0.6);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 600;
@@ -72,23 +75,24 @@ body.admin-body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1.5rem;
-    color: rgba(247, 243, 234, 0.85);
+    color: rgba(244, 241, 234, 0.8);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.9rem;
-    transition: background-color 0.15s, color 0.15s;
+    transition: background-color 0.15s, color 0.15s, padding 0.25s, justify-content 0.25s;
 }
 
 .sidebar-link:hover, .sidebar-link.active {
-    background-color: rgba(212, 167, 69, 0.12);
+    background-color: rgba(244, 241, 234, 0.08);
     color: #FFFFFF;
-    border-left: 3px solid var(--color-gold);
+    border-left: 3px solid var(--color-paper);
 }
 
 .sidebar-footer {
     padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(247, 243, 234, 0.15);
+    border-top: 1px solid rgba(244, 241, 234, 0.1);
     font-size: 0.85rem;
+    transition: padding 0.25s ease;
 }
 
 .user-info {
@@ -99,8 +103,8 @@ body.admin-body {
 
 .user-role-badge {
     font-size: 0.7rem;
-    background-color: var(--color-gold);
-    color: var(--color-navy);
+    background-color: var(--color-sepia);
+    color: #FFFFFF;
     padding: 0.15rem 0.45rem;
     border-radius: 2px;
     text-transform: uppercase;
@@ -114,11 +118,12 @@ body.admin-body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    transition: margin-left 0.25s ease;
 }
 
 .admin-topbar {
     height: var(--admin-header-height);
-    background-color: #FFFFFF;
+    background-color: #FAF9F6;
     border-bottom: 1px solid var(--admin-border);
     display: flex;
     align-items: center;
@@ -131,9 +136,9 @@ body.admin-body {
 
 .topbar-title {
     font-family: var(--font-display);
-    font-size: 1.35rem;
+    font-size: 1.3rem;
     font-weight: 600;
-    color: var(--color-navy);
+    color: var(--admin-text-main);
 }
 
 .topbar-actions {
@@ -158,14 +163,14 @@ body.admin-body {
 .stat-tile {
     background-color: var(--admin-card-bg);
     border: 1px solid var(--admin-border);
-    border-top: 3px solid var(--color-navy);
+    border-top: 2px solid var(--color-ink);
     border-radius: var(--radius-sm);
     padding: 1.25rem 1.5rem;
-    box-shadow: 0 1px 3px rgba(11, 31, 77, 0.03);
+    box-shadow: var(--shadow-subtle);
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -177,12 +182,12 @@ body.admin-body {
     font-family: var(--font-display);
     font-size: 2rem;
     font-weight: 700;
-    color: var(--color-navy);
+    color: var(--color-ink);
     line-height: 1;
 }
 
-.stat-number.primary { color: var(--color-navy); }
-.stat-number.gold { color: var(--color-gold-dark); }
+.stat-number.primary { color: var(--color-ink); }
+.stat-number.gold, .stat-number.sepia { color: var(--color-sepia); }
 .stat-number.success { color: var(--color-success); }
 .stat-number.warning { color: var(--color-warning); }
 
@@ -198,7 +203,7 @@ body.admin-body {
     border: 1px solid var(--admin-border);
     border-radius: var(--radius-sm);
     margin-bottom: 2rem;
-    box-shadow: 0 1px 3px rgba(11, 31, 77, 0.03);
+    box-shadow: var(--shadow-subtle);
 }
 
 .card-header {
@@ -212,7 +217,7 @@ body.admin-body {
 .card-title {
     font-size: 1.1rem;
     font-weight: 600;
-    color: var(--color-navy);
+    color: var(--color-ink);
 }
 
 .card-body {
@@ -222,6 +227,7 @@ body.admin-body {
 /* Data Tables */
 .table-responsive {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
 }
 
@@ -233,8 +239,8 @@ body.admin-body {
 }
 
 .admin-table th {
-    background-color: #FAF8F4;
-    color: var(--color-navy);
+    background-color: #EFEBE2;
+    color: var(--color-ink);
     font-weight: 700;
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -251,7 +257,7 @@ body.admin-body {
 }
 
 .admin-table tbody tr:hover {
-    background-color: #FAF8F4;
+    background-color: #F0EBE0;
 }
 
 /* Status Badges */
@@ -286,6 +292,7 @@ body.admin-body {
 
 /* Action Buttons */
 .btn-sm {
+    min-height: 36px;
     padding: 0.35rem 0.75rem;
     font-size: 0.82rem;
 }
@@ -310,7 +317,7 @@ body.admin-body {
     font-size: 0.85rem;
     font-weight: 600;
     margin-bottom: 0.4rem;
-    color: var(--color-navy);
+    color: var(--color-ink);
 }
 
 .form-text {
@@ -327,7 +334,7 @@ body.admin-body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(11, 31, 77, 0.6);
+    background-color: rgba(17, 17, 17, 0.6);
     z-index: 2000;
     justify-content: center;
     align-items: center;
@@ -339,13 +346,14 @@ body.admin-body {
 }
 
 .modal-dialog {
-    background-color: #FFFFFF;
+    background-color: #FAF9F6;
     border-radius: var(--radius-sm);
-    border-top: 4px solid var(--color-gold);
+    border-top: 3px solid var(--color-ink);
     max-width: 550px;
     width: 100%;
-    box-shadow: 0 10px 30px rgba(11, 31, 77, 0.25);
+    box-shadow: 0 10px 30px rgba(17, 17, 17, 0.2);
     overflow: hidden;
+    border: 1px solid var(--admin-border);
 }
 
 .modal-header {
@@ -359,7 +367,7 @@ body.admin-body {
 .modal-title {
     font-family: var(--font-display);
     font-size: 1.25rem;
-    color: var(--color-navy);
+    color: var(--color-ink);
     font-weight: 600;
 }
 
@@ -368,7 +376,7 @@ body.admin-body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: #888;
+    color: var(--admin-text-muted);
 }
 
 .modal-body {
@@ -381,7 +389,7 @@ body.admin-body {
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
-    background-color: #FAF8F4;
+    background-color: #F4F1EA;
 }
 
 /* Pagination */
@@ -397,28 +405,135 @@ body.admin-body {
     display: inline-block;
     padding: 0.4rem 0.8rem;
     border: 1px solid var(--admin-border);
-    background-color: #FFF;
-    color: var(--color-navy);
+    background-color: #FAF9F6;
+    color: var(--color-ink);
     border-radius: var(--radius-sm);
     font-size: 0.88rem;
     font-weight: 600;
 }
 
 .page-item.active .page-link {
-    background-color: var(--color-navy);
-    color: var(--color-gold);
-    border-color: var(--color-navy);
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    border-color: var(--color-ink);
+}
+
+.admin-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-ink);
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.15s;
+}
+
+.admin-nav-toggle:hover {
+    background-color: rgba(17, 17, 17, 0.08);
+}
+
+.sidebar-collapse-btn {
+    background: rgba(244, 241, 234, 0.08);
+    border: 1px solid rgba(244, 241, 234, 0.15);
+    color: rgba(244, 241, 234, 0.85);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.25s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.sidebar-collapse-btn:hover {
+    background: rgba(244, 241, 234, 0.18);
+    color: #FFFFFF;
+}
+
+.collapse-arrow-icon {
+    transition: transform 0.25s ease;
+}
+
+/* Collapsed Sidebar Rules for Desktop (min-width: 993px) */
+@media (min-width: 993px) {
+    body.sidebar-collapsed {
+        --admin-sidebar-width: 70px;
+    }
+
+    body.sidebar-collapsed .sidebar-header {
+        padding: 1rem 0.5rem;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    body.sidebar-collapsed .sidebar-brand-wrapper div,
+    body.sidebar-collapsed .sidebar-link span,
+    body.sidebar-collapsed .user-info,
+    body.sidebar-collapsed .user-role-badge,
+    body.sidebar-collapsed .sidebar-footer div > a {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed .collapse-arrow-icon {
+        transform: rotate(180deg);
+    }
+
+    body.sidebar-collapsed .sidebar-link {
+        justify-content: center;
+        padding: 0.85rem 0;
+    }
+
+    body.sidebar-collapsed .sidebar-footer {
+        padding: 1rem 0.5rem;
+        text-align: center;
+    }
 }
 
 @media (max-width: 992px) {
+    .admin-nav-toggle {
+        display: inline-flex;
+    }
+
+    .sidebar-collapse-btn {
+        display: none !important;
+    }
+
+    .admin-topbar {
+        padding: 0 1rem;
+    }
+
+    .admin-content {
+        padding: 1.25rem;
+    }
+
     .admin-sidebar {
         transform: translateX(-100%);
         transition: transform 0.25s ease;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
     }
+
     .admin-sidebar.open {
         transform: translateX(0);
     }
+
     .admin-main {
         margin-left: 0;
     }
 }
+
+@media (max-width: 640px) {
+    .topbar-title {
+        font-size: 1.1rem;
+    }
+}
+
+

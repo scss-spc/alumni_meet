@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 {% from "macros/icons.html" import icon_location, icon_external %}
 
-{% block title %}Alumni Directory — SC&SS JNU{% endblock %}
+{% block title %}Alumni Directory — SC&amp;SS JNU{% endblock %}
 
 {% block content %}
 <div class="container section">
     <div class="section-header">
-        <div class="section-ribbon">
-            <span class="ribbon-num">01</span>
+        <div class="section-label">
+            <span class="label-num">01</span>
             <span>Directory</span>
         </div>
 
         <h1>Alumni Directory</h1>
-        <hr class="gold-rule">
+        <hr class="editorial-rule">
         <p class="lead-text">
-            Connecting across decades. Public profiles are displayed in accordance with individual privacy & recognition preferences.
+            Connecting across decades. Public profiles are displayed in accordance with individual privacy &amp; recognition preferences.
         </p>
     </div>
 
@@ -75,7 +75,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="content-card" style="text-align: center; padding: var(--space-xl) var(--space-lg); border-top: 3px solid var(--color-gold);">
+        <div class="content-card" style="text-align: center; padding: var(--space-xl) var(--space-lg);">
             <h3>No alumni entries found</h3>
             <p>
                 {% if current_search or current_batch or current_course %}
@@ -85,7 +85,7 @@
                 {% endif %}
             </p>
             <div style="margin-top: var(--space-md);">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
                     Submit Your Details on Google Form {{ icon_external() }}
                 </a>
             </div>

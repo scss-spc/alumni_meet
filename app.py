@@ -1,6 +1,6 @@
 import os
 import click
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from config import Config
 from routes.public import public_bp
 from routes.admin import admin_bp
@@ -8,6 +8,8 @@ from routes.api import api_bp
 from services.auth_service import ensure_seed_admin
 from services.scheduler_service import start_scheduler
 from services.sync_service import perform_sync
+from services.section_service import ensure_sections_initialized
+from db.sections import get_sections_dict
 import logging
 
 logging.basicConfig(
@@ -30,10 +32,23 @@ def create_app(config_class=Config):
     # Global Template Context Processor
     @app.context_processor
     def inject_globals():
+        try:
+            sections = get_sections_dict()
+        except Exception:
+            sections = {}
+        try:
+            is_edit_mode = request.args.get("edit_mode") == "1" if request else False
+        except Exception:
+            is_edit_mode = False
+        form_link = app.config.get("ALUMNI_FORM_URL") or app.config.get("GOOGLE_FORM_URL") or "https://forms.gle/rfHgUFHzHUtkBBhL8"
         return {
-            "google_form_url": app.config.get("GOOGLE_FORM_URL"),
-            "admin_path_prefix": app.config.get("ADMIN_PATH_PREFIX", "/admin")
+            "google_form_url": form_link,
+            "alumni_form_url": form_link,
+            "admin_path_prefix": app.config.get("ADMIN_PATH_PREFIX", "/admin"),
+            "site_sections": sections,
+            "is_edit_mode": is_edit_mode
         }
+
 
     # Template Filters
     @app.template_filter("currency_inr")
@@ -128,10 +143,11 @@ def create_app(config_class=Config):
 
 
 
-    # Initialize Seed Admin and 24-Hour Sync Scheduler
+    # Initialize Seed Admin, Site Sections, and 24-Hour Sync Scheduler
     with app.app_context():
         try:
             ensure_seed_admin()
+            ensure_sections_initialized()
         except Exception as e:
             logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
 

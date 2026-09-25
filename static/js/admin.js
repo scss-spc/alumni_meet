@@ -18,6 +18,59 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    // Admin sidebar toggle & collapse handler
+    const adminNavToggle = document.getElementById("adminNavToggle");
+    const sidebarCollapseBtn = document.getElementById("sidebarCollapseBtn");
+    const adminSidebar = document.querySelector(".admin-sidebar");
+
+    // Restore saved desktop sidebar collapse state
+    const savedCollapseState = localStorage.getItem("admin_sidebar_collapsed") === "true";
+    if (savedCollapseState && window.innerWidth > 992) {
+        document.body.classList.add("sidebar-collapsed");
+        if (sidebarCollapseBtn) {
+            sidebarCollapseBtn.setAttribute("title", "Expand Sidebar");
+        }
+    }
+
+    if (sidebarCollapseBtn) {
+        sidebarCollapseBtn.addEventListener("click", () => {
+            if (window.innerWidth > 992) {
+                document.body.classList.toggle("sidebar-collapsed");
+                const isNowCollapsed = document.body.classList.contains("sidebar-collapsed");
+                localStorage.setItem("admin_sidebar_collapsed", isNowCollapsed ? "true" : "false");
+                sidebarCollapseBtn.setAttribute("title", isNowCollapsed ? "Expand Sidebar" : "Collapse Sidebar");
+            }
+        });
+    }
+
+    if (adminNavToggle) {
+        adminNavToggle.addEventListener("click", () => {
+            if (window.innerWidth > 992) {
+                // Desktop: Toggle collapsed state & persist in localStorage
+                document.body.classList.toggle("sidebar-collapsed");
+                const isNowCollapsed = document.body.classList.contains("sidebar-collapsed");
+                localStorage.setItem("admin_sidebar_collapsed", isNowCollapsed ? "true" : "false");
+                if (sidebarCollapseBtn) {
+                    sidebarCollapseBtn.setAttribute("title", isNowCollapsed ? "Expand Sidebar" : "Collapse Sidebar");
+                }
+            } else if (adminSidebar) {
+                // Mobile/Tablet: Toggle drawer open state
+                adminSidebar.classList.toggle("open");
+            }
+        });
+
+        // Close mobile drawer when clicking outside
+        document.addEventListener("click", (e) => {
+            if (window.innerWidth <= 992 && 
+                adminSidebar &&
+                adminSidebar.classList.contains("open") && 
+                !adminSidebar.contains(e.target) && 
+                !adminNavToggle.contains(e.target)) {
+                adminSidebar.classList.remove("open");
+            }
+        });
+    }
+
     // Close modal on outside click
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", (e) => {

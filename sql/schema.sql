@@ -130,3 +130,18 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
     `new_value` TEXT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `site_sections` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `page` VARCHAR(50) NOT NULL,
+    `section_key` VARCHAR(100) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `category` VARCHAR(100) NOT NULL DEFAULT 'General',
+    `content_type` VARCHAR(30) NOT NULL DEFAULT 'text',
+    `content_value` LONGTEXT NULL,
+    `default_value` LONGTEXT NULL,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by` BIGINT NULL,
+    CONSTRAINT `uk_page_section` UNIQUE (`page`, `section_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

@@ -1,0 +1,100 @@
+{% extends "admin/base.html" %}
+{% from "macros/icons.html" import icon_check, icon_sync %}
+
+{% block title %}Inline Website Sections Editor{% endblock %}
+{% block page_title %}Inline Website Sections Editor{% endblock %}
+
+{% block topbar_actions %}
+<div style="display: flex; align-items: center; gap: 0.5rem;">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="reloadPreviewIframe()" title="Reload live preview">
+        {{ icon_sync(size=14) }} Reload Preview
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Top Control Bar: Instant Page Tabs & Status -->
+<div class="admin-card" style="margin-bottom: 1rem; padding: 0.85rem 1.25rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <!-- Instant Page Navigation Tabs -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="font-weight: 700; font-size: 0.88rem; color: var(--color-ink); margin-right: 0.25rem;">Select Page:</span>
+            {% for p in pages %}
+                {% if p.id != 'all' %}
+                    <button 
+                        type="button" 
+                        class="btn btn-sm page-tab-btn {% if (selected_page == p.id or (selected_page == 'all' and p.id == 'index')) %}btn-primary{% else %}btn-secondary{% endif %}"
+                        style="font-size: 0.85rem; font-weight: 600;"
+                        onclick="switchEditorPage('{{ p.id }}', this)"
+                    >
+                        {{ p.name }}
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: #E0F2FE; color: #0369A1; padding: 0.3rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.82rem; border: 1px solid #BAE6FD;">
+                ✨ Click any text directly on the preview to edit in place (Instant switching)
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Full-Width Live Canvas Preview Container -->
+<div class="admin-card" style="padding: 0.75rem 1rem; height: calc(100vh - 210px); display: flex; flex-direction: column; background: #E2E8F0; border-radius: var(--radius-md); overflow: hidden;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.82rem; color: #334155; padding: 0 0.25rem;">
+        <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+            🖥️ Live Website Preview (Direct Inline Text Editor)
+        </span>
+        <span style="color: #475569; font-size: 0.78rem;">
+            Click any headline, lead text, badge, or card description to type changes directly
+        </span>
+    </div>
+
+    <div style="width: 100%; height: 100%; background: #FFFFFF; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); overflow: hidden; position: relative;">
+        <iframe 
+            id="previewIframe" 
+            src="{% if selected_page == 'meet' %}/meet?edit_mode=1{% elif selected_page == 'about' %}/about?edit_mode=1{% elif selected_page == 'contribute' %}/contribute?edit_mode=1{% else %}/?edit_mode=1{% endif %}&admin_prefix={{ admin_path_prefix }}" 
+            style="width: 100%; height: 100%; border: none; display: block;"
+        ></iframe>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const adminPrefix = "{{ admin_path_prefix }}";
+
+const pageRoutes = {
+    "index": "/",
+    "meet": "/meet",
+    "about": "/about",
+    "contribute": "/contribute"
+};
+
+function switchEditorPage(pageId, btn) {
+    // 1. Update active button tab styles instantly
+    document.querySelectorAll('.page-tab-btn').forEach(b => {
+        b.classList.remove('btn-primary');
+        b.classList.add('btn-secondary');
+    });
+    btn.classList.remove('btn-secondary');
+    btn.classList.add('btn-primary');
+
+    // 2. Switch iframe preview page instantly without parent page reloads
+    const iframe = document.getElementById('previewIframe');
+    if (iframe) {
+        const basePath = pageRoutes[pageId] || "/";
+        iframe.src = basePath + "?edit_mode=1&admin_prefix=" + encodeURIComponent(adminPrefix) + "&t=" + new Date().getTime();
+    }
+}
+
+function reloadPreviewIframe() {
+    const iframe = document.getElementById('previewIframe');
+    if (iframe) {
+        iframe.src = iframe.src.split('&t=')[0] + '&t=' + new Date().getTime();
+    }
+}
+</script>
+{% endblock %}
