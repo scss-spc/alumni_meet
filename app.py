@@ -143,18 +143,24 @@ def create_app(config_class=Config):
 
 
 
-    # Initialize Seed Admin, Site Sections, and 24-Hour Sync Scheduler
-    with app.app_context():
-        try:
-            ensure_seed_admin()
-            ensure_sections_initialized()
-        except Exception as e:
-            logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
+    # Initialize Seed Admin, Site Sections, and 24-Hour Sync Scheduler in background
+    def run_startup_tasks(app_instance):
+        with app_instance.app_context():
+            try:
+                ensure_seed_admin()
+                ensure_sections_initialized()
+            except Exception as e:
+                logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
 
-        try:
-            start_scheduler(app)
-        except Exception as e:
-            logger.warning(f"Could not start background sync scheduler: {e}")
+            try:
+                start_scheduler(app_instance)
+            except Exception as e:
+                logger.warning(f"Could not start background sync scheduler: {e}")
+
+    import threading
+    startup_thread = threading.Thread(target=run_startup_tasks, args=(app,))
+    startup_thread.daemon = True
+    startup_thread.start()
 
     return app
 

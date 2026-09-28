@@ -16,7 +16,10 @@ def get_connection():
         "database": Config.DB_NAME,
         "charset": "utf8mb4",
         "cursorclass": pymysql.cursors.DictCursor,
-        "autocommit": False
+        "autocommit": False,
+        "connect_timeout": 10,
+        "read_timeout": 30,
+        "write_timeout": 30
     }
 
     if Config.DB_SSL_CA:
