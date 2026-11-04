@@ -94,9 +94,9 @@
                                         <span class="badge badge-submitted" style="font-size: 0.7rem;">No RSVP</span>
                                     {% endif %}
 
-                                    {% if a.total_verified_contribution > 0 %}
+                                    {% if a.total_contribution > 0 %}
                                         <div style="font-size: 0.78rem; font-weight: 600; color: var(--color-success); margin-top: 0.2rem;">
-                                            {{ a.total_verified_contribution | currency_inr }}
+                                            {{ a.total_contribution | currency_inr }}
                                         </div>
                                     {% endif %}
                                 </td>

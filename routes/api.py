@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, session
 from services.auth_service import login_required
-from services.contribution_service import process_contribution_verification, get_public_contributions_tracker
+from services.contribution_service import get_public_contributions_tracker
 from services.alumni_service import get_public_alumni_directory
 from services.sync_service import perform_sync, get_sync_status, test_sheet_connection
 from services.scheduler_service import get_scheduler_info
@@ -33,38 +33,6 @@ def public_alumni_json():
         limit=100
     )
     return jsonify({"success": True, "count": len(data), "data": data})
-
-@api_bp.route("/admin/contributions/<int:contrib_id>/verify", methods=["POST"])
-@login_required
-def api_verify_contribution(contrib_id: int):
-    """AJAX endpoint for quick verification."""
-    data = request.get_json() or {}
-    notes = data.get("notes")
-    user_id = session.get("user_id")
-
-    result = process_contribution_verification(
-        contrib_id=contrib_id,
-        action="verify",
-        user_id=user_id,
-        notes=notes
-    )
-    return jsonify(result)
-
-@api_bp.route("/admin/contributions/<int:contrib_id>/reject", methods=["POST"])
-@login_required
-def api_reject_contribution(contrib_id: int):
-    """AJAX endpoint for rejection."""
-    data = request.get_json() or {}
-    notes = data.get("notes")
-    user_id = session.get("user_id")
-
-    result = process_contribution_verification(
-        contrib_id=contrib_id,
-        action="reject",
-        user_id=user_id,
-        notes=notes
-    )
-    return jsonify(result)
 
 @api_bp.route("/admin/sync/trigger", methods=["POST"])
 @login_required

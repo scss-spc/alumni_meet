@@ -1,8 +1,8 @@
 {% extends "admin/base.html" %}
 {% from "macros/icons.html" import icon_external %}
 
-{% block title %}Contribution Verification{% endblock %}
-{% block page_title %}Contribution & Payment Verification{% endblock %}
+{% block title %}Contributions{% endblock %}
+{% block page_title %}Contributions{% endblock %}
 
 {% block topbar_actions %}
     {% if session.get('user_role') == 'admin' %}
@@ -18,14 +18,9 @@
 <!-- Metric Bar -->
 <div class="stat-grid" style="margin-bottom: 1.5rem;">
     <div class="stat-tile">
-        <div class="stat-label">Total Verified Amount</div>
-        <div class="stat-number success">{{ data.stats.verified_amount | currency_inr }}</div>
-        <div class="stat-sub">{{ data.stats.verified_count }} verified receipts</div>
-    </div>
-    <div class="stat-tile">
-        <div class="stat-label">Pending Verification</div>
-        <div class="stat-number warning">{{ data.stats.pending_amount | currency_inr }}</div>
-        <div class="stat-sub">{{ data.stats.pending_count }} waiting for review</div>
+        <div class="stat-label">Total Contributed</div>
+        <div class="stat-number success">{{ data.stats.total_submitted_amount | currency_inr }}</div>
+        <div class="stat-sub">Across all submissions</div>
     </div>
     <div class="stat-tile">
         <div class="stat-label">Total Submissions</div>
@@ -47,16 +42,9 @@
                 style="flex: 1; min-width: 250px;"
             >
 
-            <select name="status" class="form-control">
-                <option value="">All Statuses</option>
-                <option value="submitted" {% if current_status == 'submitted' %}selected{% endif %}>Submitted</option>
-                <option value="under_review" {% if current_status == 'under_review' %}selected{% endif %}>Under Review</option>
-                <option value="verified" {% if current_status == 'verified' %}selected{% endif %}>Verified</option>
-                <option value="rejected" {% if current_status == 'rejected' %}selected{% endif %}>Rejected</option>
-            </select>
 
-            <button type="submit" class="btn btn-primary">Filter</button>
-            {% if current_search or current_status %}
+            <button type="submit" class="btn btn-primary">Search</button>
+            {% if current_search %}
                 <a href="{{ url_for('admin.contributions') }}" class="btn btn-secondary">Reset</a>
             {% endif %}
         </form>
@@ -72,7 +60,6 @@
                     <tr>
                         <th>Alumnus</th>
                         <th>Amount</th>
-                        <th>Status</th>
                         <th>Transaction UTR</th>
                         <th>Screenshot (Drive)</th>
                         <th>Recognition</th>
@@ -88,12 +75,6 @@
                                     <div style="font-size: 0.78rem; color: #888;">{{ c.email }} · {{ c.graduation_year | batch_label }}</div>
                                 </td>
                                 <td><strong>{{ c.amount | currency_inr }}</strong></td>
-                                <td>
-                                    <span class="badge badge-{{ c.payment_status }}">{{ c.payment_status }}</span>
-                                    {% if c.verifier_name %}
-                                        <div style="font-size: 0.72rem; color: #888; margin-top: 2px;">by {{ c.verifier_name }}</div>
-                                    {% endif %}
-                                </td>
                                 <td>
                                     <code>{{ c.transaction_reference or 'Not provided' }}</code>
                                 </td>
@@ -111,25 +92,6 @@
                                 </td>
                                 <td>
                                     <div class="action-group">
-                                        {% if c.payment_status != 'verified' %}
-                                            <button 
-                                                class="btn btn-primary btn-sm"
-                                                onclick="openVerifyModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
-                                            >
-                                                Verify
-                                            </button>
-                                        {% endif %}
-
-                                        {% if c.payment_status != 'rejected' %}
-                                            <button 
-                                                class="btn btn-secondary btn-sm" 
-                                                style="color: var(--color-danger);"
-                                                onclick="openRejectModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
-                                            >
-                                                Reject
-                                            </button>
-                                        {% endif %}
-
                                         {% if session.get('user_role') == 'admin' %}
                                             <button 
                                                 type="button"
@@ -152,7 +114,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="7" style="text-align: center; color: #888; padding: 2.5rem;">
+                            <td colspan="6" style="text-align: center; color: #888; padding: 2.5rem;">
                                 No contribution records found.
                             </td>
                         </tr>
@@ -172,72 +134,18 @@
         <ul class="pagination">
             {% if data.page > 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page-1, search=current_search, status=current_status) }}">Previous</a>
+                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page-1, search=current_search) }}">Previous</a>
                 </li>
             {% endif %}
             <li class="page-item active"><span class="page-link">{{ data.page }}</span></li>
             {% if data.page < data.total_pages %}
                 <li class="page-item">
-                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page+1, search=current_search, status=current_status) }}">Next</a>
+                    <a class="page-link" href="{{ url_for('admin.contributions', page=data.page+1, search=current_search) }}">Next</a>
                 </li>
             {% endif %}
         </ul>
     </div>
 {% endif %}
-
-<!-- Verify Modal -->
-<div class="modal-overlay" id="verifyModal">
-    <div class="modal-dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Verify Contribution #<span id="verifyContribId"></span></h4>
-            <button class="modal-close" onclick="closeModal('verifyModal')">&times;</button>
-        </div>
-        <form method="POST" action="">
-            <div class="modal-body">
-                <p>Are you sure you want to mark this contribution as verified?</p>
-                <div style="background-color: #F8FAFC; padding: 1rem; margin: 1rem 0; border: 1px solid var(--admin-border);">
-                    <div><strong>Alumnus:</strong> <span id="verifyAlumniName"></span></div>
-                    <div><strong>Amount:</strong> <span id="verifyAmount"></span></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="verifyNotes">Verification Notes / Statement Ref</label>
-                    <textarea name="notes" id="verifyNotes" rows="2" class="form-control" style="width: 100%;" placeholder="e.g. Verified against SBI account credit"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('verifyModal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Confirm & Verify</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Reject Modal -->
-<div class="modal-overlay" id="rejectModal">
-    <div class="modal-dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Reject Contribution #<span id="rejectContribId"></span></h4>
-            <button class="modal-close" onclick="closeModal('rejectModal')">&times;</button>
-        </div>
-        <form method="POST" action="">
-            <div class="modal-body">
-                <p>Mark this contribution as rejected? Please provide a reason.</p>
-                <div style="background-color: #F8FAFC; padding: 1rem; margin: 1rem 0; border: 1px solid var(--admin-border);">
-                    <div><strong>Alumnus:</strong> <span id="rejectAlumniName"></span></div>
-                    <div><strong>Amount:</strong> <span id="rejectAmount"></span></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="rejectNotes">Rejection Reason</label>
-                    <textarea name="notes" id="rejectNotes" required rows="2" class="form-control" style="width: 100%;" placeholder="e.g. UTR not matched in bank statement"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('rejectModal')">Cancel</button>
-                <button type="submit" class="btn btn-primary" style="background-color: var(--color-danger);">Confirm Rejection</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 <!-- Delete Contribution Modal -->
 <div class="modal-overlay" id="deleteContribModal">

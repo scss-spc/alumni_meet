@@ -35,13 +35,11 @@ def test_contribution_db_queries():
         mock_exec.return_value = []
         contrib_db.get_contributions_admin(
             meet_id=1,
-            status="verified",
             search="Amit"
         )
         assert mock_exec.called
         sql, params = mock_exec.call_args[0]
         assert "%s" in sql
-        assert "verified" in params
         assert "%Amit%" in params
 
 def test_volunteer_db_queries():

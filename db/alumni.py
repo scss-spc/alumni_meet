@@ -98,7 +98,7 @@ def get_all_alumni_admin(
             a.updated_at,
             COUNT(DISTINCT mr.id) as response_count,
             COUNT(DISTINCT c.id) as contribution_count,
-            COALESCE(SUM(CASE WHEN c.payment_status = 'verified' THEN c.amount ELSE 0 END), 0) as total_verified_contribution
+            COALESCE(SUM(c.amount), 0) as total_contribution
         FROM alumni a
         LEFT JOIN meet_responses mr ON a.id = mr.alumni_id
         LEFT JOIN contributions c ON a.id = c.alumni_id

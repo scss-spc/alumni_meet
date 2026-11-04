@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from services.auth_service import hash_password, verify_password, authenticate_user
-from services.contribution_service import process_contribution_verification
 from services.drive_service import extract_google_drive_file_id, get_drive_preview_url
 
 def test_password_hashing_and_verification():
@@ -51,26 +50,6 @@ def test_drive_service_url_parsing():
     # URL format with id=
     url2 = "https://drive.google.com/open?id=1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OIvE2up0Y"
     assert extract_google_drive_file_id(url2) == "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OIvE2up0Y"
-
-def test_process_contribution_verification():
-    """Verify contribution verification state transition and audit trail recording."""
-    mock_contrib = {
-        "id": 42,
-        "amount": 10000.00,
-        "payment_status": "submitted",
-        "alumni_id": 5
-    }
-
-    with patch("services.contribution_service.get_contribution_by_id", return_value=mock_contrib), \
-         patch("services.contribution_service.update_contribution_status", return_value=True) as mock_update, \
-         patch("services.contribution_service.log_audit_action", return_value=1) as mock_audit:
-
-        # Test verification
-        result = process_contribution_verification(42, "verify", user_id=1, notes="Bank credited")
-        assert result["success"] is True
-        assert result["new_status"] == "verified"
-        mock_update.assert_called_once_with(contrib_id=42, status="verified", verified_by=1, notes="Bank credited")
-        mock_audit.assert_called_once()
 
 def test_gallery_parse_drive_links():
     """Pasted Drive links become file IDs; folder links and junk are rejected; duplicates collapse."""

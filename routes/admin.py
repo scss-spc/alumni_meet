@@ -16,7 +16,6 @@ from services.alumni_service import (
 )
 from services.contribution_service import (
     get_contributions_dashboard,
-    process_contribution_verification,
     delete_single_contribution,
     clean_duplicate_contributions
 )
@@ -208,13 +207,11 @@ def delete_alumnus(alumni_id: int):
 @admin_bp.route("/contributions")
 @login_required
 def contributions():
-    """Contribution queue and verification management."""
-    status = request.args.get("status", "").strip() or None
+    """Contribution list with search."""
     search = request.args.get("search", "").strip() or None
     page = request.args.get("page", 1, type=int)
 
     data = get_contributions_dashboard(
-        status=status,
         search=search,
         page=page,
         per_page=25
@@ -227,43 +224,8 @@ def contributions():
     return render_template(
         "admin/contributions.html",
         data=data,
-        current_status=status or "",
         current_search=search or ""
     )
-
-@admin_bp.route("/contributions/<int:contrib_id>/verify", methods=["POST"])
-@login_required
-def verify_contribution(contrib_id: int):
-    """Mark contribution as verified."""
-    notes = request.form.get("notes", "").strip() or None
-    result = process_contribution_verification(
-        contrib_id=contrib_id,
-        action="verify",
-        user_id=session["user_id"],
-        notes=notes
-    )
-    if result["success"]:
-        flash(f"Contribution #{contrib_id} marked as Verified.", "success")
-    else:
-        flash(result.get("error", "Failed to verify contribution."), "danger")
-    return redirect(request.referrer or url_for("admin.contributions"))
-
-@admin_bp.route("/contributions/<int:contrib_id>/reject", methods=["POST"])
-@login_required
-def reject_contribution(contrib_id: int):
-    """Mark contribution as rejected."""
-    notes = request.form.get("notes", "").strip() or None
-    result = process_contribution_verification(
-        contrib_id=contrib_id,
-        action="reject",
-        user_id=session["user_id"],
-        notes=notes
-    )
-    if result["success"]:
-        flash(f"Contribution #{contrib_id} marked as Rejected.", "warning")
-    else:
-        flash(result.get("error", "Failed to reject contribution."), "danger")
-    return redirect(request.referrer or url_for("admin.contributions"))
 
 @admin_bp.route("/contributions/<int:contrib_id>/delete", methods=["POST"])
 @login_required

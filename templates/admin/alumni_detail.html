@@ -123,7 +123,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Amount</th>
-                        <th>Status</th>
                         <th>UTR Reference</th>
                         <th>Submitted At</th>
                         <th>Recognition</th>
@@ -136,9 +135,6 @@
                             <tr>
                                 <td>#{{ c.id }}</td>
                                 <td><strong>{{ c.amount | currency_inr }}</strong></td>
-                                <td>
-                                    <span class="badge badge-{{ c.payment_status }}">{{ c.payment_status }}</span>
-                                </td>
                                 <td><code>{{ c.transaction_reference or '—' }}</code></td>
                                 <td>{{ c.submitted_at | format_date("%d %b %Y") }}</td>
                                 <td><span style="font-size: 0.8rem;">{{ c.recognition_type }}</span></td>
@@ -147,7 +143,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="7" style="text-align: center; color: #888; padding: 1.5rem;">No contribution records associated with this alumnus.</td>
+                            <td colspan="6" style="text-align: center; color: #888; padding: 1.5rem;">No contribution records associated with this alumnus.</td>
                         </tr>
                     {% endif %}
                 </tbody>

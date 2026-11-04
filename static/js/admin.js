@@ -80,33 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Verification modal triggers
-    window.openVerifyModal = function(contribId, amount, name) {
-        const modal = document.getElementById("verifyModal");
-        if (modal) {
-            const form = modal.querySelector("form");
-            const prefix = window.ADMIN_PREFIX || "/admin";
-            form.action = `${prefix}/contributions/${contribId}/verify`;
-            document.getElementById("verifyContribId").textContent = contribId;
-            document.getElementById("verifyAlumniName").textContent = name;
-            document.getElementById("verifyAmount").textContent = amount;
-            openModal("verifyModal");
-        }
-    };
-
-    window.openRejectModal = function(contribId, amount, name) {
-        const modal = document.getElementById("rejectModal");
-        if (modal) {
-            const form = modal.querySelector("form");
-            const prefix = window.ADMIN_PREFIX || "/admin";
-            form.action = `${prefix}/contributions/${contribId}/reject`;
-            document.getElementById("rejectContribId").textContent = contribId;
-            document.getElementById("rejectAlumniName").textContent = name;
-            document.getElementById("rejectAmount").textContent = amount;
-            openModal("rejectModal");
-        }
-    };
-
     window.openVolunteerModal = function(volunteer = null) {
         const modal = document.getElementById("volunteerModal");
         if (modal) {

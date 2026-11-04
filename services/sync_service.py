@@ -189,7 +189,6 @@ def perform_sync(
                             "currency": "INR",
                             "transaction_reference": tx_ref,
                             "payment_screenshot_path": screenshot,
-                            "payment_status": "submitted",
                             "notes": f"Auto-synced from Google Sheet (Row {row_num})"
                         }
                         create_contribution(contrib_payload)

@@ -6,7 +6,7 @@
 
 {% block topbar_actions %}
     <a href="{{ url_for('admin.contributions') }}" class="btn btn-primary btn-sm">
-        Review Pending Payments ({{ financial_stats.pending_count }})
+        View Contributions ({{ financial_stats.total_submissions }})
     </a>
 {% endblock %}
 
@@ -28,15 +28,9 @@
     </div>
 
     <div class="stat-tile">
-        <div class="stat-label">Verified Funds Collected</div>
-        <div class="stat-number success">{{ financial_stats.verified_amount | currency_inr }}</div>
-        <div class="stat-sub">{{ financial_stats.verified_count }} verified contributions</div>
-    </div>
-
-    <div class="stat-tile">
-        <div class="stat-label">Pending Verification</div>
-        <div class="stat-number warning">{{ financial_stats.pending_count }}</div>
-        <div class="stat-sub">{{ financial_stats.pending_amount | currency_inr }} under review</div>
+        <div class="stat-label">Funds Contributed</div>
+        <div class="stat-number success">{{ financial_stats.total_submitted_amount | currency_inr }}</div>
+        <div class="stat-sub">{{ financial_stats.total_submissions }} contributions from {{ financial_stats.distinct_contributors }} alumni</div>
     </div>
 
     <div class="stat-tile">
@@ -84,9 +78,7 @@
                         <tr>
                             <th>Alumnus</th>
                             <th>Amount</th>
-                            <th>Status</th>
                             <th>UTR / Ref</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,29 +90,12 @@
                                         <div style="font-size: 0.78rem; color: #888;">{{ c.email }}</div>
                                     </td>
                                     <td><strong>{{ c.amount | currency_inr }}</strong></td>
-                                    <td>
-                                        <span class="badge badge-{{ c.payment_status }}">{{ c.payment_status }}</span>
-                                    </td>
                                     <td><code>{{ c.transaction_reference or 'N/A' }}</code></td>
-                                    <td>
-                                        {% if c.payment_status in ['submitted', 'under_review'] %}
-                                            <div class="action-group">
-                                                <button 
-                                                    class="btn btn-primary btn-sm" 
-                                                    onclick="openVerifyModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name }}')"
-                                                >
-                                                    Verify
-                                                </button>
-                                            </div>
-                                        {% else %}
-                                            <span style="font-size: 0.8rem; color: #888;">{{ c.payment_status }}</span>
-                                        {% endif %}
-                                    </td>
                                 </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="5" style="text-align: center; color: #888; padding: 2rem;">No contribution records found.</td>
+                                <td colspan="3" style="text-align: center; color: #888; padding: 2rem;">No contribution records found.</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -181,30 +156,4 @@
     </div>
 </div>
 
-<!-- Verify Modal -->
-<div class="modal-overlay" id="verifyModal">
-    <div class="modal-dialog">
-        <div class="modal-header">
-            <h4 class="modal-title">Verify Contribution #<span id="verifyContribId"></span></h4>
-            <button class="modal-close" onclick="closeModal('verifyModal')">&times;</button>
-        </div>
-        <form method="POST" action="">
-            <div class="modal-body">
-                <p>Are you sure you want to mark this contribution as verified?</p>
-                <div style="background-color: #F8FAFC; padding: 1rem; margin: 1rem 0; border: 1px solid var(--admin-border);">
-                    <div><strong>Alumnus:</strong> <span id="verifyAlumniName"></span></div>
-                    <div><strong>Amount:</strong> <span id="verifyAmount"></span></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="verifyNotes">Organizer Verification Notes (Optional)</label>
-                    <textarea name="notes" id="verifyNotes" rows="2" class="form-control" style="width: 100%;" placeholder="e.g. Bank statement matched with UTR"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('verifyModal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Confirm & Verify</button>
-            </div>
-        </form>
-    </div>
-</div>
 {% endblock %}
