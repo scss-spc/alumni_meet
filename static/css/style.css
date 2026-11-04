@@ -2007,3 +2007,31 @@ a.gallery-item:hover img {
     color: var(--color-text);
     cursor: pointer;
 }
+
+/* "Not finalized" marker for sections whose details may still change */
+.tentative-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border: 1px dashed var(--color-gold);
+    border-radius: 999px;
+    background-color: rgba(199, 168, 75, 0.12);
+    color: var(--color-sepia-dark);
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.content-card > .tentative-tag {
+    margin-bottom: 0.6rem;
+}
+
+@media (max-width: 480px) {
+    .section-label {
+        flex-wrap: wrap;
+    }
+}

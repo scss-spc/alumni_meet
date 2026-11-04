@@ -1,0 +1,4 @@
+{# Marks a section whose details are not final yet. Remove the call from a section once it is confirmed. #}
+{% macro tentative_tag(site_sections) -%}
+<span class="tentative-tag" title="These details may still change">{{ site_sections.get('event.tentative_label', 'Tentative · To be finalized') }}</span>
+{%- endmacro %}

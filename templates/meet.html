@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/icons.html" import icon_external, icon_jnu_seal %}
+{% from "macros/tags.html" import tentative_tag %}
 
 {% block title %}Event Details — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
@@ -92,6 +93,7 @@
         <div class="section-label">
             <span class="label-num">02</span>
             <span data-field-key="s2_label">{{ site_sections.get('meet.s2_label', 'Schedule') }}</span>
+            {{ tentative_tag(site_sections) }}
         </div>
 
         <h2 style="margin-bottom: var(--space-xs);" data-field-key="s2_title">{{ site_sections.get('meet.s2_title', 'Tentative Program & Activities') }}</h2>
@@ -146,6 +148,7 @@
         <div class="section-label">
             <span class="label-num">03</span>
             <span data-field-key="s3_label">{{ site_sections.get('meet.s3_label', 'Highlights') }}</span>
+            {{ tentative_tag(site_sections) }}
         </div>
 
         <h2 style="margin-bottom: var(--space-xs);" data-field-key="s3_title">{{ site_sections.get('meet.s3_title', 'What to Expect at the Meet') }}</h2>

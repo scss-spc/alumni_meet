@@ -85,7 +85,7 @@
                             <tr>
                                 <td>
                                     <strong>{{ c.full_name }}</strong>
-                                    <div style="font-size: 0.78rem; color: #888;">{{ c.email }} · Batch {{ c.graduation_year or 'N/A' }}</div>
+                                    <div style="font-size: 0.78rem; color: #888;">{{ c.email }} · {{ c.graduation_year | batch_label }}</div>
                                 </td>
                                 <td><strong>{{ c.amount | currency_inr }}</strong></td>
                                 <td>

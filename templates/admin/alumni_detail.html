@@ -35,8 +35,8 @@
                         <td>{{ detail.alumnus.full_name }}</td>
                     </tr>
                     <tr>
-                        <td style="font-weight: 600;">Graduation Year</td>
-                        <td>{{ detail.alumnus.graduation_year or 'N/A' }}</td>
+                        <td style="font-weight: 600;">Batch</td>
+                        <td>{{ detail.alumnus.graduation_year | batch_label }}</td>
                     </tr>
                     <tr>
                         <td style="font-weight: 600;">Degree / Course</td>

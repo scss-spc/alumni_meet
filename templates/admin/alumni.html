@@ -29,7 +29,7 @@
             <select name="batch" class="form-control">
                 <option value="">All Batches</option>
                 {% for b in roster.batches %}
-                    <option value="{{ b }}" {% if current_batch == b %}selected{% endif %}>Batch {{ b }}</option>
+                    <option value="{{ b }}" {% if current_batch == b %}selected{% endif %}>{{ b | batch_label }}</option>
                 {% endfor %}
             </select>
 
@@ -75,7 +75,7 @@
                                 </td>
                                 <td>
                                     <div><strong>{{ a.course or 'N/A' }}</strong></div>
-                                    <div style="font-size: 0.8rem; color: var(--color-sepia-dark); font-weight: 600;">Class of {{ a.graduation_year or 'N/A' }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--color-sepia-dark); font-weight: 600;">{{ a.graduation_year | batch_label }}</div>
                                 </td>
                                 <td>
                                     <div><a href="mailto:{{ a.email }}">{{ a.email }}</a></div>

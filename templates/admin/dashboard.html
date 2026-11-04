@@ -196,7 +196,7 @@
                                 <tr>
                                     <td>
                                         <strong>{{ r.full_name }}</strong>
-                                        <div style="font-size: 0.78rem; color: #888;">Batch {{ r.graduation_year or 'N/A' }}</div>
+                                        <div style="font-size: 0.78rem; color: #888;">{{ r.graduation_year | batch_label }}</div>
                                     </td>
                                     <td>
                                         {% if r.attending %}

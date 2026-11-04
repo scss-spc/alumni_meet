@@ -33,7 +33,7 @@
             <select name="batch" class="form-control">
                 <option value="">All Graduation Years</option>
                 {% for b in batches %}
-                    <option value="{{ b }}" {% if current_batch == b %}selected{% endif %}>Batch {{ b }}</option>
+                    <option value="{{ b }}" {% if current_batch == b %}selected{% endif %}>{{ b | batch_label }}</option>
                 {% endfor %}
             </select>
 
@@ -59,7 +59,7 @@
                     <div class="alumnus-name">{{ person.full_name }}</div>
                     <div class="alumnus-batch">
                         {% if person.course %}{{ person.course }}{% endif %}
-                        {% if person.graduation_year %}· Class of {{ person.graduation_year }}{% endif %}
+                        {% if person.graduation_year %}· {{ person.graduation_year | batch_label }}{% endif %}
                     </div>
                     {% if person.designation or person.organization %}
                         <div class="alumnus-role">

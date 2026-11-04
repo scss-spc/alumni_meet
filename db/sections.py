@@ -485,6 +485,14 @@ DEFAULT_SECTIONS = [
         "default_value": "Registration Open"
     },
     {
+        "page": "event",
+        "section_key": "tentative_label",
+        "title": "'Not Finalized' Tag Text",
+        "category": "Event Details",
+        "content_type": "text",
+        "default_value": "Tentative · To be finalized"
+    },
+    {
         "page": "index",
         "section_key": "s3_label",
         "title": "Gallery Label",

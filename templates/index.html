@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/icons.html" import icon_external, icon_jnu_seal %}
+{% from "macros/tags.html" import tentative_tag %}
 
 {% block title %}SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
@@ -112,7 +113,7 @@
                             </div>
                             <div class="supporter-card-sub">
                                 {% if c.graduation_year %}
-                                    <span>Batch of {{ c.graduation_year }}</span>
+                                    <span>{{ c.graduation_year | batch_label }}</span>
                                     {% if c.course %}<span>· {{ c.course }}</span>{% endif %}
                                 {% else %}
                                     <span>SC&amp;SS Contributor</span>
@@ -148,6 +149,7 @@
             </div>
             <div>
                 <div class="content-card">
+                    {{ tentative_tag(site_sections) }}
                     <h3 data-field-key="s1_highlights_title">{{ site_sections.get('index.s1_highlights_title', 'Event Highlights') }}</h3>
                     <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem;">
                         <li><strong style="color: var(--color-ink);">Inaugural &amp; Welcome Address</strong> by School Leadership</li>
