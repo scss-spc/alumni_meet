@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "macros/icons.html" import icon_public, icon_semi, icon_anon, icon_privacy_badge, icon_external, icon_search, icon_sparkle, icon_money, icon_jnu_seal %}
+{% from "macros/tags.html" import tentative_tag %}
 
 {% block title %}Contribution Tracker — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
@@ -143,6 +144,7 @@
             <div class="section-label">
                 <span class="label-num">02</span>
                 <span data-field-key="s2_label">{{ site_sections.get('contribute.s2_label', 'Fund Utilization') }}</span>
+                {{ tentative_tag(site_sections) }}
             </div>
             <h2 data-field-key="s2_title">{{ site_sections.get('contribute.s2_title', 'Transparent Allocation & Purpose') }}</h2>
             <hr class="editorial-rule">
