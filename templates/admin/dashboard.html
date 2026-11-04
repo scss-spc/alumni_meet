@@ -173,7 +173,7 @@
         </div>
     </div>
 
-    <!-- Recent RSVPs & Dietary Info -->
+    <!-- Recent RSVPs -->
     <div class="admin-card">
         <div class="card-header">
             <span class="card-title">Recent Meet Responses</span>
@@ -187,7 +187,7 @@
                             <th>Alumnus</th>
                             <th>Attending</th>
                             <th>Headcount</th>
-                            <th>Diet / Notes</th>
+                            <th>Notes</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,7 +208,7 @@
                                     <td>{{ r.total_attendees }}</td>
                                     <td>
                                         <div style="font-size: 0.82rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            {{ r.dietary_preferences or r.suggestions or 'Standard' }}
+                                            {{ r.suggestions or '—' }}
                                         </div>
                                     </td>
                                 </tr>

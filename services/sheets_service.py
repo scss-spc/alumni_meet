@@ -52,10 +52,6 @@ COLUMN_ALIASES = {
         "family members", "additional guests", "plus ones", "accompanying guest count",
         "how many guests are accompanying you?"
     ],
-    "dietary_preferences": [
-        "dietary preferences", "dietary preference", "food preference", "meal preference",
-        "diet", "food", "food choice", "vegetarian / non-vegetarian"
-    ],
     "suggestions": [
         "suggestions", "suggestions / notes", "feedback", "messages", "ideas",
         "comments", "notes", "any suggestions", "message for batchmates",
@@ -384,7 +380,6 @@ class GoogleSheetsConnector:
                 "attending": is_attending,
                 "guest_count": guest_count,
                 "total_attendees": total_attendees,
-                "dietary_preferences": get_val("dietary_preferences"),
                 "suggestions": get_val("suggestions"),
 
                 # Contribution / Payment

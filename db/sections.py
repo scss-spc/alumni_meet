@@ -342,7 +342,7 @@ DEFAULT_SECTIONS = [
         "title": "Section 04 Banner Description",
         "category": "Section 04 - Attendance Banner",
         "content_type": "textarea",
-        "default_value": "Please submit your RSVP, guest counts, dietary preferences, and optional contribution via our official Google Form."
+        "default_value": "Please submit your RSVP, guest count, and optional contribution via our official Google Form."
     },
     {
         "page": "meet",

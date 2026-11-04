@@ -23,7 +23,7 @@ def get_meet_response_by_alumni(meet_id: int, alumni_id: int) -> Optional[Dict[s
     """Fetch response of an alumnus for a specific meet."""
     sql = """
         SELECT id, meet_id, alumni_id, attending, guest_count, total_attendees,
-               dietary_preferences, suggestions, submitted_at, updated_at
+               suggestions, submitted_at, updated_at
         FROM meet_responses
         WHERE meet_id = %s AND alumni_id = %s
     """
@@ -33,14 +33,12 @@ def save_meet_response(data: Dict[str, Any]) -> int:
     """Insert or update a meet response."""
     sql = """
         INSERT INTO meet_responses (
-            meet_id, alumni_id, attending, guest_count, total_attendees,
-            dietary_preferences, suggestions
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+            meet_id, alumni_id, attending, guest_count, total_attendees, suggestions
+        ) VALUES (%s, %s, %s, %s, %s, %s)
         ON DUPLICATE KEY UPDATE
             attending = VALUES(attending),
             guest_count = VALUES(guest_count),
             total_attendees = VALUES(total_attendees),
-            dietary_preferences = VALUES(dietary_preferences),
             suggestions = VALUES(suggestions),
             updated_at = CURRENT_TIMESTAMP
     """
@@ -50,7 +48,6 @@ def save_meet_response(data: Dict[str, Any]) -> int:
         1 if data.get("attending", True) else 0,
         data.get("guest_count", 0),
         data.get("total_attendees", 1),
-        data.get("dietary_preferences"),
         data.get("suggestions")
     )
     return execute_query(sql, params, commit=True)
@@ -79,7 +76,7 @@ def get_meet_responses_admin(meet_id: int, limit: int = 100, offset: int = 0) ->
     sql = """
         SELECT 
             mr.id, mr.meet_id, mr.alumni_id, mr.attending, mr.guest_count,
-            mr.total_attendees, mr.dietary_preferences, mr.suggestions, mr.submitted_at,
+            mr.total_attendees, mr.suggestions, mr.submitted_at,
             a.full_name, a.graduation_year, a.course, a.email, a.phone, a.organization
         FROM meet_responses mr
         JOIN alumni a ON mr.alumni_id = a.id

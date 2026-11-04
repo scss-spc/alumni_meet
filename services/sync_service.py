@@ -162,7 +162,6 @@ def perform_sync(
                     "attending": rec.get("attending", True),
                     "guest_count": rec.get("guest_count", 0),
                     "total_attendees": rec.get("total_attendees", 1),
-                    "dietary_preferences": rec.get("dietary_preferences"),
                     "suggestions": rec.get("suggestions")
                 }
                 save_meet_response(response_payload)

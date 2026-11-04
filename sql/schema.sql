@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `meet_responses` (
     `attending` BOOLEAN NOT NULL DEFAULT TRUE,
     `guest_count` INT NOT NULL DEFAULT 0,
     `total_attendees` INT NOT NULL DEFAULT 1,
-    `dietary_preferences` TEXT NULL,
     `suggestions` TEXT NULL,
     `submitted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

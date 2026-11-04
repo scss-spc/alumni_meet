@@ -53,7 +53,8 @@ def test_detect_column_mapping():
     assert mapping["current_location"] == "Current City of Residence"
     assert mapping["attending"] == "Will you be attending the Alumni Meet?"
     assert mapping["guest_count"] == "Number of Accompanying Guests"
-    assert mapping["dietary_preferences"] == "Dietary Preference"
+    # Meal preference is no longer collected; a leftover form column must not be mapped onto another field.
+    assert "Dietary Preference" not in mapping.values()
     assert mapping["suggestions"] == "Suggestions / Messages for Batchmates"
     assert mapping["amount"] == "Contribution Amount (INR)"
     assert mapping["transaction_reference"] == "Transaction Reference / UTR ID"
@@ -118,7 +119,6 @@ def test_perform_sync_with_mock_records():
             "attending": True,
             "guest_count": 1,
             "total_attendees": 2,
-            "dietary_preferences": "Vegetarian",
             "suggestions": "Looking forward to meeting batchmates!",
             "amount": 5000.0,
             "transaction_reference": "UPI/SYNC/TEST/001",
@@ -138,7 +138,6 @@ def test_perform_sync_with_mock_records():
             "attending": False,
             "guest_count": 0,
             "total_attendees": 0,
-            "dietary_preferences": None,
             "suggestions": "Cannot attend in person but wishing all the best.",
             "amount": 10000.0,
             "transaction_reference": "UPI/SYNC/TEST/002",
