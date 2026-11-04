@@ -4,7 +4,7 @@ from services.sheets_service import (
     clean_header_text,
     detect_column_mapping,
     parse_year,
-    parse_boolean_attending,
+    parse_attendance_status,
     parse_guest_count,
     parse_amount,
     parse_recognition_preference,
@@ -70,12 +70,20 @@ def test_value_parsers():
     assert parse_year("Invalid") is None
 
     # Attending
-    assert parse_boolean_attending("Yes") is True
-    assert parse_boolean_attending("YES") is True
-    assert parse_boolean_attending("confirmed") is True
-    assert parse_boolean_attending("No") is False
-    assert parse_boolean_attending("cannot attend") is False
-    assert parse_boolean_attending(None) is True
+    assert parse_attendance_status("Yes") == "yes"
+    assert parse_attendance_status("YES") == "yes"
+    assert parse_attendance_status("confirmed") == "yes"
+    assert parse_attendance_status("No") == "no"
+    assert parse_attendance_status("cannot attend") == "no"
+    # Exact answers used on the live Google Form
+    assert parse_attendance_status("Yes, definitely.") == "yes"
+    assert parse_attendance_status("Maybe/ Tentative") == "maybe"
+    assert parse_attendance_status("Will support/connect Virtually.") == "virtual"
+    assert parse_attendance_status("Unable to attend.") == "no"
+    assert parse_attendance_status("Unable to attend") == "no"
+    # Unknown/blank answers must not inflate the confirmed headcount
+    assert parse_attendance_status(None) == "maybe"
+    assert parse_attendance_status("") == "maybe"
 
     # Guest Count
     assert parse_guest_count("0") == 0

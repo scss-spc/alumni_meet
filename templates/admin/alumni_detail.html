@@ -1,4 +1,5 @@
 {% extends "admin/base.html" %}
+{% from "macros/tags.html" import attendance_badge %}
 
 {% block title %}{{ detail.alumnus.full_name }}{% endblock %}
 {% block page_title %}{{ detail.alumnus.full_name }} — Profile & Activity{% endblock %}
@@ -83,11 +84,7 @@
                         <tr>
                             <td style="width: 40%; font-weight: 600;">Attendance Status</td>
                             <td>
-                                {% if detail.meet_response.attending %}
-                                    <span class="badge badge-verified">Attending Meet</span>
-                                {% else %}
-                                    <span class="badge badge-rejected">Not Attending</span>
-                                {% endif %}
+                                {{ attendance_badge(detail.meet_response) }}
                             </td>
                         </tr>
                         <tr>

@@ -52,6 +52,10 @@ COLUMN_ALIASES = {
         "family members", "additional guests", "plus ones", "accompanying guest count",
         "how many guests are accompanying you?"
     ],
+    "total_attendees": [
+        "total number of attendees", "number of attendees", "total attendees",
+        "total attendees including yourself", "party size"
+    ],
     "suggestions": [
         "suggestions", "suggestions / notes", "feedback", "messages", "ideas",
         "comments", "notes", "any suggestions", "message for batchmates",
@@ -125,16 +129,27 @@ def parse_year(val: Any) -> Optional[int]:
         return int(match.group(1))
     return None
 
-def parse_boolean_attending(val: Any) -> bool:
-    """Parse attendance status from form response."""
-    if val is None:
-        return True
-    val_str = str(val).strip().lower()
-    if val_str in ("yes", "y", "true", "1", "attending", "confirm", "confirmed", "definitely", "joining"):
-        return True
-    if val_str in ("no", "n", "false", "0", "not attending", "cannot attend", "declined", "can't make it"):
-        return False
-    return True
+ATTENDANCE_STATUSES = ("yes", "maybe", "virtual", "no")
+
+def parse_attendance_status(val: Any) -> str:
+    """
+    Classify the RSVP answer as 'yes', 'maybe', 'virtual', or 'no'.
+    Order matters: 'Will support/connect Virtually' and 'Maybe/ Tentative' must not fall through to 'yes',
+    and 'Unable to attend' must not match 'attend'. Unrecognised or empty answers count as 'maybe'
+    so they never inflate the confirmed headcount.
+    """
+    text = str(val or "").strip().lower()
+    if not text:
+        return "maybe"
+    if re.search(r"virtual|online|remote", text):
+        return "virtual"
+    if re.search(r"maybe|tentative|not sure|unsure|might", text):
+        return "maybe"
+    if re.search(r"\b(no|not|unable|cannot|can't|cant|won't|declined?)\b", text):
+        return "no"
+    if re.search(r"\b(yes|y|definitely|confirm(ed)?|attending|joining|true|1)\b", text):
+        return "yes"
+    return "maybe"
 
 def parse_guest_count(val: Any) -> int:
     """Parse number of guests accompanying alumnus."""
@@ -354,9 +369,14 @@ class GoogleSheetsConnector:
                 logger.warning(f"Row {idx} has invalid email format '{email}'; skipping.")
                 continue
 
-            guest_count = parse_guest_count(get_val("guest_count"))
-            is_attending = parse_boolean_attending(get_val("attending"))
-            total_attendees = (1 + guest_count) if is_attending else 0
+            attendance_status = parse_attendance_status(get_val("attending"))
+            # Prefer the explicit "Total Number of Attendees (Including yourself)" answer; fall back to guests + 1.
+            party_size = parse_guest_count(get_val("total_attendees"))
+            if party_size < 1:
+                party_size = 1 + parse_guest_count(get_val("guest_count"))
+            guest_count = party_size - 1
+            # Party size is kept for maybes too, so the dashboard can show their potential headcount separately.
+            total_attendees = party_size if attendance_status in ("yes", "maybe") else 0
 
             record = {
                 "row_number": idx,
@@ -371,7 +391,8 @@ class GoogleSheetsConnector:
                 "current_location": get_val("current_location"),
                 
                 # Meet Attendance
-                "attending": is_attending,
+                "attendance_status": attendance_status,
+                "attending": attendance_status == "yes",
                 "guest_count": guest_count,
                 "total_attendees": total_attendees,
                 "suggestions": get_val("suggestions"),

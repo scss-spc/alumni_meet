@@ -160,6 +160,7 @@ def perform_sync(
                     "meet_id": target_meet_id,
                     "alumni_id": alumni_id,
                     "attending": rec.get("attending", True),
+                    "attendance_status": rec.get("attendance_status"),
                     "guest_count": rec.get("guest_count", 0),
                     "total_attendees": rec.get("total_attendees", 1),
                     "suggestions": rec.get("suggestions")

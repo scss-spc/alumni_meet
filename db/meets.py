@@ -22,7 +22,7 @@ def get_all_meets() -> List[Dict[str, Any]]:
 def get_meet_response_by_alumni(meet_id: int, alumni_id: int) -> Optional[Dict[str, Any]]:
     """Fetch response of an alumnus for a specific meet."""
     sql = """
-        SELECT id, meet_id, alumni_id, attending, guest_count, total_attendees,
+        SELECT id, meet_id, alumni_id, attending, attendance_status, guest_count, total_attendees,
                suggestions, submitted_at, updated_at
         FROM meet_responses
         WHERE meet_id = %s AND alumni_id = %s
@@ -33,10 +33,11 @@ def save_meet_response(data: Dict[str, Any]) -> int:
     """Insert or update a meet response."""
     sql = """
         INSERT INTO meet_responses (
-            meet_id, alumni_id, attending, guest_count, total_attendees, suggestions
-        ) VALUES (%s, %s, %s, %s, %s, %s)
+            meet_id, alumni_id, attending, attendance_status, guest_count, total_attendees, suggestions
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s)
         ON DUPLICATE KEY UPDATE
             attending = VALUES(attending),
+            attendance_status = VALUES(attendance_status),
             guest_count = VALUES(guest_count),
             total_attendees = VALUES(total_attendees),
             suggestions = VALUES(suggestions),
@@ -46,36 +47,57 @@ def save_meet_response(data: Dict[str, Any]) -> int:
         data["meet_id"],
         data["alumni_id"],
         1 if data.get("attending", True) else 0,
+        data.get("attendance_status"),
         data.get("guest_count", 0),
         data.get("total_attendees", 1),
         data.get("suggestions")
     )
     return execute_query(sql, params, commit=True)
 
+def ensure_attendance_status_column():
+    """Add meet_responses.attendance_status (yes/maybe/virtual/no). Additive, so older deployed code is unaffected."""
+    execute_query(
+        "ALTER TABLE meet_responses ADD COLUMN IF NOT EXISTS attendance_status VARCHAR(20) NULL AFTER attending",
+        commit=True
+    )
+
 def get_meet_stats(meet_id: int) -> Dict[str, Any]:
     """Calculate aggregated stats for a meet."""
     sql = """
         SELECT 
-            COUNT(id) AS total_responses,
-            COALESCE(SUM(CASE WHEN attending = 1 THEN 1 ELSE 0 END), 0) AS total_attending_alumni,
-            COALESCE(SUM(CASE WHEN attending = 1 THEN total_attendees ELSE 0 END), 0) AS total_headcount,
-            COALESCE(SUM(CASE WHEN attending = 1 THEN guest_count ELSE 0 END), 0) AS total_guests
-        FROM meet_responses
-        WHERE meet_id = %s
+            COUNT(*) AS total_responses,
+            COALESCE(SUM(CASE WHEN status = 'yes' THEN 1 ELSE 0 END), 0) AS total_attending_alumni,
+            COALESCE(SUM(CASE WHEN status = 'yes' THEN total_attendees ELSE 0 END), 0) AS total_headcount,
+            COALESCE(SUM(CASE WHEN status = 'yes' THEN guest_count ELSE 0 END), 0) AS total_guests,
+            COALESCE(SUM(CASE WHEN status = 'maybe' THEN 1 ELSE 0 END), 0) AS total_maybe,
+            COALESCE(SUM(CASE WHEN status = 'maybe' THEN total_attendees ELSE 0 END), 0) AS maybe_headcount,
+            COALESCE(SUM(CASE WHEN status = 'virtual' THEN 1 ELSE 0 END), 0) AS total_virtual,
+            COALESCE(SUM(CASE WHEN status = 'no' THEN 1 ELSE 0 END), 0) AS total_not_attending
+        FROM (
+            -- Rows synced before attendance_status existed fall back to the old yes/no flag.
+            SELECT COALESCE(attendance_status, CASE WHEN attending = 1 THEN 'yes' ELSE 'no' END) AS status,
+                   total_attendees, guest_count
+            FROM meet_responses
+            WHERE meet_id = %s
+        ) r
     """
     stats = execute_query(sql, (meet_id,), fetch_one=True)
     return stats or {
         "total_responses": 0,
         "total_attending_alumni": 0,
         "total_headcount": 0,
-        "total_guests": 0
+        "total_guests": 0,
+        "total_maybe": 0,
+        "maybe_headcount": 0,
+        "total_virtual": 0,
+        "total_not_attending": 0
     }
 
 def get_meet_responses_admin(meet_id: int, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]:
     """Fetch responses with alumnus details for admin display."""
     sql = """
         SELECT 
-            mr.id, mr.meet_id, mr.alumni_id, mr.attending, mr.guest_count,
+            mr.id, mr.meet_id, mr.alumni_id, mr.attending, mr.attendance_status, mr.guest_count,
             mr.total_attendees, mr.suggestions, mr.submitted_at,
             a.full_name, a.graduation_year, a.course, a.email, a.phone, a.organization
         FROM meet_responses mr

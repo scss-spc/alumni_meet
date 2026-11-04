@@ -2,3 +2,11 @@
 {% macro tentative_tag(site_sections) -%}
 <span class="tentative-tag" title="These details may still change">{{ site_sections.get('event.tentative_label', 'Tentative · To be finalized') }}</span>
 {%- endmacro %}
+
+{# RSVP badge; rows synced before attendance_status existed fall back to the yes/no flag. #}
+{% macro attendance_badge(response) -%}
+{%- set status = response.attendance_status or ('yes' if response.attending else 'no') -%}
+{%- set labels = {'yes': ('Attending', 'badge-verified'), 'maybe': ('Maybe', 'badge-submitted'), 'virtual': ('Virtual', 'badge-submitted'), 'no': ('Not Attending', 'badge-rejected')} -%}
+{%- set label, css = labels.get(status, ('Unknown', 'badge-submitted')) -%}
+<span class="badge {{ css }}">{{ label }}</span>
+{%- endmacro %}

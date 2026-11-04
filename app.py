@@ -10,6 +10,7 @@ from services.scheduler_service import start_scheduler
 from services.sync_service import perform_sync
 from services.section_service import ensure_sections_initialized
 from services.gallery_service import ensure_gallery_initialized
+from db.meets import ensure_attendance_status_column
 from db.sections import get_sections_dict
 import logging
 
@@ -162,6 +163,7 @@ def create_app(config_class=Config):
                 ensure_seed_admin()
                 ensure_sections_initialized()
                 ensure_gallery_initialized()
+                ensure_attendance_status_column()
             except Exception as e:
                 logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
 

@@ -1,5 +1,6 @@
 {% extends "admin/base.html" %}
 {% from "macros/icons.html" import icon_sync %}
+{% from "macros/tags.html" import attendance_badge %}
 
 {% block title %}Organizer Portal Hub{% endblock %}
 {% block page_title %}Dashboard{% endblock %}
@@ -16,13 +17,19 @@
 <!-- Metric Tiles -->
 <div class="stat-grid">
     <div class="stat-tile">
-        <div class="stat-label">Confirmed Attending Alumni</div>
+        <div class="stat-label">Confirmed Attending</div>
         <div class="stat-number primary">{{ meet_stats.total_attending_alumni }}</div>
-        <div class="stat-sub">{{ meet_stats.total_responses }} total responses submitted</div>
+        <div class="stat-sub">of {{ meet_stats.total_responses }} responses · {{ meet_stats.total_virtual }} virtual · {{ meet_stats.total_not_attending }} not attending</div>
     </div>
 
     <div class="stat-tile">
-        <div class="stat-label">Total Expected Headcount</div>
+        <div class="stat-label">Maybe / Tentative</div>
+        <div class="stat-number warning">{{ meet_stats.total_maybe }}</div>
+        <div class="stat-sub">Up to {{ meet_stats.maybe_headcount }} more people if all come</div>
+    </div>
+
+    <div class="stat-tile">
+        <div class="stat-label">Confirmed Headcount</div>
         <div class="stat-number">{{ meet_stats.total_headcount }}</div>
         <div class="stat-sub">Including {{ meet_stats.total_guests }} accompanying guests</div>
     </div>
@@ -116,7 +123,7 @@
                     <thead>
                         <tr>
                             <th>Alumnus</th>
-                            <th>Attending</th>
+                            <th>RSVP</th>
                             <th>Headcount</th>
                             <th>Notes</th>
                         </tr>
@@ -130,11 +137,7 @@
                                         <div style="font-size: 0.78rem; color: #888;">{{ r.graduation_year | batch_label }}</div>
                                     </td>
                                     <td>
-                                        {% if r.attending %}
-                                            <span class="badge badge-verified">Yes</span>
-                                        {% else %}
-                                            <span class="badge badge-rejected">No</span>
-                                        {% endif %}
+                                        {{ attendance_badge(r) }}
                                     </td>
                                     <td>{{ r.total_attendees }}</td>
                                     <td>

@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `meet_responses` (
     `meet_id` BIGINT NOT NULL,
     `alumni_id` BIGINT NOT NULL,
     `attending` BOOLEAN NOT NULL DEFAULT TRUE,
+    `attendance_status` VARCHAR(20) NULL,
     `guest_count` INT NOT NULL DEFAULT 0,
     `total_attendees` INT NOT NULL DEFAULT 1,
     `suggestions` TEXT NULL,
