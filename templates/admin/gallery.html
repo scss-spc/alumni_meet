@@ -1,0 +1,109 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Gallery{% endblock %}
+{% block page_title %}Alumni Gallery ({{ photos | length }} Photos){% endblock %}
+
+{% block topbar_actions %}
+    <a href="{{ url_for('public.gallery') }}" target="_blank" class="btn btn-secondary btn-sm">View Public Gallery</a>
+{% endblock %}
+
+{% block content %}
+<!-- Add Photos -->
+<div class="admin-card">
+    <div class="card-header">
+        <span class="card-title">Add Photos from Google Drive</span>
+    </div>
+    <div class="card-body">
+        <p style="font-size: 0.85rem; color: #666; margin-top: 0;">
+            Upload photos to Google Drive, set sharing to <strong>"Anyone with the link — Viewer"</strong>, then paste each photo's link below (one per line).
+            Images are loaded directly from Google, so they do not use this server's bandwidth. Folder links are not supported; open the folder and copy each photo's link.
+        </p>
+        <form method="POST" action="{{ url_for('admin.gallery') }}">
+            <div class="form-group">
+                <label class="form-label" for="driveLinks">Google Drive photo links</label>
+                <textarea name="drive_links" id="driveLinks" rows="5" class="form-control" style="width: 100%;" required
+                    placeholder="https://drive.google.com/file/d/1AbC.../view?usp=sharing"></textarea>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <div class="form-group" style="flex: 1; min-width: 220px;">
+                    <label class="form-label" for="album">Album (optional)</label>
+                    <input type="text" name="album" id="album" class="form-control" style="width: 100%;" maxlength="100"
+                        list="albumOptions" placeholder="e.g. Alumni Meet 2026, Batch of 1998">
+                    <datalist id="albumOptions">
+                        {% for album in albums %}<option value="{{ album }}">{% endfor %}
+                    </datalist>
+                </div>
+                <div class="form-group" style="flex: 2; min-width: 260px;">
+                    <label class="form-label" for="caption">Caption (optional, applied to every photo in this batch)</label>
+                    <input type="text" name="caption" id="caption" class="form-control" style="width: 100%;" maxlength="500">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add to Gallery</button>
+        </form>
+    </div>
+</div>
+
+<!-- Photo List -->
+<div class="admin-card">
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 110px;">Photo</th>
+                        <th>Caption &amp; Album</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if photos %}
+                        {% for photo in photos %}
+                            <tr>
+                                <td>
+                                    <a href="{{ photo.full_url }}" target="_blank" rel="noopener noreferrer">
+                                        <img src="{{ photo.thumb_url }}" alt="" loading="lazy" referrerpolicy="no-referrer"
+                                            style="width: 96px; height: 96px; object-fit: cover; border-radius: 6px; background: #eee;">
+                                    </a>
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin.gallery_edit_photo', photo_id=photo.id) }}" style="display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+                                        <input type="text" name="caption" value="{{ photo.caption or '' }}" placeholder="Caption" class="form-control" style="flex: 2; min-width: 160px;" maxlength="500">
+                                        <input type="text" name="album" value="{{ photo.album or '' }}" placeholder="Album" class="form-control" style="flex: 1; min-width: 120px;" maxlength="100" list="albumOptions">
+                                        <button type="submit" class="btn btn-secondary btn-sm">Save</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    {% if photo.is_published %}
+                                        <span class="badge badge-active">Visible</span>
+                                    {% else %}
+                                        <span class="badge badge-inactive">Hidden</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <form method="POST" action="{{ url_for('admin.gallery_toggle_publish', photo_id=photo.id) }}" style="margin: 0;">
+                                            <input type="hidden" name="is_published" value="{{ '0' if photo.is_published else '1' }}">
+                                            <button type="submit" class="btn btn-secondary btn-sm">{{ 'Hide' if photo.is_published else 'Show' }}</button>
+                                        </form>
+                                        <form method="POST" action="{{ url_for('admin.gallery_delete_photo', photo_id=photo.id) }}" style="margin: 0;"
+                                            onsubmit="return confirm('Remove this photo from the gallery? The file on Google Drive is not deleted.');">
+                                            <button type="submit" class="btn btn-secondary btn-sm" style="color: #B42318;">Remove</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #666; padding: 2.5rem;">
+                                No photos yet. Paste Google Drive links above to build the gallery.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_location, icon_building, icon_sparkle, icon_privacy_badge, icon_external, icon_jnu_seal %}
+{% from "macros/icons.html" import icon_external, icon_jnu_seal %}
 
 {% block title %}SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
@@ -18,15 +18,15 @@
             <div class="hero-meta-bar">
                 <div class="meta-item">
                     <span class="meta-label">Date</span>
-                    <span class="meta-value" data-field-key="hero_date">{{ site_sections.get('index.hero_date', 'Saturday, 29 August 2026') }}</span>
+                    <span class="meta-value" data-field-key="event.date">{{ site_sections.get('event.date', 'Saturday, 5 December 2026') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
-                    <span class="meta-value" data-field-key="hero_venue">{{ site_sections.get('index.hero_venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
+                    <span class="meta-value" data-field-key="event.venue">{{ site_sections.get('event.venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Status</span>
-                    <span class="meta-value" data-field-key="hero_status" style="color: var(--color-sepia-dark);">{{ site_sections.get('index.hero_status', 'Registration Open') }}</span>
+                    <span class="meta-value" data-field-key="event.status" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.status', 'Registration Open') }}</span>
                 </div>
             </div>
 
@@ -50,11 +50,6 @@
                 <p data-field-key="hero_card_text">
                     {{ site_sections.get('index.hero_card_text', 'From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations across the world.') }}
                 </p>
-                <div class="divider"></div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
-                    <span>{{ icon_location(size=14) }} <span data-field-key="hero_card_location">{{ site_sections.get('index.hero_card_location', 'JNU Campus, New Delhi') }}</span></span>
-                    <span>{{ icon_building(size=14) }} <span data-field-key="hero_card_venue">{{ site_sections.get('index.hero_card_venue', 'SC&SS Auditorium') }}</span></span>
-                </div>
             </div>
         </div>
     </div>
@@ -168,18 +163,18 @@
     </div>
 </section>
 
-<!-- Section 02: Institutional Heritage -->
-<section class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - Institutional Heritage">
+<!-- Section 02: About SC&SS (formerly the separate /about page) -->
+<section id="about" class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - About SC&amp;SS">
     <div class="container">
         <div class="section-label">
             <span class="label-num">02</span>
-            <span>{{ site_sections.get('index.s2_label', 'The School') }}</span>
+            <span data-field-key="s2_label">{{ site_sections.get('index.s2_label', 'The School') }}</span>
         </div>
 
         <div class="section-header" style="max-width: 800px; margin-bottom: var(--space-lg);">
-            <h2>{{ site_sections.get('index.s2_title', 'A Tradition of Scientific Inquiry & Systems Leadership') }}</h2>
+            <h2 data-field-key="s2_title">{{ site_sections.get('index.s2_title', 'A Tradition of Scientific Inquiry & Systems Leadership') }}</h2>
             <hr class="editorial-rule">
-            <p class="lead-text">
+            <p class="lead-text" data-field-key="s2_lead">
                 {{ site_sections.get('index.s2_lead', 'Established as one of the premier computer and systems science schools in India, SC&SS JNU has continuously fostered rigorous academic inquiry and technological innovation.') }}
             </p>
         </div>
@@ -187,22 +182,22 @@
         <div class="grid-3">
             <div class="content-card">
                 <span class="eyebrow">Pillar 01</span>
-                <h3>{{ site_sections.get('index.s2_p1_title', 'Academic Rigor') }}</h3>
-                <p>
+                <h3 data-field-key="s2_p1_title">{{ site_sections.get('index.s2_p1_title', 'Academic Rigor') }}</h3>
+                <p data-field-key="s2_p1_text">
                     {{ site_sections.get('index.s2_p1_text', 'Rooted in mathematical foundations, theoretical computer science, databases, and distributed systems, producing thinkers who excel worldwide.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 02</span>
-                <h3>{{ site_sections.get('index.s2_p2_title', 'Vibrant Alumni') }}</h3>
-                <p>
+                <h3 data-field-key="s2_p2_title">{{ site_sections.get('index.s2_p2_title', 'Vibrant Alumni') }}</h3>
+                <p data-field-key="s2_p2_text">
                     {{ site_sections.get('index.s2_p2_text', 'Graduates leading technology organizations, research laboratories, universities, government bodies, and innovative startups globally.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 03</span>
-                <h3>{{ site_sections.get('index.s2_p3_title', 'Future Vision') }}</h3>
-                <p>
+                <h3 data-field-key="s2_p3_title">{{ site_sections.get('index.s2_p3_title', 'Future Vision') }}</h3>
+                <p data-field-key="s2_p3_text">
                     {{ site_sections.get('index.s2_p3_text', 'Advancing research in artificial intelligence, cyber-physical systems, quantum computing, and data sciences while nurturing the next generation.') }}
                 </p>
             </div>
@@ -210,149 +205,31 @@
     </div>
 </section>
 
-<!-- Section 03: Generations Timeline -->
-<section class="timeline-section" data-editable-section="s3" data-section-title="Section 03 - Timeline">
+{% if gallery_preview %}
+<!-- Section 03: Gallery Teaser (images load from Google Drive, not this server) -->
+<section class="section section-paper" data-editable-section="s3" data-section-title="Section 03 - Gallery">
     <div class="container">
         <div class="section-label">
             <span class="label-num">03</span>
-            <span>{{ site_sections.get('index.s3_label', 'Through the Years') }}</span>
+            <span data-field-key="s3_label">{{ site_sections.get('index.s3_label', 'Gallery') }}</span>
         </div>
 
-        <h3 style="font-size: 1.6rem; margin-bottom: var(--space-xs);">{{ site_sections.get('index.s3_title', 'Spanning Decades of Computing Leadership') }}</h3>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <h2 style="margin-bottom: 0;" data-field-key="s3_title">{{ site_sections.get('index.s3_title', 'Moments from the SC&SS Community') }}</h2>
+            <a href="{{ url_for('public.gallery') }}" class="btn btn-secondary btn-sm">View Full Gallery →</a>
+        </div>
         <hr class="editorial-rule">
 
-        <div class="timeline-wrapper">
-            <div class="timeline-track">
-                <div class="timeline-node">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-year">1975 – 1985</div>
-                    <div class="timeline-label">Pioneering Era</div>
-                </div>
-                <div class="timeline-node">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-year">1986 – 1995</div>
-                    <div class="timeline-label">Expansion &amp; Research</div>
-                </div>
-                <div class="timeline-node">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-year">1996 – 2005</div>
-                    <div class="timeline-label">Digital Revolution</div>
-                </div>
-                <div class="timeline-node">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-year">2006 – 2015</div>
-                    <div class="timeline-label">Global Horizons</div>
-                </div>
-                <div class="timeline-node">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-year">2016 – 2025</div>
-                    <div class="timeline-label">Modern Innovation</div>
-                </div>
-                <div class="timeline-node">
-                    <div class="timeline-dot" style="background-color: var(--color-ink); border-color: var(--color-ink);"></div>
-                    <div class="timeline-year" style="color: var(--color-ink); font-weight: 700;">2026</div>
-                    <div class="timeline-label" style="font-weight: 700; color: var(--color-sepia-dark);">Alumni Meet</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section 04: Then and Now -->
-<section class="section section-paper" data-editable-section="s4" data-section-title="Section 04 - Then &amp; Now">
-    <div class="container">
-        <div class="section-label">
-            <span class="label-num">04</span>
-            <span>{{ site_sections.get('index.s4_label', 'Then & Now') }}</span>
-        </div>
-
-        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('index.s4_title', 'Memories & Milestones Across Generations') }}</h2>
-        <hr class="editorial-rule">
-        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
-            {{ site_sections.get('index.s4_lead', 'Reflecting on the foundations built over five decades and the enduring impact of SC&SS scholars in an ever-evolving digital world.') }}
-        </p>
-
-        <div class="then-now-grid">
-            <div class="then-now-card">
-                <span class="eyebrow" style="color: var(--color-sepia);">Then · Archival Foundations</span>
-                <h3 style="margin-top: 0.25rem;">{{ site_sections.get('index.s4_then_title', 'Pioneering Systems &amp; Computing Roots') }}</h3>
-                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
-                    {{ site_sections.get('index.s4_then_text', 'From early mainframes, foundational programming laboratories, and chalkboard theoretical derivations to pioneering the MCA and M.Tech programs in India, the School set standards of academic rigor that stood the test of time.') }}
-                </p>
-                <div class="card-caption">
-                    <span class="meta-label">Era:</span> 1975–2000s · JNU Campus
-                </div>
-            </div>
-
-            <div class="then-now-card">
-                <span class="eyebrow" style="color: var(--color-ink);">Now · Contemporary Vanguard</span>
-                <h3 style="margin-top: 0.25rem;">{{ site_sections.get('index.s4_now_title', 'Global Leadership &amp; Modern Frontiers') }}</h3>
-                <p style="margin-top: 0.5rem; font-size: 0.95rem;">
-                    {{ site_sections.get('index.s4_now_text', 'Today, SC&SS alumni lead world-class tech firms, top research laboratories, prestigious universities, and innovative startups, while the School continues to advance research in AI, cybersecurity, and distributed systems.') }}
-                </p>
-                <div class="card-caption">
-                    <span class="meta-label">Present:</span> 2026 &amp; Beyond · Worldwide Community
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section 05: Meet Details Summary -->
-<section class="section section-off-white" data-editable-section="s5" data-section-title="Section 05 - Plan Your Visit">
-    <div class="container">
-        <div class="section-label">
-            <span class="label-num">05</span>
-            <span>{{ site_sections.get('index.s5_label', 'Meet Details') }}</span>
-        </div>
-
-        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('index.s5_title', 'Plan Your Visit') }}</h2>
-        <hr class="editorial-rule">
-
-        <div class="grid-3" style="margin-top: var(--space-md);">
-            <div class="content-card">
-                <span class="eyebrow">Date &amp; Time</span>
-                <h4>{{ meet.event_date | format_date("%A, %d %B %Y") }}</h4>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">09:30 AM – 05:00 PM IST<br>Full-day schedule with lunch &amp; high tea.</p>
-            </div>
-            <div class="content-card">
-                <span class="eyebrow">Venue &amp; Campus Access</span>
-                <h4>{{ meet.venue | default('SC&SS Auditorium, JNU') }}</h4>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">Jawaharlal Nehru University, New Delhi.<br>Campus entry guidelines and parking provided.</p>
-            </div>
-            <div class="content-card">
-                <span class="eyebrow">Participation</span>
-                <h4>Registration Open</h4>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">RSVP and optional contribution intake via our official Google Form.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Section 06: Support the Meet CTA -->
-<section class="section section-paper" data-editable-section="s6" data-section-title="Section 06 - Support Banner">
-    <div class="container">
-        <div class="cta-banner">
-            <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
-                <span class="label-num" style="color: var(--color-paper);">06</span>
-                <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('index.s6_label', 'Support the Meet') }}</span>
-            </div>
-            <h2>{{ site_sections.get('index.s6_title', 'Help Us Bring the SC&SS Community Together') }}</h2>
-            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
-            <p>
-                {{ site_sections.get('index.s6_text', 'Your voluntary contribution supports event arrangements, hospitality, student volunteer facilitation, and building a stronger alumni foundation for years to come.') }}
-            </p>
-            <div class="btn-group" style="justify-content: center;">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
-                    Contribute &amp; RSVP on Google Form {{ icon_external() }}
+        <div class="gallery-grid gallery-grid-preview">
+            {% for photo in gallery_preview %}
+                <a href="{{ url_for('public.gallery') }}" class="gallery-item">
+                    <img src="{{ photo.thumb_url }}" alt="{{ photo.caption or 'SC&SS alumni photo' }}" loading="lazy" referrerpolicy="no-referrer">
                 </a>
-                <a href="{{ url_for('public.contribute') }}" class="btn btn-outline-paper btn-lg">
-                    Learn More About Contributions
-                </a>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- Closing Section -->
 <section class="section section-paper" style="padding-top: var(--space-lg); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">

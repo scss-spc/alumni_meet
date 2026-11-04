@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros/icons.html" import icon_external, icon_building, icon_location, icon_sparkle, icon_jnu_seal, icon_money %}
+{% from "macros/icons.html" import icon_external, icon_jnu_seal %}
 
 {% block title %}Event Details — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
@@ -18,15 +18,15 @@
             <div class="hero-meta-bar">
                 <div class="meta-item">
                     <span class="meta-label">Date</span>
-                    <span class="meta-value" data-field-key="hero_date">{{ site_sections.get('meet.hero_date', meet.event_date | format_date("%A, %d %B %Y")) }}</span>
+                    <span class="meta-value" data-field-key="event.date">{{ site_sections.get('event.date', meet.event_date | format_date("%A, %d %B %Y")) }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Timing</span>
-                    <span class="meta-value" data-field-key="hero_timing">{{ site_sections.get('meet.hero_timing', '09:30 AM – 05:00 PM IST') }}</span>
+                    <span class="meta-value" data-field-key="event.timing">{{ site_sections.get('event.timing', '09:30 AM – 05:00 PM IST') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
-                    <span class="meta-value" data-field-key="hero_venue" style="color: var(--color-sepia-dark);">{{ site_sections.get('meet.hero_venue', 'SC&SS Auditorium, JNU') }}</span>
+                    <span class="meta-value" data-field-key="event.venue" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.venue', meet.venue | default('SC&SS Auditorium, JNU')) }}</span>
                 </div>
             </div>
 
@@ -50,11 +50,6 @@
                 <p data-field-key="hero_card_text">
                     {{ site_sections.get('meet.hero_card_text', 'Bringing together alumni across MCA, M.Tech, and Ph.D. batches along with revered faculty and current scholars for a day of celebration, memories, and future collaboration.') }}
                 </p>
-                <div class="divider"></div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--color-muted); font-weight: 500;">
-                    <span>{{ icon_location(size=14) }} <span data-field-key="hero_card_location">{{ site_sections.get('meet.hero_card_location', 'JNU Campus, New Delhi') }}</span></span>
-                    <span>{{ icon_building(size=14) }} <span data-field-key="hero_card_venue">{{ site_sections.get('meet.hero_card_venue', 'SC&SS Auditorium') }}</span></span>
-                </div>
             </div>
         </div>
     </div>
@@ -71,20 +66,12 @@
         <h2 style="margin-bottom: var(--space-xs);" data-field-key="s1_title">{{ site_sections.get('meet.s1_title', 'Event Logistics & Campus Access') }}</h2>
         <hr class="editorial-rule">
 
-        <div class="grid-3" style="margin-top: var(--space-md);">
-            <div class="content-card">
-                <span class="eyebrow">Date &amp; Schedule</span>
-                <h4>{{ site_sections.get('meet.hero_date', meet.event_date | format_date("%A, %d %B %Y")) }}</h4>
-                <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-                    {{ site_sections.get('meet.hero_timing', '09:30 AM – 05:00 PM IST') }}<br>Full-day gathering including registration tea, inaugural ceremony, lunch, and high tea.
-                </p>
-            </div>
-
+        <div class="grid-2" style="margin-top: var(--space-md);">
             <div class="content-card">
                 <span class="eyebrow">Venue &amp; Entry</span>
-                <h4>{{ site_sections.get('meet.hero_venue', meet.venue | default('SC&SS Auditorium, JNU')) }}</h4>
+                <h4>JNU Campus, New Delhi – 110067</h4>
                 <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-                    Jawaharlal Nehru University, New Delhi.<br>Campus entry pass details and dedicated parking instructions provided to registered attendees.
+                    Campus entry pass details and dedicated parking instructions provided to registered attendees.
                 </p>
             </div>
 

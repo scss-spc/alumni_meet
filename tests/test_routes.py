@@ -52,11 +52,64 @@ def test_public_meet_page(client):
         assert res.status_code == 200
         assert b"Schedule" in res.data
 
-def test_public_about_page(client):
-    """Verify about page renders."""
+def test_public_about_redirects_to_homepage_section(client):
+    """The /about page was merged into the homepage; old links must keep working."""
     res = client.get("/about")
-    assert res.status_code == 200
-    assert b"School of Computer" in res.data
+    assert res.status_code == 301
+    assert res.headers["Location"].endswith("/#about")
+
+def test_public_gallery_page(client):
+    """Gallery renders Drive-hosted thumbnails, never images served by this app."""
+    with patch("routes.public.get_public_gallery") as mock_gallery:
+        mock_gallery.return_value = {
+            "photos": [{
+                "id": 1,
+                "drive_file_id": "1AbCdEfGhIjKlMnOpQrStUvWxYz",
+                "caption": "Batch of 1998 reunion",
+                "album": "Reunions",
+                "thumb_url": "https://drive.google.com/thumbnail?id=1AbCdEfGhIjKlMnOpQrStUvWxYz&sz=w480",
+                "full_url": "https://drive.google.com/thumbnail?id=1AbCdEfGhIjKlMnOpQrStUvWxYz&sz=w1600",
+            }],
+            "albums": ["Reunions"],
+            "selected_album": None,
+            "page": 1,
+            "total": 1,
+            "has_next": False,
+            "has_prev": False,
+        }
+        res = client.get("/gallery?album=Reunions&page=2")
+        assert res.status_code == 200
+        mock_gallery.assert_called_once_with(album="Reunions", page=2)
+        assert b"drive.google.com/thumbnail?id=1AbCdEfGhIjKlMnOpQrStUvWxYz&amp;sz=w480" in res.data
+        assert b"Batch of 1998 reunion" in res.data
+
+def test_public_gallery_empty_state(client):
+    with patch("routes.public.get_public_gallery") as mock_gallery:
+        mock_gallery.return_value = {
+            "photos": [], "albums": [], "selected_album": None,
+            "page": 1, "total": 0, "has_next": False, "has_prev": False,
+        }
+        res = client.get("/gallery")
+        assert res.status_code == 200
+        assert b"Photos coming soon" in res.data
+
+def test_inline_editor_saves_to_the_page_being_edited(client):
+    """Bare keys like hero_title exist on several pages; they must resolve against the posted page."""
+    with client.session_transaction() as sess:
+        sess["user_id"] = 1
+    sections = [
+        {"id": 10, "page": "index", "section_key": "hero_title"},
+        {"id": 20, "page": "meet", "section_key": "hero_title"},
+        {"id": 30, "page": "event", "section_key": "date"},
+    ]
+    with patch("routes.admin.get_sections_for_admin", return_value=sections),          patch("routes.admin.bulk_update_sections", return_value=2) as mock_bulk:
+        res = client.post("/admin/sections/ajax-update", json={
+            "page": "index",
+            "updates": {"hero_title": "Home Title", "event.date": "Saturday, 5 December 2026"}
+        })
+        assert res.status_code == 200
+        updates = mock_bulk.call_args[0][0]
+        assert updates == {10: "Home Title", 30: "Saturday, 5 December 2026"}
 
 def test_public_contribute_page(client):
     """Verify contribute page renders."""

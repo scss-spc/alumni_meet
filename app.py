@@ -9,6 +9,7 @@ from services.auth_service import ensure_seed_admin
 from services.scheduler_service import start_scheduler
 from services.sync_service import perform_sync
 from services.section_service import ensure_sections_initialized
+from services.gallery_service import ensure_gallery_initialized
 from db.sections import get_sections_dict
 import logging
 
@@ -143,12 +144,24 @@ def create_app(config_class=Config):
 
 
 
+    @app.cli.command("prune-sections")
+    def prune_sections_command():
+        """CLI command to delete website section rows that are no longer used by any page."""
+        from db.sections import prune_retired_sections
+        logger.warning("Pruning retired website sections via Flask CLI...")
+        try:
+            removed = prune_retired_sections()
+            print(f"Removed {removed} retired website section row(s).")
+        except Exception as e:
+            print(f"Prune failed: {e}")
+
     # Initialize Seed Admin, Site Sections, and 24-Hour Sync Scheduler in background
     def run_startup_tasks(app_instance):
         with app_instance.app_context():
             try:
                 ensure_seed_admin()
                 ensure_sections_initialized()
+                ensure_gallery_initialized()
             except Exception as e:
                 logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
 

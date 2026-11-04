@@ -55,7 +55,7 @@
     <div style="width: 100%; height: 100%; background: #FFFFFF; border-radius: 6px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); overflow: hidden; position: relative;">
         <iframe 
             id="previewIframe" 
-            src="{% if selected_page == 'meet' %}/meet?edit_mode=1{% elif selected_page == 'about' %}/about?edit_mode=1{% elif selected_page == 'contribute' %}/contribute?edit_mode=1{% else %}/?edit_mode=1{% endif %}&admin_prefix={{ admin_path_prefix }}" 
+            src="{% if selected_page == 'meet' %}/meet?edit_mode=1{% elif selected_page == 'gallery' %}/gallery?edit_mode=1{% elif selected_page == 'contribute' %}/contribute?edit_mode=1{% else %}/?edit_mode=1{% endif %}&admin_prefix={{ admin_path_prefix }}" 
             style="width: 100%; height: 100%; border: none; display: block;"
         ></iframe>
     </div>
@@ -69,8 +69,8 @@ const adminPrefix = "{{ admin_path_prefix }}";
 const pageRoutes = {
     "index": "/",
     "meet": "/meet",
-    "about": "/about",
-    "contribute": "/contribute"
+    "contribute": "/contribute",
+    "gallery": "/gallery"
 };
 
 function switchEditorPage(pageId, btn) {

@@ -37,6 +37,13 @@ from services.section_service import (
     reset_single_section,
     bulk_update_sections
 )
+from services.gallery_service import (
+    get_admin_gallery,
+    add_gallery_photos,
+    toggle_photo_published,
+    edit_photo,
+    remove_photo
+)
 from db.meets import get_meet_responses_admin
 from db.audit import get_recent_audit_logs
 
@@ -373,6 +380,61 @@ def delete_assignment(assignment_id: int):
     return redirect(url_for("admin.activities"))
 
 
+@admin_bp.route("/gallery", methods=["GET", "POST"])
+@login_required
+def gallery():
+    """Gallery management. Photos stay on Google Drive; only their file IDs are stored here."""
+    if request.method == "POST":
+        result = add_gallery_photos(
+            raw_links=request.form.get("drive_links", ""),
+            caption=request.form.get("caption", "").strip(),
+            album=request.form.get("album", "").strip(),
+            user_id=session.get("user_id")
+        )
+        if result["added"]:
+            flash(f"Added {result['added']} photo(s) to the gallery.", "success")
+        if result["duplicates"]:
+            flash(f"{result['duplicates']} photo(s) were already in the gallery and were skipped.", "info")
+        if result["rejected"]:
+            flash(
+                f"{len(result['rejected'])} line(s) were not Drive file links and were skipped "
+                f"(folder links are not supported): {', '.join(result['rejected'][:3])}",
+                "danger"
+            )
+        if not (result["added"] or result["duplicates"] or result["rejected"]):
+            flash("Paste at least one Google Drive photo link.", "danger")
+        return redirect(url_for("admin.gallery"))
+
+    return render_template("admin/gallery.html", **get_admin_gallery())
+
+@admin_bp.route("/gallery/<int:photo_id>/publish", methods=["POST"])
+@login_required
+def gallery_toggle_publish(photo_id: int):
+    is_published = request.form.get("is_published") == "1"
+    toggle_photo_published(photo_id, is_published, user_id=session.get("user_id"))
+    flash("Photo is now visible on the public gallery." if is_published else "Photo hidden from the public gallery.", "info")
+    return redirect(url_for("admin.gallery"))
+
+@admin_bp.route("/gallery/<int:photo_id>/edit", methods=["POST"])
+@login_required
+def gallery_edit_photo(photo_id: int):
+    edit_photo(
+        photo_id,
+        caption=request.form.get("caption", "").strip(),
+        album=request.form.get("album", "").strip(),
+        user_id=session.get("user_id")
+    )
+    flash("Photo details updated.", "success")
+    return redirect(url_for("admin.gallery"))
+
+@admin_bp.route("/gallery/<int:photo_id>/delete", methods=["POST"])
+@login_required
+def gallery_delete_photo(photo_id: int):
+    remove_photo(photo_id, user_id=session.get("user_id"))
+    flash("Photo removed from the gallery. The file on Google Drive was not touched.", "info")
+    return redirect(url_for("admin.gallery"))
+
+
 @admin_bp.route("/sections", methods=["GET", "POST"])
 @login_required
 def section_management():
@@ -403,8 +465,8 @@ def section_management():
         {"id": "all", "name": "All Pages"},
         {"id": "index", "name": "Homepage (index)"},
         {"id": "meet", "name": "Event Details (meet)"},
-        {"id": "about", "name": "About SC&SS (about)"},
         {"id": "contribute", "name": "Contributions (contribute)"},
+        {"id": "gallery", "name": "Gallery (gallery)"},
     ]
 
     return render_template(
@@ -434,6 +496,7 @@ def ajax_update_sections():
     try:
         data = request.get_json() or {}
         updates = data.get("updates", {})
+        page = str(data.get("page", "")).strip().lower()
         user_id = session.get("user_id")
 
         if not updates:
@@ -443,14 +506,16 @@ def ajax_update_sections():
         key_to_id = {}
         for s in sections_list:
             key_to_id[str(s["id"])] = s["id"]
-            key_to_id[s["section_key"]] = s["id"]
             key_to_id[f"{s['page']}.{s['section_key']}"] = s["id"]
 
+        # Bare keys (e.g. "hero_title") exist on several pages, so they are resolved against
+        # the page being edited; "page.key" (e.g. "event.date") is used as-is.
         final_updates = {}
         for k, v in updates.items():
             k_str = str(k).strip()
-            if k_str in key_to_id:
-                final_updates[key_to_id[k_str]] = v
+            qualified = k_str if "." in k_str or k_str.isdigit() else f"{page}.{k_str}"
+            if qualified in key_to_id:
+                final_updates[key_to_id[qualified]] = v
 
         if final_updates:
             count = bulk_update_sections(final_updates, user_id=user_id)

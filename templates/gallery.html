@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Alumni Gallery — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero" style="padding-bottom: var(--space-md);" data-editable-section="hero" data-section-title="Hero Section">
+    <div class="container">
+        <div class="hero-content">
+            <span class="eyebrow">SC&amp;SS · Jawaharlal Nehru University</span>
+            <h1 data-field-key="hero_title">{{ site_sections.get('gallery.hero_title', 'Alumni Gallery') }}</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text" data-field-key="hero_lead">
+                {{ site_sections.get('gallery.hero_lead', 'Photographs from alumni meets, batch reunions, and life at SC&SS over the years.') }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="section section-paper" style="padding-top: var(--space-md);">
+    <div class="container">
+        {% if gallery.albums %}
+            <nav class="gallery-albums" aria-label="Filter by album">
+                <a href="{{ url_for('public.gallery') }}" class="gallery-album-chip {% if not gallery.selected_album %}active{% endif %}">All Photos</a>
+                {% for album in gallery.albums %}
+                    <a href="{{ url_for('public.gallery', album=album) }}" class="gallery-album-chip {% if gallery.selected_album == album %}active{% endif %}">{{ album }}</a>
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        {% if gallery.photos %}
+            <div class="gallery-grid">
+                {% for photo in gallery.photos %}
+                    <figure class="gallery-item">
+                        <a href="{{ photo.full_url }}" class="gallery-open" data-full="{{ photo.full_url }}" data-caption="{{ photo.caption or '' }}">
+                            <img src="{{ photo.thumb_url }}" alt="{{ photo.caption or 'SC&SS alumni photo' }}" loading="lazy" referrerpolicy="no-referrer">
+                        </a>
+                        {% if photo.caption or photo.album %}
+                            <figcaption>
+                                {% if photo.caption %}<span>{{ photo.caption }}</span>{% endif %}
+                                {% if photo.album and not gallery.selected_album %}<span class="gallery-item-album">{{ photo.album }}</span>{% endif %}
+                            </figcaption>
+                        {% endif %}
+                    </figure>
+                {% endfor %}
+            </div>
+
+            {% if gallery.has_prev or gallery.has_next %}
+                <div class="btn-group" style="justify-content: center; margin-top: var(--space-lg);">
+                    {% if gallery.has_prev %}
+                        <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page - 1) }}" class="btn btn-secondary btn-md">← Newer</a>
+                    {% endif %}
+                    {% if gallery.has_next %}
+                        <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page + 1) }}" class="btn btn-secondary btn-md">Older →</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="content-card" style="text-align: center; padding: var(--space-xl) var(--space-md);">
+                <h3>Photos coming soon</h3>
+                <p style="color: var(--color-muted);">The organizing team is collecting photographs from alumni. Check back after the meet.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<dialog class="gallery-lightbox" id="galleryLightbox">
+    <button type="button" class="gallery-lightbox-close" aria-label="Close photo">×</button>
+    <img src="" alt="" referrerpolicy="no-referrer">
+    <p class="gallery-lightbox-caption"></p>
+</dialog>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const box = document.getElementById("galleryLightbox");
+    if (!box || typeof box.showModal !== "function") return;  // fall back to opening the image link
+    const img = box.querySelector("img");
+    const caption = box.querySelector(".gallery-lightbox-caption");
+
+    document.querySelectorAll(".gallery-open").forEach(link => {
+        link.addEventListener("click", e => {
+            e.preventDefault();
+            img.src = link.dataset.full;
+            img.alt = link.dataset.caption || "SC&SS alumni photo";
+            caption.textContent = link.dataset.caption || "";
+            box.showModal();
+        });
+    });
+    box.querySelector(".gallery-lightbox-close").addEventListener("click", () => box.close());
+    box.addEventListener("click", e => { if (e.target === box) box.close(); });
+    box.addEventListener("close", () => { img.src = ""; });
+})();
+</script>
+{% endblock %}

@@ -29,7 +29,7 @@
                     <li><a href="{{ url_for('public.index') }}" class="nav-link {% if request.endpoint == 'public.index' %}active{% endif %}">Home</a></li>
                     <li><a href="{{ url_for('public.meet_detail') }}" class="nav-link {% if request.endpoint == 'public.meet_detail' %}active{% endif %}">Alumni Meet</a></li>
                     <li><a href="{{ url_for('public.contribute') }}" class="nav-link {% if request.endpoint == 'public.contribute' %}active{% endif %}">Contribution Tracker</a></li>
-                    <li><a href="{{ url_for('public.about') }}" class="nav-link {% if request.endpoint == 'public.about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ url_for('public.gallery') }}" class="nav-link {% if request.endpoint == 'public.gallery' %}active{% endif %}">Gallery</a></li>
 
                     <!-- Mobile Drawer CTA (Hidden on desktop, shown inside mobile drawer) -->
                     <li class="mobile-nav-cta">
@@ -115,7 +115,7 @@
                         <li><a href="{{ url_for('public.index') }}">Home</a></li>
                         <li><a href="{{ url_for('public.meet_detail') }}">Alumni Meet 2026</a></li>
                         <li><a href="{{ url_for('public.contribute') }}">Contribution Tracker</a></li>
-                        <li><a href="{{ url_for('public.about') }}">About SC&amp;SS</a></li>
+                        <li><a href="{{ url_for('public.gallery') }}">Alumni Gallery</a></li>
                     </ul>
                 </div>
                 <div class="footer-links">

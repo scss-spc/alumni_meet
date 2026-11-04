@@ -1,4 +1,4 @@
-{% from "macros/icons.html" import icon_dashboard, icon_money, icon_alumni, icon_volunteers, icon_activities, icon_sync, icon_external, icon_menu, icon_jnu_seal, icon_palette %}
+{% from "macros/icons.html" import icon_dashboard, icon_money, icon_alumni, icon_volunteers, icon_activities, icon_sync, icon_external, icon_menu, icon_jnu_seal, icon_palette, icon_gallery %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +36,11 @@
             <li class="sidebar-item">
                 <a href="{{ url_for('admin.section_management') }}" class="sidebar-link {% if request.endpoint == 'admin.section_management' %}active{% endif %}" title="Website Sections">
                     {{ icon_palette(size=18) }} <span>Website Sections</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{{ url_for('admin.gallery') }}" class="sidebar-link {% if request.endpoint == 'admin.gallery' %}active{% endif %}" title="Gallery">
+                    {{ icon_gallery(size=18) }} <span>Gallery</span>
                 </a>
             </li>
             <li class="sidebar-item">

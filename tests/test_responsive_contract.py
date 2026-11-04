@@ -28,7 +28,7 @@ PAGES = [
     "/",
     "/meet",
     "/contribute",
-    "/about",
+    "/gallery",
     "/alumni",
     "/admin/login",
 ]

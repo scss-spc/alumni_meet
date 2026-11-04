@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = "index";
     const path = window.location.pathname.toLowerCase();
     if (path.includes("meet")) currentPage = "meet";
-    else if (path.includes("about")) currentPage = "about";
-    else if (path.includes("contribute")) currentPage = "contribute";
+    else if (path.includes("gallery")) currentPage = "gallery";
+    else if (path.includes("contribut")) currentPage = "contribute";
 
     // Helper to dynamically resolve admin route prefix
     function getAdminPrefix() {
@@ -117,13 +117,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (fieldsInSec.length > 0) {
                 fieldsInSec.forEach(f => {
                     const key = f.getAttribute("data-field-key");
-                    const val = f.isContentEditable ? f.innerText.trim() : (f.value || f.innerText.trim());
+                    // textContent, not innerText: innerText applies CSS text-transform and would save UPPERCASED copy.
+                    const val = f.isContentEditable ? f.textContent.trim() : (f.value || f.textContent.trim());
                     if (key) updates[key] = val;
                 });
             } else {
                 textElements.forEach((el, index) => {
                     const key = el.getAttribute("data-field-key") || `${sectionKey}_field_${index}`;
-                    updates[key] = el.innerText.trim();
+                    updates[key] = el.textContent.trim();
                 });
             }
 

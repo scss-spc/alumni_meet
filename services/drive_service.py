@@ -44,9 +44,9 @@ def get_drive_preview_url(file_path_or_url: Optional[str]) -> Optional[str]:
 
     return f"https://drive.google.com/file/d/{file_id}/view"
 
-def get_drive_thumbnail_url(file_path_or_url: Optional[str]) -> Optional[str]:
+def get_drive_thumbnail_url(file_path_or_url: Optional[str], width: int = 600) -> Optional[str]:
     """
-    Generate Google Drive thumbnail URL.
+    Generate Google Drive thumbnail URL (image bytes are served by Google, not this app).
     """
     file_id = extract_google_drive_file_id(file_path_or_url)
     if not file_id:
@@ -55,4 +55,4 @@ def get_drive_thumbnail_url(file_path_or_url: Optional[str]) -> Optional[str]:
     if file_id.startswith("http"):
         return file_id
 
-    return f"https://drive.google.com/thumbnail?id={file_id}&sz=w600"
+    return f"https://drive.google.com/thumbnail?id={file_id}&sz=w{width}"

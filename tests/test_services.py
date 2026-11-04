@@ -71,3 +71,18 @@ def test_process_contribution_verification():
         assert result["new_status"] == "verified"
         mock_update.assert_called_once_with(contrib_id=42, status="verified", verified_by=1, notes="Bank credited")
         mock_audit.assert_called_once()
+
+def test_gallery_parse_drive_links():
+    """Pasted Drive links become file IDs; folder links and junk are rejected; duplicates collapse."""
+    from services.gallery_service import parse_drive_links
+    raw = """
+        https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz/view?usp=sharing
+        https://drive.google.com/open?id=1ZyXwVuTsRqPoNmLkJiHgFeDcBa
+        https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQrStUvWxYz/view
+        https://drive.google.com/drive/folders/1FolderIdShouldBeRejected123
+        not a link
+    """
+    file_ids, rejected = parse_drive_links(raw)
+    assert file_ids == ["1AbCdEfGhIjKlMnOpQrStUvWxYz", "1ZyXwVuTsRqPoNmLkJiHgFeDcBa"]
+    assert len(rejected) == 2
+    assert any("folders" in r for r in rejected)

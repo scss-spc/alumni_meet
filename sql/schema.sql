@@ -145,3 +145,13 @@ CREATE TABLE IF NOT EXISTS `site_sections` (
     CONSTRAINT `uk_page_section` UNIQUE (`page`, `section_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `gallery_photos` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `drive_file_id` VARCHAR(128) NOT NULL,
+    `caption` VARCHAR(500) NULL,
+    `album` VARCHAR(100) NULL,
+    `is_published` BOOLEAN NOT NULL DEFAULT TRUE,
+    `created_by` BIGINT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `uk_gallery_drive_file` UNIQUE (`drive_file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
