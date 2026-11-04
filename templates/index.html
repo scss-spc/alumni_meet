@@ -6,37 +6,37 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+<section class="hero">
     <div class="container hero-grid">
         <div class="hero-content">
-            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('index.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
-            <h1 data-field-key="hero_title">{{ site_sections.get('index.hero_title', 'Alumni Meet 2026') }}</h1>
+            <span class="eyebrow">{{ site_sections.get('index.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
+            <h1>{{ site_sections.get('index.hero_title', 'Alumni Meet 2026') }}</h1>
             <hr class="editorial-rule">
-            <p class="lead-text" data-field-key="hero_lead">
+            <p class="lead-text">
                 {{ site_sections.get('index.hero_lead', 'Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.') }}
             </p>
 
             <div class="hero-meta-bar">
                 <div class="meta-item">
                     <span class="meta-label">Date</span>
-                    <span class="meta-value" data-field-key="event.date">{{ site_sections.get('event.date', 'Saturday, 5 December 2026') }}</span>
+                    <span class="meta-value">{{ site_sections.get('event.date', 'Saturday, 5 December 2026') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
-                    <span class="meta-value" data-field-key="event.venue">{{ site_sections.get('event.venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
+                    <span class="meta-value">{{ site_sections.get('event.venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Status</span>
-                    <span class="meta-value" data-field-key="event.status" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.status', 'Registration Open') }}</span>
+                    <span class="meta-value" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.status', 'Registration Open') }}</span>
                 </div>
             </div>
 
             <div class="btn-group">
                 <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
-                    <span data-field-key="hero_btn_primary">{{ site_sections.get('index.hero_btn_primary', 'Register & Contribute via Google Form') }}</span> {{ icon_external() }}
+                    <span>{{ site_sections.get('index.hero_btn_primary', 'Register & Contribute via Google Form') }}</span> {{ icon_external() }}
                 </a>
                 <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
-                    <span data-field-key="hero_btn_secondary">{{ site_sections.get('index.hero_btn_secondary', 'View Meet Schedule') }}</span>
+                    <span>{{ site_sections.get('index.hero_btn_secondary', 'View Meet Schedule') }}</span>
                 </a>
             </div>
         </div>
@@ -44,11 +44,11 @@
         <div class="hero-visual">
             <div class="hero-card">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
-                    <span class="hero-card-badge" data-field-key="hero_badge">{{ site_sections.get('index.hero_badge', 'SC&SS · JNU Gathering') }}</span>
+                    <span class="hero-card-badge">{{ site_sections.get('index.hero_badge', 'SC&SS · JNU Gathering') }}</span>
                     {{ icon_jnu_seal(size=48) }}
                 </div>
-                <h3 data-field-key="hero_card_title">{{ site_sections.get('index.hero_card_title', 'An Enduring Academic Community') }}</h3>
-                <p data-field-key="hero_card_text">
+                <h3>{{ site_sections.get('index.hero_card_title', 'An Enduring Academic Community') }}</h3>
+                <p>
                     {{ site_sections.get('index.hero_card_text', 'From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations across the world.') }}
                 </p>
             </div>
@@ -129,28 +129,28 @@
 </section>
 
 <!-- Section 01: About the Meet -->
-<section class="section section-paper" data-editable-section="s1" data-section-title="Section 01 - About the Meet">
+<section class="section section-paper">
     <div class="container">
         <div class="section-label">
             <span class="label-num">01</span>
-            <span data-field-key="s1_label">{{ site_sections.get('index.s1_label', 'About the Meet') }}</span>
+            <span>{{ site_sections.get('index.s1_label', 'About the Meet') }}</span>
         </div>
 
         <div class="grid-2">
             <div>
-                <h2 data-field-key="s1_title">{{ site_sections.get('index.s1_title', 'Years After Leaving JNU, the Connection Endures') }}</h2>
+                <h2>{{ site_sections.get('index.s1_title', 'Years After Leaving JNU, the Connection Endures') }}</h2>
                 <hr class="editorial-rule">
-                <p class="lead-text" data-field-key="s1_lead">
+                <p class="lead-text">
                     {{ site_sections.get('index.s1_lead', 'The SC&SS Alumni Meet 2026 is an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network.') }}
                 </p>
-                <p data-field-key="s1_body">
+                <p>
                     {{ site_sections.get('index.s1_body', "Whether you graduated in the early batches of MCA and M.Tech or recently completed your Ph.D., your presence enriches the school's legacy.") }}
                 </p>
             </div>
             <div>
                 <div class="content-card">
                     {{ tentative_tag(site_sections) }}
-                    <h3 data-field-key="s1_highlights_title">{{ site_sections.get('index.s1_highlights_title', 'Event Highlights') }}</h3>
+                    <h3>{{ site_sections.get('index.s1_highlights_title', 'Event Highlights') }}</h3>
                     <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem;">
                         <li><strong style="color: var(--color-ink);">Inaugural &amp; Welcome Address</strong> by School Leadership</li>
                         <li><strong style="color: var(--color-ink);">Felicitation</strong> of Former Deans &amp; Revered Faculty</li>
@@ -166,17 +166,17 @@
 </section>
 
 <!-- Section 02: About SC&SS (formerly the separate /about page) -->
-<section id="about" class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - About SC&amp;SS">
+<section id="about" class="section section-off-white">
     <div class="container">
         <div class="section-label">
             <span class="label-num">02</span>
-            <span data-field-key="s2_label">{{ site_sections.get('index.s2_label', 'The School') }}</span>
+            <span>{{ site_sections.get('index.s2_label', 'The School') }}</span>
         </div>
 
         <div class="section-header" style="max-width: 800px; margin-bottom: var(--space-lg);">
-            <h2 data-field-key="s2_title">{{ site_sections.get('index.s2_title', 'A Tradition of Scientific Inquiry & Systems Leadership') }}</h2>
+            <h2>{{ site_sections.get('index.s2_title', 'A Tradition of Scientific Inquiry & Systems Leadership') }}</h2>
             <hr class="editorial-rule">
-            <p class="lead-text" data-field-key="s2_lead">
+            <p class="lead-text">
                 {{ site_sections.get('index.s2_lead', 'Established as one of the premier computer and systems science schools in India, SC&SS JNU has continuously fostered rigorous academic inquiry and technological innovation.') }}
             </p>
         </div>
@@ -184,22 +184,22 @@
         <div class="grid-3">
             <div class="content-card">
                 <span class="eyebrow">Pillar 01</span>
-                <h3 data-field-key="s2_p1_title">{{ site_sections.get('index.s2_p1_title', 'Academic Rigor') }}</h3>
-                <p data-field-key="s2_p1_text">
+                <h3>{{ site_sections.get('index.s2_p1_title', 'Academic Rigor') }}</h3>
+                <p>
                     {{ site_sections.get('index.s2_p1_text', 'Rooted in mathematical foundations, theoretical computer science, databases, and distributed systems, producing thinkers who excel worldwide.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 02</span>
-                <h3 data-field-key="s2_p2_title">{{ site_sections.get('index.s2_p2_title', 'Vibrant Alumni') }}</h3>
-                <p data-field-key="s2_p2_text">
+                <h3>{{ site_sections.get('index.s2_p2_title', 'Vibrant Alumni') }}</h3>
+                <p>
                     {{ site_sections.get('index.s2_p2_text', 'Graduates leading technology organizations, research laboratories, universities, government bodies, and innovative startups globally.') }}
                 </p>
             </div>
             <div class="content-card">
                 <span class="eyebrow">Pillar 03</span>
-                <h3 data-field-key="s2_p3_title">{{ site_sections.get('index.s2_p3_title', 'Future Vision') }}</h3>
-                <p data-field-key="s2_p3_text">
+                <h3>{{ site_sections.get('index.s2_p3_title', 'Future Vision') }}</h3>
+                <p>
                     {{ site_sections.get('index.s2_p3_text', 'Advancing research in artificial intelligence, cyber-physical systems, quantum computing, and data sciences while nurturing the next generation.') }}
                 </p>
             </div>
@@ -209,15 +209,15 @@
 
 {% if gallery_preview %}
 <!-- Section 03: Gallery Teaser (images load from Google Drive, not this server) -->
-<section class="section section-paper" data-editable-section="s3" data-section-title="Section 03 - Gallery">
+<section class="section section-paper">
     <div class="container">
         <div class="section-label">
             <span class="label-num">03</span>
-            <span data-field-key="s3_label">{{ site_sections.get('index.s3_label', 'Gallery') }}</span>
+            <span>{{ site_sections.get('index.s3_label', 'Gallery') }}</span>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-            <h2 style="margin-bottom: 0;" data-field-key="s3_title">{{ site_sections.get('index.s3_title', 'Moments from the SC&SS Community') }}</h2>
+            <h2 style="margin-bottom: 0;">{{ site_sections.get('index.s3_title', 'Moments from the SC&SS Community') }}</h2>
             <a href="{{ url_for('public.gallery') }}" class="btn btn-secondary btn-sm">View Full Gallery →</a>
         </div>
         <hr class="editorial-rule">
@@ -234,7 +234,7 @@
 {% endif %}
 
 <!-- Closing Section -->
-<section class="section section-paper" style="padding-top: var(--space-lg); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">
+<section class="section section-paper" style="padding-top: var(--space-lg); padding-bottom: var(--space-xl);">
     <div class="container" style="text-align: center;">
         <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;">
             {{ site_sections.get('index.quote_text', '"The School remains a part of the journeys that began here."') }}

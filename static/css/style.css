@@ -18,6 +18,8 @@
     --color-dark-ink: #182033;
     --color-muted-ink: #5E6270;
     --color-white: #FFFFFF;
+    --color-ink: var(--color-dark-ink);
+    --color-paper-light: #FDFCF8;
 
     /* Theme Mapping */
     --color-background: var(--color-warm-ivory);

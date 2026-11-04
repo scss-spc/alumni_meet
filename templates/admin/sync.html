@@ -19,7 +19,7 @@
 
 {% block content %}
 <!-- Top Configuration & Status Grid -->
-<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+<div class="stat-grid">
     <div class="stat-tile">
         <div class="stat-label">24-Hour Auto-Sync</div>
         <div class="stat-number {% if scheduler_info.is_active %}success{% else %}warning{% endif %}">
@@ -52,7 +52,7 @@
 </div>
 
 <!-- Details & Control Panel -->
-<div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; margin-top: 1.5rem;">
+<div class="admin-split" style="margin-top: 1.5rem;">
     <!-- Sync Configuration & Diagnostic Card -->
     <div class="admin-card">
         <div class="card-header">
@@ -60,7 +60,8 @@
             <button class="btn btn-secondary btn-sm" id="btnTestConn" onclick="runConnectionTest()">Test Connection</button>
         </div>
         <div class="card-body">
-            <table class="admin-table" style="margin-bottom: 1.5rem;">
+            <div class="table-responsive" style="margin-bottom: 1.5rem;">
+            <table class="admin-table">
                 <tbody>
                     <tr>
                         <td style="width: 35%; font-weight: 600;">Google Sheet ID</td>
@@ -92,6 +93,7 @@
                     {% endif %}
                 </tbody>
             </table>
+            </div>
 
             <!-- Connection Test Result Box -->
             <div id="testResultBox" style="display: none; padding: 1rem; border-radius: 6px; font-size: 0.88rem; margin-top: 1rem;"></div>
@@ -140,7 +142,7 @@
 
             <div style="margin-top: 1.5rem; border-top: 1px solid #E2E8F0; padding-top: 1rem;">
                 <h5 style="margin-bottom: 0.5rem; font-size: 0.95rem; color: #1E293B;">Last Ingestion Metrics</h5>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.88rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; font-size: 0.88rem;">
                     <div>{{ icon_alumni(size=14) }} <strong>New Alumni Created:</strong> {{ sync_state.metrics.alumni_created or 0 }}</div>
                     <div>{{ icon_sync(size=14) }} <strong>Alumni Updated:</strong> {{ sync_state.metrics.alumni_updated or 0 }}</div>
                     <div>{{ icon_check(size=14) }} <strong>RSVPs Synced:</strong> {{ sync_state.metrics.responses_synced or 0 }}</div>

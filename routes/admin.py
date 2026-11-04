@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from services.auth_service import (
     authenticate_user,
     login_user_session,
@@ -31,12 +31,6 @@ from services.volunteer_service import (
 from services.drive_service import get_drive_preview_url, get_drive_thumbnail_url
 from services.sync_service import get_sync_status, perform_sync, test_sheet_connection
 from services.scheduler_service import get_scheduler_info
-from services.section_service import (
-    get_sections_for_admin,
-    update_single_section,
-    reset_single_section,
-    bulk_update_sections
-)
 from services.gallery_service import (
     get_admin_gallery,
     add_gallery_photos,
@@ -433,101 +427,3 @@ def gallery_delete_photo(photo_id: int):
     remove_photo(photo_id, user_id=session.get("user_id"))
     flash("Photo removed from the gallery. The file on Google Drive was not touched.", "info")
     return redirect(url_for("admin.gallery"))
-
-
-@admin_bp.route("/sections", methods=["GET", "POST"])
-@login_required
-def section_management():
-    """Website Sections Content Management System (CMS)."""
-    selected_page = request.args.get("page", "all").strip().lower()
-
-    if request.method == "POST":
-        user_id = session.get("user_id")
-        section_updates = {}
-        for key, val in request.form.items():
-            if key.startswith("section_"):
-                try:
-                    sec_id = int(key.replace("section_", ""))
-                    section_updates[sec_id] = val
-                except ValueError:
-                    continue
-
-        if section_updates:
-            updated_count = bulk_update_sections(section_updates, user_id=user_id)
-            flash(f"Successfully saved changes to {updated_count} website section(s).", "success")
-        else:
-            flash("No changes submitted.", "info")
-
-        return redirect(url_for("admin.section_management", page=selected_page))
-
-    sections = get_sections_for_admin(selected_page=selected_page)
-    pages = [
-        {"id": "all", "name": "All Pages"},
-        {"id": "index", "name": "Homepage (index)"},
-        {"id": "meet", "name": "Event Details (meet)"},
-        {"id": "contribute", "name": "Contributions (contribute)"},
-        {"id": "gallery", "name": "Gallery (gallery)"},
-    ]
-
-    return render_template(
-        "admin/sections.html",
-        sections=sections,
-        pages=pages,
-        selected_page=selected_page
-    )
-
-@admin_bp.route("/sections/<int:section_id>/reset", methods=["POST"])
-@login_required
-def reset_section_route(section_id: int):
-    """Reset a website section to its default copy."""
-    user_id = session.get("user_id")
-    result = reset_single_section(section_id=section_id, user_id=user_id)
-    if result.get("success"):
-        flash("Section content reset to original default copy.", "info")
-    else:
-        flash(result.get("error", "Failed to reset section."), "danger")
-    return redirect(request.referrer or url_for("admin.section_management"))
-
-
-@admin_bp.route("/sections/ajax-update", methods=["POST"])
-@login_required
-def ajax_update_sections():
-    """AJAX endpoint for inline website section updates directly from preview frame."""
-    try:
-        data = request.get_json() or {}
-        updates = data.get("updates", {})
-        page = str(data.get("page", "")).strip().lower()
-        user_id = session.get("user_id")
-
-        if not updates:
-            return jsonify({"success": False, "error": "No updates provided."}), 400
-
-        sections_list = get_sections_for_admin(selected_page="all")
-        key_to_id = {}
-        for s in sections_list:
-            key_to_id[str(s["id"])] = s["id"]
-            key_to_id[f"{s['page']}.{s['section_key']}"] = s["id"]
-
-        # Bare keys (e.g. "hero_title") exist on several pages, so they are resolved against
-        # the page being edited; "page.key" (e.g. "event.date") is used as-is.
-        final_updates = {}
-        for k, v in updates.items():
-            k_str = str(k).strip()
-            qualified = k_str if "." in k_str or k_str.isdigit() else f"{page}.{k_str}"
-            if qualified in key_to_id:
-                final_updates[key_to_id[qualified]] = v
-
-        if final_updates:
-            count = bulk_update_sections(final_updates, user_id=user_id)
-            return jsonify({
-                "success": True,
-                "message": f"Saved {count} section field(s) successfully.",
-                "updated_count": count
-            })
-
-        return jsonify({"success": False, "error": "No matching section keys found."}), 400
-    except Exception as e:
-        logger.error(f"Error in ajax_update_sections: {e}")
-        return jsonify({"success": False, "error": str(e)}), 500
-
-

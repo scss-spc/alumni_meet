@@ -1,61 +1,17 @@
 {% extends "admin/base.html" %}
-{% from "macros/icons.html" import icon_sync, icon_palette, icon_dashboard, icon_alumni %}
+{% from "macros/icons.html" import icon_sync %}
 
 {% block title %}Organizer Portal Hub{% endblock %}
-{% block page_title %}Organizer Portal Hub — {{ meet.name }}{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
 {% block topbar_actions %}
-    <a href="{{ url_for('admin.section_management') }}" class="btn btn-secondary btn-sm" style="margin-right: 0.5rem;">
-        {{ icon_palette(size=14) }} Edit Website Sections
-    </a>
     <a href="{{ url_for('admin.contributions') }}" class="btn btn-primary btn-sm">
         Review Pending Payments ({{ financial_stats.pending_count }})
     </a>
 {% endblock %}
 
 {% block content %}
-<!-- Organizer Portal Launch Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2.25rem;">
-    <!-- Option A: Website Sections Editor -->
-    <div class="admin-card" style="border-top: 4px solid var(--color-sepia-dark); background: linear-gradient(135deg, var(--color-paper-light) 0%, var(--color-surface) 100%); padding: 1.5rem; border-radius: var(--radius-md);">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; gap: 0.6rem;">
-                {{ icon_palette(size=26) }}
-                <h3 style="margin: 0; color: var(--color-ink); font-size: 1.3rem;">Edit Website Sections</h3>
-            </div>
-            <span class="badge" style="background: var(--color-paper); border: 1px solid var(--color-border); color: var(--color-sepia-dark); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem;">
-                No-Code Editor
-            </span>
-        </div>
-        <p style="color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem;">
-            Edit all headings, lead paragraphs, pillars, timeline copy, quotes, and CTA banners across the website without touching code.
-        </p>
-        <a href="{{ url_for('admin.section_management') }}" class="btn btn-primary btn-md" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;">
-            {{ icon_palette(size=16) }} Open Website Sections Editor →
-        </a>
-    </div>
-
-    <!-- Option B: Operational Overview -->
-    <div class="admin-card" style="border-top: 4px solid var(--color-ink); background: linear-gradient(135deg, var(--color-paper-light) 0%, var(--color-surface) 100%); padding: 1.5rem; border-radius: var(--radius-md);">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem;">
-            <div style="display: flex; align-items: center; gap: 0.6rem;">
-                {{ icon_dashboard(size=26) }}
-                <h3 style="margin: 0; color: var(--color-ink); font-size: 1.3rem;">Operational Overview</h3>
-            </div>
-            <span class="badge" style="background: var(--color-paper); border: 1px solid var(--color-border); color: var(--color-ink); font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem;">
-                Live Stats &amp; Roster
-            </span>
-        </div>
-        <p style="color: var(--color-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.25rem;">
-            Review headcount statistics, alumni responses, contribution verification queues, volunteers, and Google Sheets sync status.
-        </p>
-        <a href="#operational-stats" class="btn btn-secondary btn-md" style="width: 100%; text-align: center; display: inline-flex; justify-content: center; align-items: center; gap: 0.4rem;">
-            {{ icon_dashboard(size=16) }} View Dashboard Stats Below ↓
-        </a>
-    </div>
-</div>
-
-<h3 id="operational-stats" style="color: var(--color-ink); margin-bottom: 1rem; font-size: 1.2rem;">Operational Summary &amp; Analytics</h3>
+<p style="color: var(--admin-text-muted); margin: 0 0 1.25rem;">{{ meet.name }} · overview of responses, contributions, and team.</p>
 
 <!-- Metric Tiles -->
 <div class="stat-grid">
@@ -91,7 +47,7 @@
 
     <!-- Google Sheet 24h Sync Status Tile -->
     <div class="stat-tile" style="border-left: 3px solid #3B82F6;">
-        <div class="stat-label" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="stat-label" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.35rem;">
             <span style="display: inline-flex; align-items: center; gap: 0.35rem;">{{ icon_sync(size=14) }} Google Sheet Sync</span>
             {% if sync_state.status == 'SUCCESS' %}
                 <span class="badge badge-verified" style="font-size: 0.7rem;">Active / Healthy</span>
@@ -114,7 +70,7 @@
 </div>
 
 <!-- Main Tables Grid -->
-<div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem;">
+<div class="admin-split">
     <!-- Recent Contributions -->
     <div class="admin-card">
         <div class="card-header">

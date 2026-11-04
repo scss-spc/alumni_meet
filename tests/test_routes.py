@@ -93,24 +93,6 @@ def test_public_gallery_empty_state(client):
         assert res.status_code == 200
         assert b"Photos coming soon" in res.data
 
-def test_inline_editor_saves_to_the_page_being_edited(client):
-    """Bare keys like hero_title exist on several pages; they must resolve against the posted page."""
-    with client.session_transaction() as sess:
-        sess["user_id"] = 1
-    sections = [
-        {"id": 10, "page": "index", "section_key": "hero_title"},
-        {"id": 20, "page": "meet", "section_key": "hero_title"},
-        {"id": 30, "page": "event", "section_key": "date"},
-    ]
-    with patch("routes.admin.get_sections_for_admin", return_value=sections),          patch("routes.admin.bulk_update_sections", return_value=2) as mock_bulk:
-        res = client.post("/admin/sections/ajax-update", json={
-            "page": "index",
-            "updates": {"hero_title": "Home Title", "event.date": "Saturday, 5 December 2026"}
-        })
-        assert res.status_code == 200
-        updates = mock_bulk.call_args[0][0]
-        assert updates == {10: "Home Title", 30: "Saturday, 5 December 2026"}
-
 def test_public_contribute_page(client):
     """Verify contribute page renders."""
     with patch("routes.public.get_current_meet_context") as mock_meet_ctx:

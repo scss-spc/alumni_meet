@@ -85,36 +85,3 @@ def test_service_bulk_update():
     # Cleanup reset
     reset_single_section(s1["id"], user_id=1)
     reset_single_section(s2["id"], user_id=1)
-
-def test_admin_sections_route_requires_login(client):
-    """Verify /admin/sections requires authentication."""
-    res = client.get("/admin/sections")
-    assert res.status_code == 302
-    assert "/admin/login" in res.headers["Location"]
-
-def test_admin_sections_route_logged_in(client):
-    """Verify authenticated admin can access /admin/sections and update sections."""
-    with client.session_transaction() as sess:
-        sess["user_id"] = 1
-        sess["user_name"] = "Admin Test"
-        sess["user_role"] = "admin"
-
-    res = client.get("/admin/sections")
-    assert res.status_code == 200
-    assert b"Website Sections Editor" in res.data
-
-    # Submit form POST to update section
-    sections = get_sections_for_admin("index")
-    sec_id = sections[0]["id"]
-
-    post_data = {
-        f"section_{sec_id}": "Form Submitted Heading Title"
-    }
-    res_post = client.post("/admin/sections?page=index", data=post_data, follow_redirects=True)
-    assert res_post.status_code == 200
-    assert b"Successfully saved changes" in res_post.data
-
-    # Verify reset endpoint
-    res_reset = client.post(f"/admin/sections/{sec_id}/reset", follow_redirects=True)
-    assert res_reset.status_code == 200
-    assert b"Section content reset to original default copy" in res_reset.data

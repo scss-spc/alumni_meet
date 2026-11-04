@@ -6,14 +6,14 @@
 
 {% block content %}
 <!-- Header Hero Banner with 2-Column Hero Grid (Hero Content + Right Hero Card) -->
-<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+<section class="hero">
     <div class="container hero-grid">
         <!-- Left Hero Content -->
         <div class="hero-content">
-            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('contribute.hero_eyebrow', 'SC&SS JNU Alumni Meet 2026 · Financial Transparency') }}</span>
-            <h1 data-field-key="hero_title">{{ site_sections.get('contribute.hero_title', 'Contribution Tracker & Honor Roll') }}</h1>
+            <span class="eyebrow">{{ site_sections.get('contribute.hero_eyebrow', 'SC&SS JNU Alumni Meet 2026 · Financial Transparency') }}</span>
+            <h1>{{ site_sections.get('contribute.hero_title', 'Contribution Tracker & Honor Roll') }}</h1>
             <hr class="editorial-rule">
-            <p class="lead-text" data-field-key="hero_lead">
+            <p class="lead-text">
                 {{ site_sections.get('contribute.hero_lead', 'Every contribution fuels our collective gathering, faculty felicitations, student subsidies, and legacy archives. Track our progress in real-time with full transparency.') }}
             </p>
             <div class="btn-group" style="margin-top: 1.5rem;">
@@ -65,7 +65,7 @@
 <!-- Supporter Honor Roll Section -->
 <section class="section" style="padding-top: var(--space-lg);">
     <div class="container">
-        <div id="supporter-roll" class="supporter-roll-container" data-editable-section="s1" data-section-title="Section 01 - Honor Roll">
+        <div id="supporter-roll" class="supporter-roll-container">
             <div class="roll-header">
                 <div>
                     <div class="section-label" style="margin-bottom: 0.25rem;">
@@ -140,15 +140,15 @@
         </div>
 
         <!-- Transparency & Utilization Breakdown -->
-        <div style="margin-top: var(--space-xl);" data-editable-section="s2" data-section-title="Section 02 - Fund Utilization">
+        <div style="margin-top: var(--space-xl);">
             <div class="section-label">
                 <span class="label-num">02</span>
-                <span data-field-key="s2_label">{{ site_sections.get('contribute.s2_label', 'Fund Utilization') }}</span>
+                <span>{{ site_sections.get('contribute.s2_label', 'Fund Utilization') }}</span>
                 {{ tentative_tag(site_sections) }}
             </div>
-            <h2 data-field-key="s2_title">{{ site_sections.get('contribute.s2_title', 'Transparent Allocation & Purpose') }}</h2>
+            <h2>{{ site_sections.get('contribute.s2_title', 'Transparent Allocation & Purpose') }}</h2>
             <hr class="editorial-rule">
-            <p class="lead-text" data-field-key="s2_lead">
+            <p class="lead-text">
                 {{ site_sections.get('contribute.s2_lead', 'Every contribution directly powers the event experience, faculty recognition, and student volunteer facilitation.') }}
             </p>
 
@@ -177,14 +177,14 @@
         </div>
 
         <!-- Google Form CTA Banner -->
-        <div class="cta-banner" style="margin-top: var(--space-xl); text-align: center;" data-editable-section="s3" data-section-title="Section 03 - Support CTA">
+        <div class="cta-banner" style="margin-top: var(--space-xl); text-align: center;">
             <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
                 <span class="label-num" style="color: var(--color-paper);">03</span>
-                <span style="color: rgba(244, 241, 234, 0.85);" data-field-key="s3_label">{{ site_sections.get('contribute.s3_label', 'Support the Meet') }}</span>
+                <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('contribute.s3_label', 'Support the Meet') }}</span>
             </div>
-            <h2 data-field-key="s3_title">{{ site_sections.get('contribute.s3_title', 'Support the SC&SS Alumni Meet 2026') }}</h2>
+            <h2>{{ site_sections.get('contribute.s3_title', 'Support the SC&SS Alumni Meet 2026') }}</h2>
             <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
-            <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;" data-field-key="s3_text">
+            <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
                 {{ site_sections.get('contribute.s3_text', 'Make your voluntary contribution and participation submission in the official intake form.') }}
             </p>
             <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">

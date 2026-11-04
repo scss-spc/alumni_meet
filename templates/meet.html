@@ -6,37 +6,37 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero" data-editable-section="hero" data-section-title="Hero Section">
+<section class="hero">
     <div class="container hero-grid">
         <div class="hero-content">
-            <span class="eyebrow" data-field-key="hero_eyebrow">{{ site_sections.get('meet.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
-            <h1 data-field-key="hero_title">{{ site_sections.get('meet.hero_title', 'Alumni Meet 2026 Details & Schedule') }}</h1>
+            <span class="eyebrow">{{ site_sections.get('meet.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
+            <h1>{{ site_sections.get('meet.hero_title', 'Alumni Meet 2026 Details & Schedule') }}</h1>
             <hr class="editorial-rule">
-            <p class="lead-text" data-field-key="hero_lead">
+            <p class="lead-text">
                 {{ site_sections.get('meet.hero_lead', 'Key information regarding schedule, campus access, venue arrangements, faculty felicitation, and alumni participation.') }}
             </p>
 
             <div class="hero-meta-bar">
                 <div class="meta-item">
                     <span class="meta-label">Date</span>
-                    <span class="meta-value" data-field-key="event.date">{{ site_sections.get('event.date', meet.event_date | format_date("%A, %d %B %Y")) }}</span>
+                    <span class="meta-value">{{ site_sections.get('event.date', meet.event_date | format_date("%A, %d %B %Y")) }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Timing</span>
-                    <span class="meta-value" data-field-key="event.timing">{{ site_sections.get('event.timing', '09:30 AM – 05:00 PM IST') }}</span>
+                    <span class="meta-value">{{ site_sections.get('event.timing', '09:30 AM – 05:00 PM IST') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
-                    <span class="meta-value" data-field-key="event.venue" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.venue', meet.venue | default('SC&SS Auditorium, JNU')) }}</span>
+                    <span class="meta-value" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.venue', meet.venue | default('SC&SS Auditorium, JNU')) }}</span>
                 </div>
             </div>
 
             <div class="btn-group">
                 <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
-                    <span data-field-key="hero_btn_primary">{{ site_sections.get('meet.hero_btn_primary', 'RSVP & Register via Google Form') }}</span> {{ icon_external() }}
+                    <span>{{ site_sections.get('meet.hero_btn_primary', 'RSVP & Register via Google Form') }}</span> {{ icon_external() }}
                 </a>
                 <a href="{{ url_for('public.contribute') }}" class="btn btn-secondary btn-lg">
-                    <span data-field-key="hero_btn_secondary">{{ site_sections.get('meet.hero_btn_secondary', 'View Contribution Tracker') }}</span>
+                    <span>{{ site_sections.get('meet.hero_btn_secondary', 'View Contribution Tracker') }}</span>
                 </a>
             </div>
         </div>
@@ -44,11 +44,11 @@
         <div class="hero-visual">
             <div class="hero-card">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
-                    <span class="hero-card-badge" data-field-key="hero_badge">{{ site_sections.get('meet.hero_badge', 'SC&SS · Event Summary') }}</span>
+                    <span class="hero-card-badge">{{ site_sections.get('meet.hero_badge', 'SC&SS · Event Summary') }}</span>
                     {{ icon_jnu_seal(size=48) }}
                 </div>
-                <h3 data-field-key="hero_card_title">{{ site_sections.get('meet.hero_card_title', 'Gathering at JNU Campus') }}</h3>
-                <p data-field-key="hero_card_text">
+                <h3>{{ site_sections.get('meet.hero_card_title', 'Gathering at JNU Campus') }}</h3>
+                <p>
                     {{ site_sections.get('meet.hero_card_text', 'Bringing together alumni across MCA, M.Tech, and Ph.D. batches along with revered faculty and current scholars for a day of celebration, memories, and future collaboration.') }}
                 </p>
             </div>
@@ -57,14 +57,14 @@
 </section>
 
 <!-- Section 01: Event Overview & Venue Cards -->
-<section class="section section-paper" data-editable-section="s1" data-section-title="Section 01 - Program &amp; Venue">
+<section class="section section-paper">
     <div class="container">
         <div class="section-label">
             <span class="label-num">01</span>
-            <span data-field-key="s1_label">{{ site_sections.get('meet.s1_label', 'Program & Venue') }}</span>
+            <span>{{ site_sections.get('meet.s1_label', 'Program & Venue') }}</span>
         </div>
 
-        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s1_title">{{ site_sections.get('meet.s1_title', 'Event Logistics & Campus Access') }}</h2>
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('meet.s1_title', 'Event Logistics & Campus Access') }}</h2>
         <hr class="editorial-rule">
 
         <div class="grid-2" style="margin-top: var(--space-md);">
@@ -88,17 +88,17 @@
 </section>
 
 <!-- Section 02: Full Program Schedule -->
-<section class="section section-off-white" data-editable-section="s2" data-section-title="Section 02 - Schedule">
+<section class="section section-off-white">
     <div class="container">
         <div class="section-label">
             <span class="label-num">02</span>
-            <span data-field-key="s2_label">{{ site_sections.get('meet.s2_label', 'Schedule') }}</span>
+            <span>{{ site_sections.get('meet.s2_label', 'Schedule') }}</span>
             {{ tentative_tag(site_sections) }}
         </div>
 
-        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s2_title">{{ site_sections.get('meet.s2_title', 'Tentative Program & Activities') }}</h2>
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('meet.s2_title', 'Tentative Program & Activities') }}</h2>
         <hr class="editorial-rule">
-        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);" data-field-key="s2_lead">
+        <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
             {{ site_sections.get('meet.s2_lead', 'A day filled with reconnecting, honoring revered faculty, interactive sessions, and memory walks across campus pathways:') }}
         </p>
 
@@ -143,15 +143,15 @@
 </section>
 
 <!-- Section 03: Event Highlights -->
-<section class="section section-paper" data-editable-section="s3" data-section-title="Section 03 - Highlights">
+<section class="section section-paper">
     <div class="container">
         <div class="section-label">
             <span class="label-num">03</span>
-            <span data-field-key="s3_label">{{ site_sections.get('meet.s3_label', 'Highlights') }}</span>
+            <span>{{ site_sections.get('meet.s3_label', 'Highlights') }}</span>
             {{ tentative_tag(site_sections) }}
         </div>
 
-        <h2 style="margin-bottom: var(--space-xs);" data-field-key="s3_title">{{ site_sections.get('meet.s3_title', 'What to Expect at the Meet') }}</h2>
+        <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('meet.s3_title', 'What to Expect at the Meet') }}</h2>
         <hr class="editorial-rule">
 
         <div class="grid-3" style="margin-top: var(--space-md);">
@@ -183,16 +183,16 @@
 </section>
 
 <!-- Section 04: Attendance CTA Banner -->
-<section class="section section-paper" style="padding-top: 0;" data-editable-section="s4" data-section-title="Section 04 - Attendance Banner">
+<section class="section section-paper" style="padding-top: 0;">
     <div class="container">
         <div class="cta-banner">
             <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
                 <span class="label-num" style="color: var(--color-paper);">04</span>
-                <span style="color: rgba(244, 241, 234, 0.85);" data-field-key="s4_label">{{ site_sections.get('meet.s4_label', 'Attendance') }}</span>
+                <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('meet.s4_label', 'Attendance') }}</span>
             </div>
-            <h2 data-field-key="s4_title">{{ site_sections.get('meet.s4_title', 'Confirm Your Attendance & RSVP') }}</h2>
+            <h2>{{ site_sections.get('meet.s4_title', 'Confirm Your Attendance & RSVP') }}</h2>
             <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
-            <p data-field-key="s4_text">
+            <p>
                 {{ site_sections.get('meet.s4_text', 'Please submit your RSVP, guest count, and optional contribution via our official Google Form.') }}
             </p>
             <div class="btn-group" style="justify-content: center;">
@@ -208,9 +208,9 @@
 </section>
 
 <!-- Closing Section -->
-<section class="section section-paper" style="padding-top: var(--space-xs); padding-bottom: var(--space-xl);" data-editable-section="quote" data-section-title="Closing Quote">
+<section class="section section-paper" style="padding-top: var(--space-xs); padding-bottom: var(--space-xl);">
     <div class="container" style="text-align: center;">
-        <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;" data-field-key="quote_text">
+        <p class="lead-text serif-font" style="font-size: clamp(1.2rem, 2.5vw, 1.65rem); color: var(--color-ink); max-width: 680px; margin: 0 auto var(--space-xs); font-style: italic;">
             {{ site_sections.get('meet.quote_text', '"Reconnecting generations of scholars who share a common heritage."') }}
         </p>
         <span class="eyebrow" style="color: var(--color-sepia); font-size: 0.78rem; letter-spacing: 0.16em;">SC&amp;SS · Jawaharlal Nehru University</span>

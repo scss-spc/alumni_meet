@@ -1,6 +1,6 @@
 import os
 import click
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from config import Config
 from routes.public import public_bp
 from routes.admin import admin_bp
@@ -37,17 +37,12 @@ def create_app(config_class=Config):
             sections = get_sections_dict()
         except Exception:
             sections = {}
-        try:
-            is_edit_mode = request.args.get("edit_mode") == "1" if request else False
-        except Exception:
-            is_edit_mode = False
         form_link = app.config.get("ALUMNI_FORM_URL") or app.config.get("GOOGLE_FORM_URL") or "https://forms.gle/rfHgUFHzHUtkBBhL8"
         return {
             "google_form_url": form_link,
             "alumni_form_url": form_link,
             "admin_path_prefix": app.config.get("ADMIN_PATH_PREFIX", "/admin"),
-            "site_sections": sections,
-            "is_edit_mode": is_edit_mode
+            "site_sections": sections
         }
 
 
