@@ -8,6 +8,7 @@ from db.gallery import (
     get_photos,
     count_photos,
     get_albums,
+    get_album_previews,
     set_photo_published,
     update_photo_details,
     delete_photo
@@ -18,6 +19,7 @@ from db.audit import log_audit_action
 logger = logging.getLogger(__name__)
 
 PHOTOS_PER_PAGE = 48
+ALBUM_PREVIEW_SIZE = 8
 _DRIVE_FILE_ID_RE = re.compile(r"^[a-zA-Z0-9_-]{20,}$")
 
 def ensure_gallery_initialized():
@@ -54,17 +56,32 @@ def _with_image_urls(photo: Dict[str, Any]) -> Dict[str, Any]:
     return photo
 
 def get_public_gallery(album: Optional[str] = None, page: int = 1) -> Dict[str, Any]:
-    """Published photos for the public gallery, paginated."""
+    """
+    Public gallery data.
+    - album given: that album's photos, paginated.
+    - no album: one section per album (newest ALBUM_PREVIEW_SIZE photos each, linking to the full album),
+      followed by paginated photos that have no album.
+    """
     page = max(page, 1)
+    groups: List[Dict[str, Any]] = []
     try:
-        total = count_photos(published_only=True, album=album)
-        photos = get_photos(published_only=True, album=album, limit=PHOTOS_PER_PAGE, offset=(page - 1) * PHOTOS_PER_PAGE)
+        if album:
+            total = count_photos(published_only=True, album=album)
+            photos = get_photos(published_only=True, album=album, limit=PHOTOS_PER_PAGE, offset=(page - 1) * PHOTOS_PER_PAGE)
+        else:
+            for row in get_album_previews(ALBUM_PREVIEW_SIZE):
+                if not groups or groups[-1]["name"] != row["album"]:
+                    groups.append({"name": row["album"], "total": int(row["album_total"]), "photos": []})
+                groups[-1]["photos"].append(_with_image_urls(row))
+            total = count_photos(published_only=True, ungrouped=True)
+            photos = get_photos(published_only=True, ungrouped=True, limit=PHOTOS_PER_PAGE, offset=(page - 1) * PHOTOS_PER_PAGE)
         albums = get_albums(published_only=True)
     except Exception as e:
         logger.error(f"Failed to load gallery: {e}")
-        total, photos, albums = 0, [], []
+        total, photos, albums, groups = 0, [], [], []
 
     return {
+        "groups": groups,
         "photos": [_with_image_urls(p) for p in photos],
         "albums": albums,
         "selected_album": album,

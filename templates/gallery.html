@@ -2,6 +2,37 @@
 
 {% block title %}Alumni Gallery — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
+{% macro photo_grid(photos, group_id, show_album=False) -%}
+<div class="gallery-grid" data-gallery-group="{{ group_id }}">
+    {% for photo in photos %}
+        <figure class="gallery-item">
+            <a href="{{ photo.full_url }}" class="gallery-open" data-full="{{ photo.full_url }}" data-caption="{{ photo.caption or '' }}">
+                <img src="{{ photo.thumb_url }}" alt="{{ photo.caption or 'SC&SS alumni photo' }}" loading="lazy" referrerpolicy="no-referrer">
+            </a>
+            {% if photo.caption or (show_album and photo.album) %}
+                <figcaption>
+                    {% if photo.caption %}<span>{{ photo.caption }}</span>{% endif %}
+                    {% if show_album and photo.album %}<span class="gallery-item-album">{{ photo.album }}</span>{% endif %}
+                </figcaption>
+            {% endif %}
+        </figure>
+    {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro pager(gallery) -%}
+{% if gallery.has_prev or gallery.has_next %}
+    <div class="btn-group" style="justify-content: center; margin-top: var(--space-lg);">
+        {% if gallery.has_prev %}
+            <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page - 1) }}" class="btn btn-secondary btn-md">← Newer</a>
+        {% endif %}
+        {% if gallery.has_next %}
+            <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page + 1) }}" class="btn btn-secondary btn-md">Older →</a>
+        {% endif %}
+    </div>
+{% endif %}
+{%- endmacro %}
+
 {% block content %}
 <!-- Hero Section -->
 <section class="hero" style="padding-bottom: var(--space-md);">
@@ -28,33 +59,47 @@
             </nav>
         {% endif %}
 
-        {% if gallery.photos %}
-            <div class="gallery-grid">
-                {% for photo in gallery.photos %}
-                    <figure class="gallery-item">
-                        <a href="{{ photo.full_url }}" class="gallery-open" data-full="{{ photo.full_url }}" data-caption="{{ photo.caption or '' }}">
-                            <img src="{{ photo.thumb_url }}" alt="{{ photo.caption or 'SC&SS alumni photo' }}" loading="lazy" referrerpolicy="no-referrer">
-                        </a>
-                        {% if photo.caption or photo.album %}
-                            <figcaption>
-                                {% if photo.caption %}<span>{{ photo.caption }}</span>{% endif %}
-                                {% if photo.album and not gallery.selected_album %}<span class="gallery-item-album">{{ photo.album }}</span>{% endif %}
-                            </figcaption>
-                        {% endif %}
-                    </figure>
-                {% endfor %}
+        {% if gallery.selected_album %}
+            {# Single album view #}
+            <div class="gallery-group-header">
+                <h2 class="gallery-group-title">{{ gallery.selected_album }}</h2>
+                <span class="gallery-group-count">{{ gallery.total }} photo{{ '' if gallery.total == 1 else 's' }}</span>
             </div>
-
-            {% if gallery.has_prev or gallery.has_next %}
-                <div class="btn-group" style="justify-content: center; margin-top: var(--space-lg);">
-                    {% if gallery.has_prev %}
-                        <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page - 1) }}" class="btn btn-secondary btn-md">← Newer</a>
-                    {% endif %}
-                    {% if gallery.has_next %}
-                        <a href="{{ url_for('public.gallery', album=gallery.selected_album, page=gallery.page + 1) }}" class="btn btn-secondary btn-md">Older →</a>
-                    {% endif %}
-                </div>
+            {% if gallery.photos %}
+                {{ photo_grid(gallery.photos, 'album') }}
+                {{ pager(gallery) }}
+            {% else %}
+                <p style="color: var(--color-muted);">This album has no photos yet.</p>
             {% endif %}
+
+        {% elif gallery.groups or gallery.photos %}
+            {# All photos: one section per album, then photos without an album #}
+            {% for group in gallery.groups %}
+                <section class="gallery-group" aria-labelledby="album-{{ loop.index }}">
+                    <div class="gallery-group-header">
+                        <h2 class="gallery-group-title" id="album-{{ loop.index }}">{{ group.name }}</h2>
+                        <span class="gallery-group-count">{{ group.total }} photo{{ '' if group.total == 1 else 's' }}</span>
+                        {% if group.total > group.photos | length %}
+                            <a href="{{ url_for('public.gallery', album=group.name) }}" class="gallery-group-link">View all →</a>
+                        {% endif %}
+                    </div>
+                    {{ photo_grid(group.photos, 'album-' ~ loop.index) }}
+                </section>
+            {% endfor %}
+
+            {% if gallery.photos %}
+                <section class="gallery-group">
+                    {% if gallery.groups %}
+                        <div class="gallery-group-header">
+                            <h2 class="gallery-group-title">More Photos</h2>
+                            <span class="gallery-group-count">{{ gallery.total }} photo{{ '' if gallery.total == 1 else 's' }}</span>
+                        </div>
+                    {% endif %}
+                    {{ photo_grid(gallery.photos, 'ungrouped') }}
+                    {{ pager(gallery) }}
+                </section>
+            {% endif %}
+
         {% else %}
             <div class="content-card" style="text-align: center; padding: var(--space-xl) var(--space-md);">
                 <h3>Photos coming soon</h3>
@@ -64,9 +109,13 @@
     </div>
 </section>
 
-<dialog class="gallery-lightbox" id="galleryLightbox">
+<dialog class="gallery-lightbox" id="galleryLightbox" aria-label="Photo viewer">
     <button type="button" class="gallery-lightbox-close" aria-label="Close photo">×</button>
-    <img src="" alt="" referrerpolicy="no-referrer">
+    <div class="gallery-lightbox-stage">
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-prev" aria-label="Previous photo">‹</button>
+        <img src="" alt="" referrerpolicy="no-referrer">
+        <button type="button" class="gallery-lightbox-nav gallery-lightbox-next" aria-label="Next photo">›</button>
+    </div>
     <p class="gallery-lightbox-caption"></p>
 </dialog>
 {% endblock %}
@@ -78,19 +127,72 @@
     if (!box || typeof box.showModal !== "function") return;  // fall back to opening the image link
     const img = box.querySelector("img");
     const caption = box.querySelector(".gallery-lightbox-caption");
+    const prevBtn = box.querySelector(".gallery-lightbox-prev");
+    const nextBtn = box.querySelector(".gallery-lightbox-next");
+    let links = [];   // photos in the same album/group as the one opened
+    let index = 0;
+    let loadToken = 0;
+
+    function show(i) {
+        index = (i + links.length) % links.length;
+        const link = links[index];
+        const thumb = link.querySelector("img");
+        const token = ++loadToken;
+
+        // Show the already-loaded thumbnail instantly, then swap in the full-size image once it has downloaded,
+        // so the viewer never opens empty or jumps in size.
+        img.src = thumb.currentSrc || thumb.src;
+        img.alt = link.dataset.caption || "SC&SS alumni photo";
+        box.classList.add("is-loading");
+        caption.textContent = link.dataset.caption || "";
+
+        const full = new Image();
+        full.referrerPolicy = "no-referrer";
+        full.onload = () => {
+            if (token !== loadToken) return;
+            img.src = full.src;
+            box.classList.remove("is-loading");
+        };
+        full.onerror = () => { if (token === loadToken) box.classList.remove("is-loading"); };
+        full.src = link.dataset.full;
+
+        const single = links.length < 2;
+        prevBtn.hidden = single;
+        nextBtn.hidden = single;
+    }
+
+    function closeAnimated() {
+        if (!box.open || box.classList.contains("is-closing")) return;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduceMotion) { box.close(); return; }
+        box.classList.add("is-closing");
+        box.addEventListener("animationend", () => {
+            box.classList.remove("is-closing");
+            box.close();
+        }, { once: true });
+    }
 
     document.querySelectorAll(".gallery-open").forEach(link => {
         link.addEventListener("click", e => {
             e.preventDefault();
-            img.src = link.dataset.full;
-            img.alt = link.dataset.caption || "SC&SS alumni photo";
-            caption.textContent = link.dataset.caption || "";
+            const group = link.closest("[data-gallery-group]");
+            links = group ? Array.from(group.querySelectorAll(".gallery-open")) : [link];
+            show(links.indexOf(link));
             box.showModal();
         });
     });
-    box.querySelector(".gallery-lightbox-close").addEventListener("click", () => box.close());
-    box.addEventListener("click", e => { if (e.target === box) box.close(); });
-    box.addEventListener("close", () => { img.src = ""; });
+
+    prevBtn.addEventListener("click", () => show(index - 1));
+    nextBtn.addEventListener("click", () => show(index + 1));
+    box.querySelector(".gallery-lightbox-close").addEventListener("click", closeAnimated);
+    box.addEventListener("click", e => { if (e.target === box) closeAnimated(); });
+    box.addEventListener("cancel", e => { e.preventDefault(); closeAnimated(); });  // Esc key
+    box.addEventListener("keydown", e => {
+        if (links.length < 2) return;
+        if (e.key === "ArrowLeft") show(index - 1);
+        if (e.key === "ArrowRight") show(index + 1);
+    });
+    box.addEventListener("close", () => { loadToken++; img.removeAttribute("src"); });
 })();
 </script>
 {% endblock %}

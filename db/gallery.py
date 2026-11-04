@@ -28,12 +28,14 @@ def add_photos(drive_file_ids: List[str], caption: Optional[str], album: Optiona
     with get_db_cursor(commit=True) as cursor:
         return cursor.executemany(sql, [(fid, caption, album, created_by) for fid in drive_file_ids]) or 0
 
-def _build_filters(published_only: bool, album: Optional[str]):
+def _build_filters(published_only: bool, album: Optional[str], ungrouped: bool = False):
     conditions = ["1=1"]
     params: List[Any] = []
     if published_only:
         conditions.append("is_published = TRUE")
-    if album:
+    if ungrouped:
+        conditions.append("(album IS NULL OR album = '')")
+    elif album:
         conditions.append("album = %s")
         params.append(album)
     return " AND ".join(conditions), params
@@ -42,10 +44,11 @@ def get_photos(
     published_only: bool = True,
     album: Optional[str] = None,
     limit: int = 60,
-    offset: int = 0
+    offset: int = 0,
+    ungrouped: bool = False
 ) -> List[Dict[str, Any]]:
-    """Fetch gallery photos, newest first."""
-    where_clause, params = _build_filters(published_only, album)
+    """Fetch gallery photos, newest first. ungrouped=True returns only photos without an album."""
+    where_clause, params = _build_filters(published_only, album, ungrouped)
     sql = f"""
         SELECT id, drive_file_id, caption, album, is_published, created_at
         FROM gallery_photos
@@ -56,11 +59,31 @@ def get_photos(
     params.extend([limit, offset])
     return execute_query(sql, tuple(params), fetch_all=True) or []
 
-def count_photos(published_only: bool = True, album: Optional[str] = None) -> int:
-    where_clause, params = _build_filters(published_only, album)
+def count_photos(published_only: bool = True, album: Optional[str] = None, ungrouped: bool = False) -> int:
+    where_clause, params = _build_filters(published_only, album, ungrouped)
     sql = f"SELECT COUNT(*) AS total FROM gallery_photos WHERE {where_clause}"
     row = execute_query(sql, tuple(params), fetch_one=True)
     return int(row["total"]) if row else 0
+
+def get_album_previews(per_album: int) -> List[Dict[str, Any]]:
+    """
+    Newest `per_album` published photos of every album in one query, with each album's total.
+    Albums are ordered by their most recent photo.
+    """
+    sql = """
+        SELECT id, drive_file_id, caption, album, created_at, album_total
+        FROM (
+            SELECT id, drive_file_id, caption, album, created_at,
+                   ROW_NUMBER() OVER (PARTITION BY album ORDER BY created_at DESC, id DESC) AS rn,
+                   COUNT(*) OVER (PARTITION BY album) AS album_total,
+                   MAX(created_at) OVER (PARTITION BY album) AS album_latest
+            FROM gallery_photos
+            WHERE is_published = TRUE AND album IS NOT NULL AND album <> ''
+        ) ranked
+        WHERE rn <= %s
+        ORDER BY album_latest DESC, album ASC, rn ASC
+    """
+    return execute_query(sql, (per_album,), fetch_all=True) or []
 
 def get_albums(published_only: bool = True) -> List[str]:
     """Distinct album names that have at least one photo."""

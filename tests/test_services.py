@@ -65,3 +65,21 @@ def test_gallery_parse_drive_links():
     assert file_ids == ["1AbCdEfGhIjKlMnOpQrStUvWxYz", "1ZyXwVuTsRqPoNmLkJiHgFeDcBa"]
     assert len(rejected) == 2
     assert any("folders" in r for r in rejected)
+
+def test_public_gallery_groups_photos_by_album():
+    """All-photos view: one section per album (in query order), then photos without an album."""
+    import services.gallery_service as gs
+    previews = [
+        {"id": 3, "drive_file_id": "a" * 25, "caption": None, "album": "Batch of 2024", "album_total": 12},
+        {"id": 2, "drive_file_id": "b" * 25, "caption": None, "album": "Batch of 2024", "album_total": 12},
+        {"id": 1, "drive_file_id": "c" * 25, "caption": "Reunion", "album": "Meet 2026", "album_total": 1},
+    ]
+    loose = [{"id": 9, "drive_file_id": "d" * 25, "caption": None, "album": None}]
+    with patch.object(gs, "get_album_previews", return_value=previews), \
+         patch.object(gs, "get_photos", return_value=loose) as mock_get, \
+         patch.object(gs, "count_photos", return_value=1), \
+         patch.object(gs, "get_albums", return_value=["Batch of 2024", "Meet 2026"]):
+        result = gs.get_public_gallery()
+    assert [(g["name"], g["total"], len(g["photos"])) for g in result["groups"]] == [("Batch of 2024", 12, 2), ("Meet 2026", 1, 1)]
+    assert mock_get.call_args.kwargs["ungrouped"] is True
+    assert [p["id"] for p in result["photos"]] == [9]
