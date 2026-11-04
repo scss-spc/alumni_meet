@@ -263,14 +263,8 @@ class GoogleSheetsConnector:
 
     def fetch_via_csv_url(self) -> List[Dict[str, Any]]:
         """Fetch sheet rows via public/shared Google Sheet CSV export URL."""
-        # Try primary URL first, then fallback to gid=0 if named sheet export fails
+        # No fallback to the first tab (gid=0): reading a different tab would silently import the wrong data.
         urls_to_try = [self.get_public_csv_url()]
-        if self.sheet_id:
-            match = re.search(r"/spreadsheets/d/([a-zA-Z0-9_-]+)", self.sheet_id)
-            sheet_id = match.group(1) if match else self.sheet_id
-            gid0_url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid=0"
-            if gid0_url not in urls_to_try:
-                urls_to_try.append(gid0_url)
 
         last_error = None
         for url in urls_to_try:

@@ -124,5 +124,6 @@ def get_scheduler_info() -> Dict[str, Any]:
         "interval_hours": hours,
         "sheet_id_configured": bool(Config.GOOGLE_SHEET_ID or Config.GOOGLE_SHEET_CSV_URL),
         "sheet_id": Config.GOOGLE_SHEET_ID or Config.GOOGLE_SHEET_CSV_URL or "Not Configured",
+        "sheet_name": Config.GOOGLE_SHEET_NAME,
         "next_run_time": _next_run_time.strftime("%Y-%m-%d %H:%M:%S") if _next_run_time else None
     }
