@@ -1,6 +1,6 @@
 import logging
 from typing import List, Dict, Any, Optional
-from db.connection import execute_query
+from db.connection import execute_query, get_db_cursor
 
 logger = logging.getLogger(__name__)
 
@@ -831,8 +831,6 @@ def init_site_sections_table():
             CONSTRAINT `uk_page_section` UNIQUE (`page`, `section_key`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     """
-    execute_query(create_sql, commit=True)
-
     insert_sql = """
         INSERT INTO site_sections (
             page, section_key, title, category, content_type, default_value
@@ -843,12 +841,14 @@ def init_site_sections_table():
             content_type = VALUES(content_type),
             default_value = VALUES(default_value)
     """
-    for sec in DEFAULT_SECTIONS:
-        execute_query(
-            insert_sql,
-            (sec["page"], sec["section_key"], sec["title"], sec["category"], sec["content_type"], sec["default_value"]),
-            commit=True
-        )
+    rows = [
+        (sec["page"], sec["section_key"], sec["title"], sec["category"], sec["content_type"], sec["default_value"])
+        for sec in DEFAULT_SECTIONS
+    ]
+    # Single connection + batched multi-row upsert: one TLS handshake instead of one per section.
+    with get_db_cursor(commit=True) as cursor:
+        cursor.execute(create_sql)
+        cursor.executemany(insert_sql, rows)
 
 def get_all_sections(page: Optional[str] = None) -> List[Dict[str, Any]]:
     """Fetch all site section records, optionally filtered by page."""
