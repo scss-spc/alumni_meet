@@ -20,6 +20,14 @@ DEFAULT_SECTIONS = [
         "title": "Hero Main Heading",
         "category": "Hero Section",
         "content_type": "text",
+        "default_value": "Continuum"
+    },
+    {
+        "page": "index",
+        "section_key": "hero_subtitle",
+        "title": "Hero Subtitle (below main heading)",
+        "category": "Hero Section",
+        "content_type": "text",
         "default_value": "Alumni Meet 2026"
     },
     {
@@ -92,7 +100,7 @@ DEFAULT_SECTIONS = [
         "title": "Section 01 Lead Paragraph",
         "category": "Section 01 - About the Meet",
         "content_type": "textarea",
-        "default_value": "The SC&SS Alumni Meet 2026 is an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network."
+        "default_value": "Continuum is the SC&SS Alumni Meet 2026 — an opportunity to walk down familiar campus pathways, catch up with batchmates, meet current scholars, and strengthen the alumni network."
     },
     {
         "page": "index",

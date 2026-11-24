@@ -14,7 +14,7 @@ def get_current_meet_context() -> Dict[str, Any]:
     if not meet:
         meet = {
             "id": 1,
-            "name": "SC&SS JNU Alumni Meet 2026",
+            "name": "Continuum — SC&SS JNU Alumni Meet 2026",
             "description": "School of Computer and Systems Sciences Alumni Meet 2026",
             "event_date": None,
             "venue": "SC&SS Auditorium, JNU, New Delhi",

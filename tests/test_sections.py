@@ -36,7 +36,7 @@ def test_db_sections_init_and_get():
 
     sec_dict = get_sections_dict()
     assert "index.hero_title" in sec_dict
-    assert sec_dict["index.hero_title"] == "Alumni Meet 2026"
+    assert sec_dict["index.hero_title"] == "Continuum"
 
 def test_update_and_reset_section():
     """Verify section update and reset to default value."""
@@ -59,7 +59,7 @@ def test_update_and_reset_section():
     assert sec_reset["content_value"] is None
 
     sec_dict_reset = get_sections_dict()
-    assert sec_dict_reset["index.hero_title"] == "Alumni Meet 2026"
+    assert sec_dict_reset["index.hero_title"] == "Continuum"
 
 def test_service_bulk_update():
     """Verify bulk section updates via service layer."""

@@ -4,7 +4,7 @@
 INSERT INTO `meets` (`id`, `name`, `description`, `event_date`, `venue`, `status`)
 VALUES (
     1,
-    'SC&SS JNU Alumni Meet 2026',
+    'Continuum — SC&SS JNU Alumni Meet 2026',
     'A gathering of the alumni, faculty, and scholars of the School of Computer and Systems Sciences (SC&SS), Jawaharlal Nehru University.',
     '2026-08-29 10:00:00',
     'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi',
