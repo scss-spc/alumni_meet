@@ -28,7 +28,7 @@
                 <div class="form-group" style="flex: 1; min-width: 220px;">
                     <label class="form-label" for="album">Album (optional)</label>
                     <input type="text" name="album" id="album" class="form-control" style="width: 100%;" maxlength="100"
-                        list="albumOptions" placeholder="e.g. Alumni Meet 2026, Batch of 1998">
+                        list="albumOptions" placeholder="e.g. Alumni Meet 2026, Class of 1998">
                     <datalist id="albumOptions">
                         {% for album in albums %}<option value="{{ album }}">{% endfor %}
                     </datalist>

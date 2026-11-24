@@ -59,8 +59,8 @@ def create_app(config_class=Config):
 
     @app.template_filter("batch_label")
     def batch_label_filter(year, missing="Batch not specified"):
-        """Standard batch display: 2015 -> 'Batch of 2015'."""
-        return f"Batch of {year}" if year else missing
+        """Standard batch display: 2015 -> 'Class of 2015'."""
+        return f"Class of {year}" if year else missing
 
     @app.template_filter("format_date")
     def format_date_filter(value, fmt="%d %B %Y"):
