@@ -1,0 +1,23 @@
+{#
+  Share button for the public invitation page (/invite).
+  On phones it opens the native share sheet; elsewhere it opens a small menu
+  (copy link, WhatsApp, email). Behaviour lives in static/js/app.js ([data-share]).
+#}
+{% macro share_invite(label="Share Invitation", btn_class="btn-secondary", size="", menu_up=false) -%}
+{%- set url = absolute_url('public.invite') -%}
+{%- set title = 'Continuum — SC&SS JNU Alumni Meet 2026' -%}
+{%- set text = "You're invited to Continuum, the SC&SS JNU Alumni Meet 2026 · " ~ site_sections.get('event.date', 'Saturday, 5 December 2026') ~ ' · ' ~ site_sections.get('event.venue', 'Convention Centre, Jawaharlal Nehru University, New Delhi') -%}
+<div class="share{% if menu_up %} share-up{% endif %}" data-share data-share-url="{{ url }}" data-share-title="{{ title }}" data-share-text="{{ text }}">
+    <button type="button" class="btn {{ btn_class }} {{ size }}" data-share-trigger aria-haspopup="true" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+        <span>{{ label }}</span>
+    </button>
+    <div class="share-menu" role="menu" hidden>
+        <p class="share-menu-link" title="{{ url }}">{{ url }}</p>
+        <button type="button" role="menuitem" class="share-menu-item" data-share-copy>Copy link</button>
+        <a role="menuitem" class="share-menu-item" href="https://wa.me/?text={{ (text ~ ' ' ~ url) | urlencode }}" target="_blank" rel="noopener noreferrer">Share on WhatsApp</a>
+        <a role="menuitem" class="share-menu-item" href="mailto:?subject={{ title | urlencode }}&amp;body={{ (text ~ '\n\n' ~ url) | urlencode }}">Share by email</a>
+        <span class="share-status" aria-live="polite"></span>
+    </div>
+</div>
+{%- endmacro %}

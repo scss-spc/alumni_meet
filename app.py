@@ -1,6 +1,6 @@
 import os
 import click
-from flask import Flask, render_template
+from flask import Flask, render_template, request, url_for
 from config import Config
 from routes.public import public_bp
 from routes.admin import admin_bp
@@ -39,11 +39,21 @@ def create_app(config_class=Config):
         except Exception:
             sections = {}
         form_link = app.config.get("ALUMNI_FORM_URL") or app.config.get("GOOGLE_FORM_URL") or "https://forms.gle/rfHgUFHzHUtkBBhL8"
+
+        def absolute_url(endpoint, **values):
+            """Full URL for sharing and link previews; keeps https when served behind a proxy (e.g. Render)."""
+            url = url_for(endpoint, _external=True, **values)
+            proto = request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip().lower()
+            if proto in ("http", "https") and "://" in url:
+                url = proto + url[url.index("://"):]
+            return url
+
         return {
             "google_form_url": form_link,
             "alumni_form_url": form_link,
             "admin_path_prefix": app.config.get("ADMIN_PATH_PREFIX", "/admin"),
-            "site_sections": sections
+            "site_sections": sections,
+            "absolute_url": absolute_url
         }
 
 

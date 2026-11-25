@@ -17,7 +17,7 @@ def get_current_meet_context() -> Dict[str, Any]:
             "name": "Continuum — SC&SS JNU Alumni Meet 2026",
             "description": "School of Computer and Systems Sciences Alumni Meet 2026",
             "event_date": None,
-            "venue": "SC&SS Auditorium, JNU, New Delhi",
+            "venue": "Convention Centre, JNU, New Delhi",
             "status": "registration_open"
         }
         stats = {"total_responses": 0, "total_attending_alumni": 0, "total_headcount": 0, "total_guests": 0}

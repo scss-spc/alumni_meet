@@ -6,8 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Continuum — SC&SS JNU Alumni Meet 2026{% endblock %} | Jawaharlal Nehru University</title>
     <meta name="description" content="Official platform for Continuum, the School of Computer and Systems Sciences (SC&SS) Alumni Meet, Jawaharlal Nehru University (JNU), New Delhi.">
+
+    <!-- Link previews (WhatsApp, LinkedIn, X, etc.) show the invitation poster -->
+    {% set share_title = 'Continuum — SC&SS JNU Alumni Meet 2026' %}
+    {% set share_desc = "You're invited! " ~ site_sections.get('event.date', 'Saturday, 5 December 2026') ~ ' · ' ~ site_sections.get('event.timing', '2:00 PM – 9:00 PM IST') ~ ' · ' ~ site_sections.get('event.venue', 'Convention Centre, Jawaharlal Nehru University, New Delhi') %}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SC&SS · JNU">
+    <meta property="og:title" content="{% block og_title %}{{ share_title }}{% endblock %}">
+    <meta property="og:description" content="{{ share_desc }}">
+    {% if request.endpoint and request.endpoint != 'static' %}<meta property="og:url" content="{{ absolute_url(request.endpoint, **(request.view_args or {})) }}">{% endif %}
+    <meta property="og:image" content="{{ absolute_url('static', filename='images/continuum_poster_og.jpg') }}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="900">
+    <meta property="og:image:height" content="1273">
+    <meta property="og:image:alt" content="Continuum — SC&SS JNU Alumni Meet 2026 invitation poster">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ share_title }}">
+    <meta name="twitter:description" content="{{ share_desc }}">
+    <meta name="twitter:image" content="{{ absolute_url('static', filename='images/continuum_poster_og.jpg') }}">
     
     <!-- Design System Stylesheet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>

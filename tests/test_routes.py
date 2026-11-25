@@ -52,6 +52,15 @@ def test_public_meet_page(client):
         assert res.status_code == 200
         assert b"Schedule" in res.data
 
+def test_public_invite_page(client):
+    """Shareable invitation page shows the poster and link-preview tags."""
+    res = client.get("/invite", headers={"X-Forwarded-Proto": "https"})
+    assert res.status_code == 200
+    assert b"images/continuum_poster.webp" in res.data
+    assert b'property="og:image" content="https://localhost/static/images/continuum_poster_og.jpg"' in res.data
+    assert b'property="og:url" content="https://localhost/invite"' in res.data
+    assert b"data-share-url=\"https://localhost/invite\"" in res.data
+
 def test_public_about_redirects_to_homepage_section(client):
     """The /about page was merged into the homepage; old links must keep working."""
     res = client.get("/about")

@@ -42,6 +42,16 @@ from db.audit import get_recent_audit_logs
 
 admin_bp = Blueprint("admin", __name__)
 
+@admin_bp.after_request
+def _refresh_public_pages_after_admin_change(response):
+    """Admin edits (gallery, contributions, sections, ...) must show on public pages immediately."""
+    if request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        from routes.public import clear_public_cache
+        from db.sections import invalidate_sections_cache
+        clear_public_cache()
+        invalidate_sections_cache()
+    return response
+
 @admin_bp.route("/", methods=["GET", "POST"])
 @admin_bp.route("/login", methods=["GET", "POST"])
 def login():

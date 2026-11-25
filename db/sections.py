@@ -1,4 +1,6 @@
 import logging
+import threading
+import time
 from typing import List, Dict, Any, Optional
 from db.connection import execute_query, get_db_cursor
 
@@ -482,7 +484,7 @@ DEFAULT_SECTIONS = [
         "title": "Venue",
         "category": "Event Details",
         "content_type": "text",
-        "default_value": "Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi"
+        "default_value": "Convention Centre, Jawaharlal Nehru University, New Delhi"
     },
     {
         "page": "event",
@@ -590,6 +592,7 @@ def init_site_sections_table():
         cursor.executemany(insert_sql, rows)
         for (dst_page, dst_key), (src_page, src_key) in LEGACY_SECTION_MOVES.items():
             cursor.execute(carry_over_sql, (src_page, src_key, dst_page, dst_key))
+    invalidate_sections_cache()
 
 def prune_retired_sections() -> int:
     """Delete site_sections rows whose (page, section_key) is no longer in DEFAULT_SECTIONS."""
@@ -598,7 +601,9 @@ def prune_retired_sections() -> int:
     if not retired_ids:
         return 0
     placeholders = ", ".join(["%s"] * len(retired_ids))
-    return execute_query(f"DELETE FROM site_sections WHERE id IN ({placeholders})", tuple(retired_ids), commit=True)
+    deleted = execute_query(f"DELETE FROM site_sections WHERE id IN ({placeholders})", tuple(retired_ids), commit=True)
+    invalidate_sections_cache()
+    return deleted
 
 def get_all_sections(page: Optional[str] = None) -> List[Dict[str, Any]]:
     """Fetch all site section records, optionally filtered by page."""
@@ -622,11 +627,31 @@ def get_all_sections(page: Optional[str] = None) -> List[Dict[str, Any]]:
     # Retired keys may linger until prune_retired_sections() runs; never surface them.
     return [r for r in rows if (r["page"], r["section_key"]) in _DEFAULT_KEYS]
 
+# Every public page reads all site sections; cache them briefly per process.
+# Edits made through this module clear the cache immediately; other worker processes
+# pick up changes within SECTIONS_CACHE_SECONDS.
+SECTIONS_CACHE_SECONDS = 30
+_sections_cache: Dict[str, Any] = {"value": None, "expires": 0.0}
+_sections_cache_lock = threading.Lock()
+
+def invalidate_sections_cache() -> None:
+    """Drop the cached sections so the next read goes to the database."""
+    with _sections_cache_lock:
+        _sections_cache["value"] = None
+        _sections_cache["expires"] = 0.0
+
 def get_sections_dict() -> Dict[str, str]:
     """
     Returns a dictionary mapping 'page.section_key' -> current text value.
     If content_value is non-empty, uses content_value; otherwise falls back to default_value.
+    Results are cached for SECTIONS_CACHE_SECONDS.
     """
+    now = time.monotonic()
+    with _sections_cache_lock:
+        cached = _sections_cache["value"]
+        if cached is not None and now < _sections_cache["expires"]:
+            return dict(cached)
+
     sections = get_all_sections()
     res = {}
     for s in sections:
@@ -635,7 +660,11 @@ def get_sections_dict() -> Dict[str, str]:
         if val is None or val.strip() == "":
             val = s.get("default_value") or ""
         res[key] = val
-    return res
+
+    with _sections_cache_lock:
+        _sections_cache["value"] = res
+        _sections_cache["expires"] = time.monotonic() + SECTIONS_CACHE_SECONDS
+    return dict(res)
 
 def get_section_by_id(section_id: int) -> Optional[Dict[str, Any]]:
     """Fetch section details by ID."""
@@ -652,6 +681,7 @@ def update_section(section_id: int, content_value: Optional[str], updated_by: Op
         WHERE id = %s
     """
     execute_query(sql, (content_value if content_value is not None else "", updated_by, section_id), commit=True)
+    invalidate_sections_cache()
     return True
 
 def reset_section_to_default(section_id: int, updated_by: Optional[int] = None) -> bool:
@@ -664,4 +694,5 @@ def reset_section_to_default(section_id: int, updated_by: Optional[int] = None) 
         WHERE id = %s
     """
     execute_query(sql, (updated_by, section_id), commit=True)
+    invalidate_sections_cache()
     return True

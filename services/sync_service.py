@@ -256,3 +256,9 @@ def perform_sync(
     finally:
         _sync_state["is_syncing"] = False
         _sync_lock.release()
+        # New responses/contributions should show on public pages straight away.
+        try:
+            from routes.public import clear_public_cache
+            clear_public_cache()
+        except Exception:
+            pass

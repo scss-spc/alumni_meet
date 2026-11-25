@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initScrollAnimations() {
         // Tag page sections for smooth reveal
         const animateTargets = document.querySelectorAll(
-            ".hero, .section, .timeline-section, .cta-banner, " +
+            ".hero:not(.hero-night), .section, .timeline-section, .cta-banner, " +
             ".tracker-spotlight-card, .privacy-tiers-explainer, " +
             ".tracker-main-card, .supporter-roll-container, .timeline-node"
         );
@@ -162,4 +162,101 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     initScrollAnimations();
+
+    // Share invitation: native share sheet on phones, otherwise a small menu (copy / WhatsApp / email)
+    const shareBoxes = document.querySelectorAll("[data-share]");
+    const closeShareMenus = (except) => {
+        shareBoxes.forEach(box => {
+            if (box === except) return;
+            const menu = box.querySelector(".share-menu");
+            const trigger = box.querySelector("[data-share-trigger]");
+            if (menu) menu.hidden = true;
+            if (trigger) trigger.setAttribute("aria-expanded", "false");
+        });
+    };
+    const copyText = async (text) => {
+        if (navigator.clipboard && window.isSecureContext) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return;
+            } catch (err) {
+                // Clipboard API can be blocked (permissions, embedded views); fall back below.
+            }
+        }
+        const field = document.createElement("textarea");
+        field.value = text;
+        field.setAttribute("readonly", "");
+        field.style.position = "fixed";
+        field.style.opacity = "0";
+        document.body.appendChild(field);
+        field.select();
+        const ok = document.execCommand("copy");
+        field.remove();
+        if (!ok) throw new Error("copy failed");
+    };
+    shareBoxes.forEach(box => {
+        const trigger = box.querySelector("[data-share-trigger]");
+        const menu = box.querySelector(".share-menu");
+        const status = box.querySelector(".share-status");
+        const copyBtn = box.querySelector("[data-share-copy]");
+        const data = { title: box.dataset.shareTitle, text: box.dataset.shareText, url: box.dataset.shareUrl };
+
+        trigger.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            const isTouch = window.matchMedia("(pointer: coarse)").matches;
+            if (isTouch && navigator.share) {
+                try {
+                    await navigator.share(data);
+                    return;
+                } catch (err) {
+                    if (err && err.name === "AbortError") return;
+                }
+            }
+            const willOpen = menu.hidden;
+            closeShareMenus(box);
+            menu.hidden = !willOpen;
+            trigger.setAttribute("aria-expanded", String(willOpen));
+            if (status) status.textContent = "";
+        });
+
+        menu.addEventListener("click", (e) => e.stopPropagation());
+
+        if (copyBtn) {
+            copyBtn.addEventListener("click", async () => {
+                try {
+                    await copyText(data.url);
+                    if (status) status.textContent = "Link copied!";
+                } catch (err) {
+                    if (status) status.textContent = "Copy failed. Select the link above.";
+                }
+            });
+        }
+    });
+    if (shareBoxes.length) {
+        document.addEventListener("click", () => closeShareMenus());
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeShareMenus();
+        });
+    }
+
+    // Hero night sky: scatter twinkling stars (decorative; skipped when motion is reduced)
+    const starfield = document.querySelector("[data-starfield]");
+    if (starfield && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const count = window.innerWidth < 640 ? 45 : 90;
+        const frag = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement("span");
+            const sparkle = Math.random() < 0.08;
+            star.className = sparkle ? "star star-sparkle" : "star";
+            star.style.left = (Math.random() * 100).toFixed(2) + "%";
+            star.style.top = (Math.random() * 70).toFixed(2) + "%";
+            star.style.setProperty("--size", sparkle
+                ? (10 + Math.random() * 8).toFixed(1) + "px"
+                : (1 + Math.random() * 2).toFixed(1) + "px");
+            star.style.setProperty("--dur", (2.2 + Math.random() * 3.8).toFixed(2) + "s");
+            star.style.setProperty("--delay", (-Math.random() * 6).toFixed(2) + "s");
+            frag.appendChild(star);
+        }
+        starfield.appendChild(frag);
+    }
 });

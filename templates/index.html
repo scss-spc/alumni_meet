@@ -1,59 +1,226 @@
 {% extends "base.html" %}
 {% from "macros/icons.html" import icon_external, icon_jnu_seal %}
 {% from "macros/tags.html" import tentative_tag %}
+{% from "macros/share.html" import share_invite with context %}
 
 {% block title %}Continuum — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero">
-    <div class="container hero-grid">
-        <div class="hero-content">
-            <span class="eyebrow">{{ site_sections.get('index.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
-            <h1>{{ site_sections.get('index.hero_title', 'Continuum') }}</h1>
-            <p class="hero-subtitle">{{ site_sections.get('index.hero_subtitle', 'Alumni Meet 2026') }}</p>
-            <hr class="editorial-rule">
-            <p class="lead-text">
-                {{ site_sections.get('index.hero_lead', 'Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.') }}
-            </p>
+<!-- Hero Section: animated night scene (twinkling stars, glowing entrance, light path) -->
+<section class="hero hero-night">
+    <div class="hero-sky" aria-hidden="true">
+        <div class="hero-stars" data-starfield></div>
+        <span class="hero-shooting-star"></span>
+        <span class="hero-moon"></span>
+        <span class="hero-core-glow"></span>
+    </div>
 
-            <div class="hero-meta-bar">
-                <div class="meta-item">
-                    <span class="meta-label">Date</span>
-                    <span class="meta-value">{{ site_sections.get('event.date', 'Saturday, 5 December 2026') }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Venue</span>
-                    <span class="meta-value">{{ site_sections.get('event.venue', 'Convention Centre / SC&SS Auditorium, Jawaharlal Nehru University, New Delhi') }}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Status</span>
-                    <span class="meta-value" style="color: var(--color-sepia-dark);">{{ site_sections.get('event.status', 'Registration Open') }}</span>
-                </div>
-            </div>
+    <div class="container hero-layout">
+        <div class="hero-heading">
+        <span class="eyebrow hero-anim" style="--d: 0">{{ site_sections.get('index.hero_eyebrow', 'School of Computer & Systems Sciences · JNU') }}</span>
+        <span class="hero-invite hero-anim" style="--d: 1">invites you to</span>
+        <h1 class="hero-title-glow hero-anim" style="--d: 2">{{ site_sections.get('index.hero_title', 'Continuum') }}</h1>
+        <p class="hero-subtitle hero-anim" style="--d: 3">{{ site_sections.get('index.hero_subtitle', 'Alumni Meet 2026') }}</p>
+        <p class="hero-tagline hero-anim" style="--d: 4">
+            {{ site_sections.get('index.hero_lead', 'Returning to the place where many of our journeys began. A gathering of alumni, distinguished faculty, scholars, and friends who have been part of the enduring SC&SS story.') }}
+        </p>
 
-            <div class="btn-group">
-                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
-                    <span>{{ site_sections.get('index.hero_btn_primary', 'Register & Contribute via Google Form') }}</span> {{ icon_external() }}
-                </a>
-                <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
-                    <span>{{ site_sections.get('index.hero_btn_secondary', 'View Meet Schedule') }}</span>
-                </a>
-            </div>
         </div>
 
-        <div class="hero-visual">
-            <figure class="hero-poster" id="poster">
-                <a href="{{ url_for('static', filename='images/continuum_poster.webp') }}" target="_blank" rel="noopener" class="hero-poster-link" aria-label="Open the full-size Continuum invitation poster">
-                    <img src="{{ url_for('static', filename='images/continuum_poster.webp') }}" width="1414" height="2000"
-                         alt="Continuum — SC&SS JNU Alumni Meet 2026 invitation poster: Saturday 5 December 2026, 2:00 PM onwards, Convention Centre, JNU, New Delhi.">
-                </a>
-                <figcaption>
-                    <a href="{{ url_for('static', filename='images/continuum_poster.jpg') }}" download="Continuum-Alumni-Meet-2026-Poster.jpg" class="btn btn-secondary btn-sm">Download Poster</a>
-                </figcaption>
-            </figure>
+        <div class="hero-scene" aria-hidden="true">
+            <svg class="hero-scene-svg" viewBox="185 935 960 435" preserveAspectRatio="xMidYMid meet" focusable="false">
+                <!-- Traced from the Continuum poster (coordinates are poster pixels) -->
+                <defs>
+                    <linearGradient id="sceneLeftWall" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#1A3EA6"/>
+                        <stop offset="1" stop-color="#112B84"/>
+                    </linearGradient>
+                    <linearGradient id="sceneCanopy" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#C49422"/>
+                        <stop offset="1" stop-color="#A47A1B"/>
+                    </linearGradient>
+                    <linearGradient id="scenePillar" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#9C7419"/>
+                        <stop offset="1" stop-color="#4E4436"/>
+                    </linearGradient>
+                    <linearGradient id="sceneDoor" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#FFE9A6"/>
+                        <stop offset="1" stop-color="#D9B868"/>
+                    </linearGradient>
+                    <linearGradient id="scenePath" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#F7D886" stop-opacity="0.95"/>
+                        <stop offset="0.45" stop-color="#9C8758" stop-opacity="0.75"/>
+                        <stop offset="1" stop-color="#3B477A" stop-opacity="0.55"/>
+                    </linearGradient>
+                    <linearGradient id="sceneSpill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#F5B82D" stop-opacity="0.55"/>
+                        <stop offset="1" stop-color="#F5B82D" stop-opacity="0"/>
+                    </linearGradient>
+                    <radialGradient id="sceneDoorGlow">
+                        <stop offset="0" stop-color="#FFE29A" stop-opacity="0.9"/>
+                        <stop offset="0.4" stop-color="#F5B82D" stop-opacity="0.3"/>
+                        <stop offset="1" stop-color="#F5B82D" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="sceneLamp">
+                        <stop offset="0" stop-color="#FFE9B0" stop-opacity="0.85"/>
+                        <stop offset="1" stop-color="#F5B82D" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+
+                <!-- trees behind the lamp -->
+                <g fill="#0A1F6B" stroke="#1A3592" stroke-opacity="0.35" stroke-width="1">
+                    <circle cx="980" cy="1055" r="60"/>
+                    <circle cx="1055" cy="1085" r="55"/>
+                    <circle cx="930" cy="1125" r="50"/>
+                    <circle cx="1075" cy="1150" r="48"/>
+                    <circle cx="1000" cy="1165" r="55"/>
+                    <rect x="880" y="1150" width="230" height="100" stroke="none"/>
+                </g>
+
+                <!-- left facade -->
+                <rect x="201" y="941" width="211" height="311" fill="url(#sceneLeftWall)"/>
+                <rect x="412" y="1068" width="84" height="184" fill="#1B379C"/>
+
+                <!-- perforated upper block and the tall block behind it -->
+                <rect x="622" y="941" width="50" height="171" fill="#1C3A9E" stroke="#8FA6E6" stroke-opacity="0.6" stroke-width="1.2"/>
+                <rect x="644" y="964" width="4" height="10" fill="#F5B82D"/>
+                <rect x="410" y="941" width="212" height="127" fill="#1D3998" stroke="#8FA6E6" stroke-opacity="0.7" stroke-width="1.2"/>
+
+                <!-- light-blue sloped underside -->
+                <polygon points="410,1068 622,1065 622,1112 500,1117 427,1097" fill="#3A65D6"/>
+                <polygon points="427,1097 500,1117 498,1124 440,1108" fill="#2347B4"/>
+
+                <!-- small window grid with a warm light -->
+                <g stroke="#8FA6E6" stroke-opacity="0.7" stroke-width="1">
+                    <rect x="542" y="1074" width="80" height="38" fill="#1E3990"/>
+                    <line x1="568.7" y1="1074" x2="568.7" y2="1112"/>
+                    <line x1="595.3" y1="1074" x2="595.3" y2="1112"/>
+                    <line x1="542" y1="1093" x2="622" y2="1093"/>
+                </g>
+                <circle class="scene-window-light" cx="555" cy="1084" r="9" fill="url(#sceneLamp)"/>
+
+                <!-- tower, side blocks and slanted roof -->
+                <rect x="672" y="1019" width="105" height="93" fill="#173498" stroke="#8FA6E6" stroke-opacity="0.7" stroke-width="1.2"/>
+                <rect x="777" y="1037" width="40" height="75" fill="#1A379E" stroke="#8FA6E6" stroke-opacity="0.6" stroke-width="1"/>
+                <rect x="817" y="1066" width="28" height="46" fill="#284198" stroke="#8FA6E6" stroke-opacity="0.6" stroke-width="1"/>
+                <polygon points="620,970 832,1001 827,1036 620,1020" fill="#0B1F6C" stroke="#C9D4FF" stroke-opacity="0.7" stroke-width="1.2"/>
+                <polygon points="620,1020 827,1036 826,1043 620,1027" fill="#C8941F"/>
+
+                <!-- window dots: a few are lit (gold) and flicker, as on the poster -->
+                {% set left_lit = [(7, 1), (3, 6), (4, 8)] %}
+                {% set left_dim = [(0, 0), (1, 2), (2, 4)] %}
+                {% set perf_lit = [(0, 0), (7, 1), (1, 2), (8, 3), (2, 4), (3, 6)] %}
+                {% set tower_lit = [(0, 0), (1, 2), (2, 4)] %}
+                <g class="scene-windows">
+                    {% for c in range(8) %}{% for r in range(9) %}
+                    <circle cx="{{ 216 + c * 25 }}" cy="{{ 956.5 + r * 14.3 }}" r="2.6" class="{{ 'win-lit' if (c, r) in left_lit else ('win-dim' if (c, r) in left_dim else 'win') }}" style="--w: {{ (c * 5 + r * 3) % 9 }}"/>
+                    {% endfor %}{% endfor %}
+                    {% for c in range(9) %}{% for r in range(8) %}
+                    <circle cx="{{ 427.5 + c * 22.5 }}" cy="{{ 954 + r * 15 }}" r="2.6" class="{{ 'win-lit' if (c, r) in perf_lit else 'win' }}" style="--w: {{ (c * 4 + r * 7) % 9 }}"/>
+                    {% endfor %}{% endfor %}
+                    {% for c in range(6) %}{% for r in range(5) %}
+                    <circle cx="{{ 687 + c * 15 }}" cy="{{ 1036 + r * 16.25 }}" r="2.4" class="{{ 'win-lit' if (c, r) in tower_lit else 'win' }}" style="--w: {{ (c * 3 + r * 5) % 9 }}"/>
+                    {% endfor %}{% endfor %}
+                </g>
+
+                <!-- entrance: dark recess, canopy, signboard with the JNU seal -->
+                <rect x="495" y="1172" width="354" height="78" fill="#060F45"/>
+                <rect x="530" y="1186" width="32" height="44" fill="#0C2470"/>
+                <rect x="787" y="1186" width="33" height="44" fill="#0C2470"/>
+                <rect x="495" y="1112" width="354" height="60" fill="url(#sceneCanopy)"/>
+                <rect x="495" y="1112" width="354" height="7" fill="#8E6918"/>
+                <rect x="582" y="1126" width="238" height="40" fill="#153598" stroke="#DCE4FF" stroke-opacity="0.85" stroke-width="1.2"/>
+                <circle cx="611" cy="1146" r="15.5" fill="#153598" stroke="#F5B82D" stroke-width="1.4"/>
+                <image href="{{ url_for('static', filename='images/jnu_logo_gold_raster.png') }}" x="597.5" y="1132.5" width="27" height="27"/>
+                <text x="735" y="1142.5" text-anchor="middle" class="scene-sign">SCHOOL OF COMPUTER</text>
+                <text x="735" y="1156" text-anchor="middle" class="scene-sign">&amp; SYSTEMS SCIENCES</text>
+
+                <!-- glow behind the doors -->
+                <ellipse class="scene-door-glow" cx="722" cy="1222" rx="150" ry="70" fill="url(#sceneDoorGlow)"/>
+
+                <!-- pillars -->
+                <g fill="url(#scenePillar)">
+                    <rect x="500" y="1172" width="17" height="77"/>
+                    <rect x="617" y="1172" width="18" height="77"/>
+                    <rect x="685" y="1172" width="17" height="77"/>
+                    <rect x="757" y="1172" width="18" height="77"/>
+                    <rect x="825" y="1172" width="17" height="77"/>
+                </g>
+
+                <!-- glowing doors -->
+                <g class="scene-doors">
+                    <rect x="643" y="1179" width="37" height="69" fill="url(#sceneDoor)"/>
+                    <rect x="702" y="1179" width="50" height="69" fill="url(#sceneDoor)"/>
+                </g>
+
+                <!-- street lamp -->
+                <circle class="scene-lamp-halo" cx="881" cy="1084" r="62" fill="url(#sceneLamp)"/>
+                <path d="M856 1250 V1104 q0 -18 18 -20 h4" stroke="#618BE8" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                <circle class="scene-lamp-bulb" cx="881.5" cy="1084" r="6.5" fill="#FFF1C9"/>
+
+                <!-- ground line -->
+                <rect x="140" y="1248" width="1000" height="8" fill="#0B2070"/>
+
+                <!-- light spilling out, the path, and the gold horizon rays -->
+                <polygon class="scene-spill" points="677,1248 780,1248 915,1312 537,1312" fill="url(#sceneSpill)"/>
+                <polygon class="scene-path" points="700,1248 755,1248 840,1370 612,1370" fill="url(#scenePath)" stroke="#F5B82D" stroke-opacity="0.8" stroke-width="1.5"/>
+                <g class="scene-rays" stroke="#F5B82D" stroke-width="2" fill="none">
+                    <line x1="696" y1="1249" x2="-1000" y2="1417"/>
+                    <line x1="756" y1="1249" x2="2414" y2="1423"/>
+                </g>
+
+                <!-- footprints walking in -->
+                <g class="scene-footprints" fill="#252D5E" opacity="0.75">
+                    <ellipse cx="720" cy="1256" rx="2.6" ry="4"/>
+                    <ellipse cx="733.5" cy="1262.5" rx="3" ry="4.5"/>
+                    <ellipse cx="719" cy="1273" rx="3.4" ry="5.4"/>
+                    <ellipse cx="735" cy="1286" rx="3.8" ry="6"/>
+                    <ellipse cx="715" cy="1302" rx="4.4" ry="7"/>
+                    <ellipse cx="738.5" cy="1318" rx="5" ry="7.8"/>
+                    <ellipse cx="712.5" cy="1340" rx="5.6" ry="8.8"/>
+                    <ellipse cx="741.5" cy="1358" rx="6.2" ry="9.6"/>
+                </g>
+
+                <!-- golden motes drifting up the path and in through the doors -->
+                <g class="scene-motes" fill="#FFE3A0">
+                    {% for dx in [-320, 300, -220, 240, -140, 160, -60, 80, -270, 200, -180, 120, -30, 40] %}
+                    <circle cx="722" cy="1240" r="2.8" style="--i: {{ loop.index0 }}; --dx: {{ dx }}px"/>
+                    {% endfor %}
+                </g>
+            </svg>
+        </div>
+
+        <div class="hero-info">
+        <dl class="hero-details hero-anim" style="--d: 5">
+            <div class="hero-detail">
+                <dt>Date</dt>
+                <dd>{{ site_sections.get('event.date', 'Saturday, 5 December 2026') }}</dd>
+            </div>
+            <div class="hero-detail">
+                <dt>Time</dt>
+                <dd>{{ site_sections.get('event.timing', '2:00 PM – 9:00 PM IST') }}</dd>
+            </div>
+            <div class="hero-detail">
+                <dt>Venue</dt>
+                <dd>{{ site_sections.get('event.venue', 'Convention Centre, Jawaharlal Nehru University, New Delhi') }}</dd>
+            </div>
+        </dl>
+
+        <div class="hero-actions hero-anim" style="--d: 6">
+            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg hero-cta">
+                <span>{{ site_sections.get('index.hero_btn_primary', 'Register & Contribute via Google Form') }}</span> {{ icon_external() }}
+            </a>
+            <a href="{{ url_for('public.meet_detail') }}" class="btn btn-secondary btn-lg">
+                <span>{{ site_sections.get('index.hero_btn_secondary', 'View Meet Schedule') }}</span>
+            </a>
+        </div>
+        <div class="hero-meta-row hero-anim" style="--d: 7">
+            <span class="hero-status"><span class="hero-status-dot"></span>{{ site_sections.get('event.status', 'Registration Open') }}</span>
+            {{ share_invite(label="Share Invitation", btn_class="btn-secondary", size="btn-sm", menu_up=true) }}
+        </div>
         </div>
     </div>
+
 </section>
 
 <!-- Contribution Tracker Spotlight Section -->
@@ -232,6 +399,31 @@
     </div>
 </section>
 {% endif %}
+
+<!-- Share the Invitation: official poster -->
+<section class="section invitation-section" id="poster">
+    <div class="container invitation-grid">
+        <figure class="invite-poster">
+            <a href="{{ url_for('static', filename='images/continuum_poster.webp') }}" target="_blank" rel="noopener" class="invite-poster-link" aria-label="Open the full-size Continuum invitation poster">
+                <img src="{{ url_for('static', filename='images/continuum_poster.webp') }}" width="1414" height="2000" loading="lazy"
+                     alt="Continuum — SC&SS JNU Alumni Meet 2026 invitation poster: Saturday 5 December 2026, 2:00 PM onwards, Convention Centre, JNU, New Delhi.">
+            </a>
+        </figure>
+        <div class="invitation-copy">
+            <span class="eyebrow">Share the Invitation</span>
+            <h2>Bring Your Batchmates Along</h2>
+            <hr class="editorial-rule">
+            <p class="lead-text">
+                Continuum is better with everyone there. Download the official poster and share it in your batch groups, so no one misses the evening.
+            </p>
+            <div class="btn-group">
+                <a href="{{ url_for('static', filename='images/continuum_poster.jpg') }}" download="Continuum-Alumni-Meet-2026-Poster.jpg" class="btn btn-primary">Download Poster</a>
+                {{ share_invite(label="Share Invitation", btn_class="btn-secondary") }}
+                <a href="{{ url_for('public.invite') }}" class="btn btn-secondary">Open Invitation Page</a>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Closing Section -->
 <section class="section section-paper" style="padding-top: var(--space-lg); padding-bottom: var(--space-xl);">
