@@ -156,7 +156,7 @@
 {%- endmacro %}
 
 {# Theme-Aware JNU Vector Seal Macro #}
-{% macro icon_jnu_seal(size=40, class_name="") -%}
-<img src="{{ url_for('static', filename='images/jnu_logo_raster.png') }}" class="jnu-vector-seal {{ class_name }}" width="{{ size }}" height="{{ size }}" alt="Jawaharlal Nehru University Emblem">
+{% macro icon_jnu_seal(size=40, class_name="", gold=false) -%}
+<img src="{{ url_for('static', filename='images/jnu_logo_gold_raster.png' if gold else 'images/jnu_logo_raster.png') }}" class="jnu-vector-seal {{ class_name }}" width="{{ size }}" height="{{ size }}" alt="Jawaharlal Nehru University Emblem">
 {%- endmacro %}
 

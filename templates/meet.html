@@ -23,7 +23,7 @@
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Timing</span>
-                    <span class="meta-value">{{ site_sections.get('event.timing', '09:30 AM – 05:00 PM IST') }}</span>
+                    <span class="meta-value">{{ site_sections.get('event.timing', '2:00 PM – 9:00 PM IST') }}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Venue</span>
@@ -45,7 +45,7 @@
             <div class="hero-card">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
                     <span class="hero-card-badge">{{ site_sections.get('meet.hero_badge', 'SC&SS · Event Summary') }}</span>
-                    {{ icon_jnu_seal(size=48) }}
+                    {{ icon_jnu_seal(size=48, gold=true) }}
                 </div>
                 <h3>{{ site_sections.get('meet.hero_card_title', 'Gathering at JNU Campus') }}</h3>
                 <p>
@@ -99,46 +99,82 @@
         <h2 style="margin-bottom: var(--space-xs);">{{ site_sections.get('meet.s2_title', 'Tentative Program & Activities') }}</h2>
         <hr class="editorial-rule">
         <p class="lead-text" style="max-width: 760px; margin-bottom: var(--space-lg);">
-            {{ site_sections.get('meet.s2_lead', 'A day filled with reconnecting, honoring revered faculty, interactive sessions, and memory walks across campus pathways:') }}
+            {{ site_sections.get('meet.s2_lead', 'An afternoon and evening of talks, conversations, performances and dinner, from 2:00 PM to 9:00 PM.') }}
         </p>
 
-        <div class="grid-2">
-            <div class="content-card">
-                <span class="eyebrow">09:30 AM – 10:30 AM</span>
-                <h3>Arrival, Registration &amp; Welcome Tea</h3>
-                <p style="font-size: 0.95rem;">Badge pickup, registration desk check-in, alumni kit distribution, and informal morning refreshments at the SC&amp;SS foyer.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow">10:30 AM – 12:00 PM</span>
-                <h3>Inaugural Ceremony &amp; Felicitations</h3>
-                <p style="font-size: 0.95rem;">Welcome address by the Dean, retrospective reflections by distinguished faculty members, and felicitation of senior professors and alumni pioneers.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow">12:00 PM – 01:15 PM</span>
-                <h3>Open House Dialogue &amp; Batch Reminiscences</h3>
-                <p style="font-size: 0.95rem;">Interactive sharing session across batches, updates on recent developments at SC&amp;SS, and open forum on alumni-school collaborations.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow">01:15 PM – 02:30 PM</span>
-                <h3>Alumni Lunch &amp; Networking</h3>
-                <p style="font-size: 0.95rem;">Special campus lunch organized for alumni, accompanying guests, scholars, and faculty.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow">02:30 PM – 04:00 PM</span>
-                <h3>Batch Group Photographs &amp; Campus Walk</h3>
-                <p style="font-size: 0.95rem;">Revisiting laboratories, seminar rooms, campus landmarks, and batch photo captures.</p>
-            </div>
-
-            <div class="content-card">
-                <span class="eyebrow">04:00 PM – 05:00 PM</span>
-                <h3>High Tea &amp; Closing Remarks</h3>
-                <p style="font-size: 0.95rem;">Vote of thanks, concluding reflections, and informal farewell tea.</p>
-            </div>
-        </div>
+        <ol class="programme-list">
+            <li class="programme-item">
+                <time class="programme-time">2:00 PM – 3:00 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Arrival &amp; Name Stickers</h3>
+                    <p class="programme-note">Pick up your name sticker so conversations start easily.</p>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">3:00 PM – 3:30 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Welcome Address, Lamp Lighting &amp; Opening Remarks</h3>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">3:30 PM – 3:45 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Placement Cell Overview</h3>
+                    <p class="programme-note">Where we stand today.</p>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">3:45 PM – 4:30 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Talk 1 (Alumni): What the Industry Expects from Freshers</h3>
+                    <span class="programme-tag">Working title</span>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">4:30 PM – 4:45 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Break</h3>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">4:45 PM – 5:30 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Talk 2 (Alumni): Where Our Students Are Lacking Today, and How We Can Prepare Them Better</h3>
+                    <span class="programme-tag">Working title</span>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">5:30 PM – 6:00 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Group Photo &amp; High Tea</h3>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">6:00 PM – 6:40 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Cultural Performances</h3>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">6:40 PM – 7:25 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Alumni–Student Interaction</h3>
+                    <p class="programme-note">Breakout tables organised by domain.</p>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">7:25 PM – 7:40 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Vote of Thanks &amp; Closing Remarks</h3>
+                </div>
+            </li>
+            <li class="programme-item">
+                <time class="programme-time">7:40 PM – 9:00 PM</time>
+                <div class="programme-body">
+                    <h3 class="programme-title">Dinner &amp; Networking</h3>
+                </div>
+            </li>
+        </ol>
     </div>
 </section>
 
@@ -156,26 +192,26 @@
 
         <div class="grid-3" style="margin-top: var(--space-md);">
             <div class="content-card">
-                <span class="eyebrow">Recognition</span>
-                <h3>Faculty Felicitation</h3>
+                <span class="eyebrow">Talks</span>
+                <h3>Alumni Talks</h3>
                 <p style="font-size: 0.92rem;">
-                    Honoring retired and serving professors who shaped generations of computing scholars and built the school's legacy.
+                    Two alumni-led talks: what the industry expects from freshers, and how SC&amp;SS can better prepare its students.
                 </p>
             </div>
 
             <div class="content-card">
-                <span class="eyebrow">Archives &amp; Kits</span>
-                <h3>Delegate Kits &amp; Keepsakes</h3>
+                <span class="eyebrow">Interaction</span>
+                <h3>Breakout Tables by Domain</h3>
                 <p style="font-size: 0.92rem;">
-                    Collect official alumni badges, souvenir memory books, identity passes, and event memorabilia.
+                    Alumni and current students meet at domain-wise tables for focused conversations, career advice and mentorship.
                 </p>
             </div>
 
             <div class="content-card">
-                <span class="eyebrow">Community</span>
-                <h3>Mentorship &amp; Collaborations</h3>
+                <span class="eyebrow">Celebration</span>
+                <h3>Performances, Photos &amp; Dinner</h3>
                 <p style="font-size: 0.92rem;">
-                    Build lasting connections between industry leaders, academic scholars, and current SC&amp;SS researchers.
+                    A group photograph and high tea, cultural performances, and dinner and networking to close the evening.
                 </p>
             </div>
         </div>
@@ -187,7 +223,7 @@
     <div class="container">
         <div class="cta-banner">
             <div class="section-label" style="color: var(--color-sepia); justify-content: center;">
-                <span class="label-num" style="color: var(--color-paper);">04</span>
+                <span class="label-num" style="color: var(--color-gold);">04</span>
                 <span style="color: rgba(244, 241, 234, 0.85);">{{ site_sections.get('meet.s4_label', 'Attendance') }}</span>
             </div>
             <h2>{{ site_sections.get('meet.s4_title', 'Confirm Your Attendance & RSVP') }}</h2>

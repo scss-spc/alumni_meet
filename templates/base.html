@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="theme-continuum">
     <!-- Site Header -->
     <header class="site-header">
         <div class="container header-container">
             <a href="{{ url_for('public.index') }}" class="brand-link">
-                {{ icon_jnu_seal(size=40, class_name="brand-logo") }}
+                {{ icon_jnu_seal(size=40, class_name="brand-logo", gold=true) }}
                 <div class="brand-text-wrapper">
                     <span class="brand-title">SC&amp;SS <span style="color: var(--color-accent);">·</span> JNU</span>
                     <span class="brand-subtitle">School of Computer &amp; Systems Sciences</span>
@@ -100,7 +100,7 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
-                        {{ icon_jnu_seal(size=44) }}
+                        {{ icon_jnu_seal(size=44, gold=true) }}
                         <h4 style="margin-bottom: 0;">School of Computer &amp; Systems Sciences</h4>
                     </div>
                     <p>Jawaharlal Nehru University, New Delhi – 110067, India.</p>

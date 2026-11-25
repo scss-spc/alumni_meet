@@ -43,16 +43,15 @@
         </div>
 
         <div class="hero-visual">
-            <div class="hero-card">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-sm);">
-                    <span class="hero-card-badge">{{ site_sections.get('index.hero_badge', 'SC&SS · JNU Gathering') }}</span>
-                    {{ icon_jnu_seal(size=48) }}
-                </div>
-                <h3>{{ site_sections.get('index.hero_card_title', 'An Enduring Academic Community') }}</h3>
-                <p>
-                    {{ site_sections.get('index.hero_card_text', 'From pioneering researchers in computing systems to leaders shaping modern technology and academia globally, the SC&SS fraternity spans generations across the world.') }}
-                </p>
-            </div>
+            <figure class="hero-poster" id="poster">
+                <a href="{{ url_for('static', filename='images/continuum_poster.webp') }}" target="_blank" rel="noopener" class="hero-poster-link" aria-label="Open the full-size Continuum invitation poster">
+                    <img src="{{ url_for('static', filename='images/continuum_poster.webp') }}" width="1414" height="2000"
+                         alt="Continuum — SC&SS JNU Alumni Meet 2026 invitation poster: Saturday 5 December 2026, 2:00 PM onwards, Convention Centre, JNU, New Delhi.">
+                </a>
+                <figcaption>
+                    <a href="{{ url_for('static', filename='images/continuum_poster.jpg') }}" download="Continuum-Alumni-Meet-2026-Poster.jpg" class="btn btn-secondary btn-sm">Download Poster</a>
+                </figcaption>
+            </figure>
         </div>
     </div>
 </section>
@@ -153,12 +152,12 @@
                     {{ tentative_tag(site_sections) }}
                     <h3>{{ site_sections.get('index.s1_highlights_title', 'Event Highlights') }}</h3>
                     <ul style="list-style: none; margin-top: 1rem; line-height: 2.2; font-size: 0.95rem;">
-                        <li><strong style="color: var(--color-ink);">Inaugural &amp; Welcome Address</strong> by School Leadership</li>
-                        <li><strong style="color: var(--color-ink);">Felicitation</strong> of Former Deans &amp; Revered Faculty</li>
-                        <li><strong style="color: var(--color-ink);">Open Dialogues</strong> on Systems, AI &amp; Industry Evolutions</li>
-                        <li><strong style="color: var(--color-ink);">Batch Group Photographs</strong> &amp; Memory Walks</li>
-                        <li><strong style="color: var(--color-ink);">High Tea &amp; Networking Lunch</strong> at JNU Campus</li>
-                        <li><strong style="color: var(--color-ink);">Alumni Mentorship &amp; Collaboration</strong> Initiatives</li>
+                        <li><strong style="color: var(--color-ink);">Welcome Address &amp; Lamp Lighting</strong> to open the evening</li>
+                        <li><strong style="color: var(--color-ink);">Placement Cell Overview</strong>: where SC&amp;SS stands today</li>
+                        <li><strong style="color: var(--color-ink);">Two Alumni Talks</strong> on industry expectations and preparing students</li>
+                        <li><strong style="color: var(--color-ink);">Alumni–Student Interaction</strong> at breakout tables by domain</li>
+                        <li><strong style="color: var(--color-ink);">Group Photo, High Tea</strong> &amp; Cultural Performances</li>
+                        <li><strong style="color: var(--color-ink);">Dinner &amp; Networking</strong> to close the evening</li>
                     </ul>
                 </div>
             </div>

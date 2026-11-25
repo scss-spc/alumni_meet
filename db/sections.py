@@ -310,7 +310,7 @@ DEFAULT_SECTIONS = [
         "title": "Section 02 Lead Text",
         "category": "Section 02 - Schedule",
         "content_type": "textarea",
-        "default_value": "A day filled with reconnecting, honoring revered faculty, interactive sessions, and memory walks across campus pathways:"
+        "default_value": "An afternoon and evening of talks, conversations, performances and dinner, from 2:00 PM to 9:00 PM."
     },
     {
         "page": "meet",
@@ -474,7 +474,7 @@ DEFAULT_SECTIONS = [
         "title": "Event Timing",
         "category": "Event Details",
         "content_type": "text",
-        "default_value": "09:30 AM – 05:00 PM IST"
+        "default_value": "2:00 PM – 9:00 PM IST"
     },
     {
         "page": "event",

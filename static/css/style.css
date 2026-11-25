@@ -2191,3 +2191,352 @@ body:has(.gallery-lightbox[open]) {
         flex-wrap: wrap;
     }
 }
+
+/* ==========================================================================
+   Continuum Night Theme (public pages only; matches the 2026 invitation poster)
+   Royal-blue night sky, bright saffron-gold highlights, cream type.
+   Scoped to body.theme-continuum so the admin console keeps the ivory palette.
+   ========================================================================== */
+body.theme-continuum {
+    --night-deep: #061758;
+    --night: #0A1D66;
+    --royal: #0E2980;
+    --gold-bright: #F5B82D;
+    --gold-soft: #FFD271;
+    --cream: #FCF1D5;
+    --sky-text: #BFCBF2;
+
+    /* Navy was the accent colour on ivory; on the night sky it becomes gold. */
+    --color-navy: var(--gold-bright);
+    --color-deep-navy: var(--night-deep);
+    --color-gold: var(--gold-bright);
+    --color-dark-ink: var(--cream);
+    --color-ink: var(--cream);
+    --color-muted-ink: var(--sky-text);
+    --color-paper: var(--royal);
+    --color-paper-light: rgba(255, 255, 255, 0.06);
+
+    --color-background: transparent;
+    --color-surface: rgba(255, 255, 255, 0.045);
+    --color-text: var(--cream);
+    --color-muted: var(--sky-text);
+    --color-border: rgba(245, 184, 45, 0.24);
+    --color-accent: var(--gold-bright);
+    --color-accent-soft: rgba(255, 255, 255, 0.06);
+    --color-sepia: var(--gold-bright);
+    --color-sepia-light: rgba(245, 184, 45, 0.12);
+    --color-sepia-dark: var(--cream);
+    --color-soft-black: var(--night-deep);
+
+    --shadow-card: 0 4px 18px rgba(2, 8, 40, 0.35);
+    --shadow-subtle: 0 1px 4px rgba(2, 8, 40, 0.3);
+    --shadow-floating: 0 12px 36px rgba(2, 8, 40, 0.5);
+
+    color: var(--cream);
+    background-color: var(--night);
+    background-image:
+        radial-gradient(ellipse 90% 60% at 50% 0%, rgba(33, 64, 168, 0.55), transparent 70%),
+        linear-gradient(180deg, var(--royal) 0%, var(--night) 45%, var(--night-deep) 100%);
+    background-attachment: fixed;
+}
+
+/* Type: gold italic serif display, cream headings, sky-blue supporting text */
+.theme-continuum h1,
+.theme-continuum .hero-title {
+    color: var(--gold-bright);
+    font-style: italic;
+    font-weight: 700;
+}
+.theme-continuum .hero h1 {
+    font-size: clamp(3rem, 9vw, 6rem);
+    line-height: 1;
+    text-shadow: 0 2px 24px rgba(245, 184, 45, 0.18);
+}
+.theme-continuum .hero-subtitle {
+    color: var(--cream);
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    letter-spacing: 0;
+}
+.theme-continuum h2, .theme-continuum h3, .theme-continuum h4 { color: var(--cream); }
+.theme-continuum .lead-text { color: var(--cream); }
+.theme-continuum a:hover { color: var(--gold-soft); }
+.theme-continuum .section-label { color: var(--cream); }
+.theme-continuum .section-label .label-num { color: var(--gold-bright); }
+.theme-continuum ::selection { background: var(--gold-bright); color: var(--night-deep); }
+
+/* Header */
+.theme-continuum .site-header,
+.theme-continuum .site-header.is-scrolled {
+    background: rgba(6, 23, 88, 0.9);
+    border-bottom: 1px solid rgba(245, 184, 45, 0.35);
+}
+.theme-continuum .site-header.is-scrolled { box-shadow: 0 6px 22px rgba(2, 8, 40, 0.45); }
+.theme-continuum .brand-title { color: var(--gold-bright); }
+.theme-continuum .brand-subtitle { color: var(--sky-text); }
+.theme-continuum .nav-link { color: var(--cream); }
+.theme-continuum .nav-link:hover,
+.theme-continuum .nav-link.active { color: var(--gold-bright); }
+.theme-continuum .nav-toggle { background-color: transparent; border-color: rgba(245, 184, 45, 0.45); }
+.theme-continuum .nav-toggle:hover { background-color: rgba(245, 184, 45, 0.12); }
+@media (max-width: 960px) {
+    .theme-continuum .nav-links { background-color: var(--night-deep); box-shadow: 0 12px 28px rgba(2, 8, 40, 0.5); }
+    .theme-continuum .nav-link { background-color: rgba(255, 255, 255, 0.04); color: var(--cream); }
+    .theme-continuum .nav-link:hover,
+    .theme-continuum .nav-link.active { background-color: rgba(245, 184, 45, 0.1); color: var(--gold-bright); }
+}
+
+/* Buttons: solid gold primary, gold-outline secondary */
+.theme-continuum .btn-primary,
+.theme-continuum .btn-ink,
+.theme-continuum .btn-paper {
+    background-color: var(--gold-bright);
+    color: var(--night-deep);
+    border: 1px solid var(--gold-bright);
+    font-weight: 700;
+}
+.theme-continuum .btn-primary:hover,
+.theme-continuum .btn-ink:hover,
+.theme-continuum .btn-paper:hover {
+    background-color: var(--gold-soft);
+    border-color: var(--gold-soft);
+    color: var(--night-deep);
+}
+.theme-continuum .btn-secondary {
+    background-color: transparent;
+    color: var(--gold-bright);
+    border: 1px solid rgba(245, 184, 45, 0.6);
+}
+.theme-continuum .btn-secondary:hover {
+    background-color: rgba(245, 184, 45, 0.12);
+    border-color: var(--gold-bright);
+    color: var(--gold-soft);
+}
+.theme-continuum .btn-outline-paper { color: var(--cream); border-color: rgba(252, 241, 213, 0.45); }
+.theme-continuum .btn-outline-paper:hover { color: var(--cream); border-color: var(--cream); }
+.theme-continuum .btn:hover { box-shadow: 0 6px 18px rgba(245, 184, 45, 0.18); }
+
+/* Hero: starry night sky like the poster */
+.theme-continuum .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(245, 184, 45, 0.35);
+    padding-bottom: var(--space-xl);
+}
+.theme-continuum .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(1.5px 1.5px at 8% 18%, rgba(252, 241, 213, 0.85), transparent 60%),
+        radial-gradient(1px 1px at 22% 62%, rgba(252, 241, 213, 0.7), transparent 60%),
+        radial-gradient(1.5px 1.5px at 37% 9%, rgba(252, 241, 213, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 48% 82%, rgba(252, 241, 213, 0.6), transparent 60%),
+        radial-gradient(2px 2px at 63% 24%, rgba(245, 184, 45, 0.9), transparent 60%),
+        radial-gradient(1px 1px at 71% 70%, rgba(252, 241, 213, 0.7), transparent 60%),
+        radial-gradient(1.5px 1.5px at 84% 12%, rgba(252, 241, 213, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 93% 48%, rgba(252, 241, 213, 0.7), transparent 60%),
+        radial-gradient(2px 2px at 14% 88%, rgba(245, 184, 45, 0.8), transparent 60%),
+        radial-gradient(1px 1px at 56% 40%, rgba(252, 241, 213, 0.5), transparent 60%);
+}
+.theme-continuum .hero > .container { position: relative; }
+.theme-continuum .hero-meta-bar {
+    border: 1px solid rgba(245, 184, 45, 0.55);
+    padding: var(--space-sm) var(--space-md);
+}
+.theme-continuum .meta-label { color: var(--cream); letter-spacing: 0.2em; }
+.theme-continuum .meta-value {
+    color: var(--gold-bright);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.5vw, 1.15rem);
+}
+.theme-continuum .hero-card-badge { background-color: var(--gold-bright); color: var(--night-deep); }
+
+/* Poster showcase */
+.hero-poster {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+}
+.hero-poster-link {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid rgba(245, 184, 45, 0.55);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 18px 50px rgba(2, 8, 40, 0.6), 0 0 0 6px rgba(245, 184, 45, 0.06);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.hero-poster-link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(2, 8, 40, 0.7), 0 0 0 6px rgba(245, 184, 45, 0.14);
+}
+.hero-poster-link img { width: 100%; height: auto; border-radius: var(--radius-sm); }
+.hero-poster figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+@media (max-width: 1023px) {
+    .hero-poster { margin-top: var(--space-lg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-poster-link:hover { transform: none; }
+}
+
+/* Sections & cards */
+.theme-continuum .section-off-white,
+.theme-continuum .timeline-section,
+.theme-continuum .section-tracker-spotlight {
+    background-color: rgba(6, 23, 88, 0.45);
+}
+.theme-continuum .content-card,
+.theme-continuum .hero-card,
+.theme-continuum .then-now-card,
+.theme-continuum .alumnus-card,
+.theme-continuum .tracker-main-card,
+.theme-continuum .supporter-roll-container,
+.theme-continuum .tracker-spotlight-card,
+.theme-continuum .privacy-tiers-explainer,
+.theme-continuum .alumni-filter-bar {
+    background-color: rgba(255, 255, 255, 0.045);
+    border-color: rgba(245, 184, 45, 0.3);
+}
+.theme-continuum .supporter-badge-card,
+.theme-continuum .tier-card,
+.theme-continuum .metric-box,
+.theme-continuum .kpi-mini-card,
+.theme-continuum .tracker-fund-amount-box {
+    background-color: rgba(6, 23, 88, 0.55);
+}
+.theme-continuum .content-card:hover,
+.theme-continuum .hero-card:hover,
+.theme-continuum .supporter-badge-card:hover,
+.theme-continuum .then-now-card:hover {
+    box-shadow: 0 14px 34px rgba(2, 8, 40, 0.5);
+    border-color: rgba(245, 184, 45, 0.7);
+}
+.theme-continuum .section-dark,
+.theme-continuum .cta-banner {
+    background-color: var(--night-deep);
+    border: 1px solid rgba(245, 184, 45, 0.6);
+}
+.theme-continuum .cta-banner h2 { color: var(--gold-bright); font-style: italic; }
+.theme-continuum .cta-banner p { color: var(--sky-text); }
+
+/* Timeline */
+.theme-continuum .timeline-dot { background-color: var(--night-deep); border-color: var(--gold-bright); }
+
+/* Tracker */
+.theme-continuum .progress-track { background-color: rgba(255, 255, 255, 0.1); }
+.theme-continuum .progress-fill { background: linear-gradient(90deg, #D99A1A, var(--gold-bright)); }
+.theme-continuum .progress-indicator-pill { color: var(--night-deep); }
+.theme-continuum .badge-archive-tag { background-color: rgba(245, 184, 45, 0.12); }
+.theme-continuum .roll-tab { background-color: transparent; color: var(--cream); }
+.theme-continuum .roll-tab.active,
+.theme-continuum .roll-tab:hover {
+    background-color: var(--gold-bright);
+    border-color: var(--gold-bright);
+    color: var(--night-deep);
+}
+.theme-continuum .supporter-table th { background-color: rgba(6, 23, 88, 0.7); color: var(--gold-bright); }
+.theme-continuum .privacy-pill.badge-public { background: rgba(245, 184, 45, 0.14); color: var(--gold-bright); }
+.theme-continuum .privacy-pill.badge-semi { background: rgba(245, 184, 45, 0.14); color: var(--gold-soft); }
+.theme-continuum .privacy-pill.badge-anon { background: rgba(191, 203, 242, 0.12); color: var(--sky-text); }
+
+/* Forms */
+.theme-continuum .form-control { background-color: rgba(6, 23, 88, 0.6); color: var(--cream); }
+.theme-continuum .form-control::placeholder { color: rgba(191, 203, 242, 0.7); }
+.theme-continuum .form-control option { background-color: var(--night); color: var(--cream); }
+.theme-continuum .form-control:focus { border-color: var(--gold-bright); box-shadow: 0 0 0 1px var(--gold-bright); }
+
+/* Gallery */
+.theme-continuum .gallery-album-chip.active {
+    background-color: var(--gold-bright);
+    border-color: var(--gold-bright);
+    color: var(--night-deep);
+}
+.theme-continuum .gallery-lightbox { background-color: var(--night-deep); border: 1px solid rgba(245, 184, 45, 0.4); }
+.theme-continuum .gallery-lightbox::backdrop { background-color: rgba(3, 10, 45, 0.9); }
+
+/* Alerts */
+.theme-continuum .alert-info { background-color: rgba(245, 184, 45, 0.1); color: var(--cream); border-color: var(--gold-bright); }
+
+/* Footer: deepest blue with a gold hairline, like the poster's RSVP strip */
+.theme-continuum .site-footer {
+    background-color: var(--night-deep);
+    border-top: 1px solid rgba(245, 184, 45, 0.55);
+}
+.theme-continuum .footer-brand h4 { color: var(--cream); }
+.theme-continuum .footer-links a:hover { color: var(--gold-bright); }
+
+/* ==========================================================================
+   Meet Programme (run-of-show list on /meet)
+   ========================================================================== */
+.programme-list {
+    list-style: none;
+    max-width: 880px;
+    border-top: 1px solid var(--color-border);
+}
+
+.programme-item {
+    display: grid;
+    grid-template-columns: 11.5rem 1fr;
+    gap: var(--space-md);
+    align-items: baseline;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.2s ease;
+}
+
+.programme-item:hover {
+    background-color: var(--color-accent-soft);
+}
+
+.programme-time {
+    font-family: var(--font-display);
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    white-space: nowrap;
+    padding-left: 0.75rem;
+}
+
+.programme-title {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.programme-tag {
+    display: inline-block;
+    margin-top: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    border: 1px dashed var(--color-gold);
+    border-radius: var(--radius-sm);
+    padding: 0.1rem 0.45rem;
+}
+
+.programme-note {
+    margin: 0.3rem 0 0;
+    font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+    .programme-item {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+    .programme-time {
+        padding-left: 0;
+    }
+}
