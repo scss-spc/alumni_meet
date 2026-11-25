@@ -14,7 +14,7 @@
         <span class="card-title">Add Photos from Google Drive</span>
     </div>
     <div class="card-body">
-        <p style="font-size: 0.85rem; color: #666; margin-top: 0;">
+        <p style="font-size: 0.85rem; color: var(--color-muted); margin-top: 0;">
             Upload photos to Google Drive, set sharing to <strong>"Anyone with the link — Viewer"</strong>, then paste each photo's link below (one per line).
             Images are loaded directly from Google, so they do not use this server's bandwidth. Folder links are not supported; open the folder and copy each photo's link.
         </p>
@@ -63,7 +63,7 @@
                                 <td>
                                     <a href="{{ photo.full_url }}" target="_blank" rel="noopener noreferrer">
                                         <img src="{{ photo.thumb_url }}" alt="" loading="lazy" referrerpolicy="no-referrer"
-                                            style="width: 96px; height: 96px; object-fit: cover; border-radius: 6px; background: #eee;">
+                                            style="width: 96px; height: 96px; object-fit: cover; border-radius: 6px; background: rgba(255, 255, 255, 0.06);">
                                     </a>
                                 </td>
                                 <td>
@@ -88,7 +88,7 @@
                                         </form>
                                         <form method="POST" action="{{ url_for('admin.gallery_delete_photo', photo_id=photo.id) }}" style="margin: 0;"
                                             onsubmit="return confirm('Remove this photo from the gallery? The file on Google Drive is not deleted.');">
-                                            <button type="submit" class="btn btn-secondary btn-sm" style="color: #B42318;">Remove</button>
+                                            <button type="submit" class="btn btn-secondary btn-sm" style="color: #FF8A80;">Remove</button>
                                         </form>
                                     </div>
                                 </td>
@@ -96,7 +96,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="4" style="text-align: center; color: #666; padding: 2.5rem;">
+                            <td colspan="4" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
                                 No photos yet. Paste Google Drive links above to build the gallery.
                             </td>
                         </tr>

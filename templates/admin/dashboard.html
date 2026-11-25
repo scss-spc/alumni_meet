@@ -12,26 +12,41 @@
 {% endblock %}
 
 {% block content %}
-<p style="color: var(--admin-text-muted); margin: 0 0 1.25rem;">{{ meet.name }} · overview of responses, contributions, and team.</p>
+<p style="color: var(--admin-text-muted); margin: 0 0 1.25rem;">{{ meet.name }} · overview of responses, contributions, and expenses.</p>
 
 <!-- Metric Tiles -->
 <div class="stat-grid">
+    {% set family_guests = [meet_stats.total_headcount - meet_stats.total_attending_alumni, 0] | max %}
     <div class="stat-tile">
-        <div class="stat-label">Confirmed Attending</div>
+        <div class="stat-label">Alumni Attending · Mementos</div>
         <div class="stat-number primary">{{ meet_stats.total_attending_alumni }}</div>
-        <div class="stat-sub">of {{ meet_stats.total_responses }} responses · {{ meet_stats.total_virtual }} virtual · {{ meet_stats.total_not_attending }} not attending</div>
+        <div class="stat-sub">Individual alumni coming in person: 1 memento each, family &amp; guests excluded</div>
+    </div>
+
+    <div class="stat-tile">
+        <div class="stat-label">Total Headcount · Catering</div>
+        <div class="stat-number">{{ meet_stats.total_headcount }}</div>
+        <div class="stat-sub">{{ meet_stats.total_attending_alumni }} alumni + {{ family_guests }} family &amp; guests</div>
     </div>
 
     <div class="stat-tile">
         <div class="stat-label">Maybe / Tentative</div>
         <div class="stat-number warning">{{ meet_stats.total_maybe }}</div>
-        <div class="stat-sub">Up to {{ meet_stats.maybe_headcount }} more people if all come</div>
+        <div class="stat-sub">Up to {{ meet_stats.maybe_headcount }} more people if all come · of {{ meet_stats.total_responses }} responses, {{ meet_stats.total_virtual }} virtual, {{ meet_stats.total_not_attending }} not attending</div>
     </div>
 
     <div class="stat-tile">
-        <div class="stat-label">Confirmed Headcount</div>
-        <div class="stat-number">{{ meet_stats.total_headcount }}</div>
-        <div class="stat-sub">Including {{ meet_stats.total_guests }} accompanying guests</div>
+        <div class="stat-label">Alumni Expenses</div>
+        {% if expense_summary %}
+            <div class="stat-number">{{ expense_summary.total_spent | currency_inr }}</div>
+            <div class="stat-sub">
+                Catering {{ expense_summary.catering_total | currency_inr }} · Mementos {{ expense_summary.mementos_total | currency_inr }}
+                <br><a href="{{ url_for('admin.expenses') }}" style="font-weight: 600;">Manage expenses →</a>
+            </div>
+        {% else %}
+            <div class="stat-number">—</div>
+            <div class="stat-sub"><a href="{{ url_for('admin.expenses') }}" style="font-weight: 600;">Track catering &amp; mementos →</a></div>
+        {% endif %}
     </div>
 
     <div class="stat-tile">
@@ -40,14 +55,8 @@
         <div class="stat-sub">{{ financial_stats.total_submissions }} contributions from {{ financial_stats.distinct_contributors }} alumni</div>
     </div>
 
-    <div class="stat-tile">
-        <div class="stat-label">Active Volunteers</div>
-        <div class="stat-number">{{ volunteer_count }}</div>
-        <div class="stat-sub">Organizing committee & helpers</div>
-    </div>
-
     <!-- Google Sheet 24h Sync Status Tile -->
-    <div class="stat-tile" style="border-left: 3px solid #3B82F6;">
+    <div class="stat-tile" style="border-left: 3px solid var(--color-gold);">
         <div class="stat-label" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.35rem;">
             <span style="display: inline-flex; align-items: center; gap: 0.35rem;">{{ icon_sync(size=14) }} Google Sheet Sync</span>
             {% if sync_state.status == 'SUCCESS' %}
@@ -57,15 +66,15 @@
             {% elif sync_state.status == 'ERROR' %}
                 <span class="badge badge-rejected" style="font-size: 0.7rem;">Sync Error</span>
             {% else %}
-                <span class="badge" style="background:#E2E8F0; color:#475569; font-size: 0.7rem;">Scheduled (24h)</span>
+                <span class="badge" style="background: rgba(245, 184, 45, 0.14); color: var(--color-muted); font-size: 0.7rem;">Scheduled (24h)</span>
             {% endif %}
         </div>
-        <div style="font-size: 0.88rem; font-weight: 600; margin: 0.35rem 0; color: #1E293B;">
+        <div style="font-size: 0.88rem; font-weight: 600; margin: 0.35rem 0; color: var(--color-text);">
             Last: {{ sync_state.last_sync_time or 'Never' }}
         </div>
         <div class="stat-sub" style="display: flex; justify-content: space-between; align-items: center;">
             <span>Next: {{ scheduler_info.next_run_time or 'Every 24 Hours' }}</span>
-            <a href="{{ url_for('admin.sync_management') }}" style="font-weight: 600; color: #2563EB;">Manage &rarr;</a>
+            <a href="{{ url_for('admin.sync_management') }}" style="font-weight: 600; color: var(--color-gold);">Manage &rarr;</a>
         </div>
     </div>
 </div>
@@ -94,7 +103,7 @@
                                 <tr>
                                     <td>
                                         <strong>{{ c.full_name }}</strong>
-                                        <div style="font-size: 0.78rem; color: #888;">{{ c.email }}</div>
+                                        <div style="font-size: 0.78rem; color: var(--color-muted);">{{ c.email }}</div>
                                     </td>
                                     <td><strong>{{ c.amount | currency_inr }}</strong></td>
                                     <td><code>{{ c.transaction_reference or 'N/A' }}</code></td>
@@ -102,7 +111,7 @@
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="3" style="text-align: center; color: #888; padding: 2rem;">No contribution records found.</td>
+                                <td colspan="3" style="text-align: center; color: var(--color-muted); padding: 2rem;">No contribution records found.</td>
                             </tr>
                         {% endif %}
                     </tbody>
@@ -134,7 +143,7 @@
                                 <tr>
                                     <td>
                                         <strong>{{ r.full_name }}</strong>
-                                        <div style="font-size: 0.78rem; color: #888;">{{ r.graduation_year | batch_label }}</div>
+                                        <div style="font-size: 0.78rem; color: var(--color-muted);">{{ r.graduation_year | batch_label }}</div>
                                     </td>
                                     <td>
                                         {{ attendance_badge(r) }}
@@ -149,7 +158,7 @@
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="4" style="text-align: center; color: #888; padding: 2rem;">No meet responses recorded yet.</td>
+                                <td colspan="4" style="text-align: center; color: var(--color-muted); padding: 2rem;">No meet responses recorded yet.</td>
                             </tr>
                         {% endif %}
                     </tbody>

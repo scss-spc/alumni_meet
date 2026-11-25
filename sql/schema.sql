@@ -73,42 +73,6 @@ CREATE TABLE IF NOT EXISTS `recognition_preferences` (
     CONSTRAINT `uk_meet_alumni_recog` UNIQUE (`meet_id`, `alumni_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `volunteers` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `full_name` VARCHAR(200) NOT NULL,
-    `email` VARCHAR(255) NULL,
-    `phone` VARCHAR(30) NULL,
-    `role` VARCHAR(100) NULL,
-    `status` VARCHAR(30) NOT NULL DEFAULT 'active',
-    `notes` TEXT NULL,
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `activities` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `meet_id` BIGINT NOT NULL,
-    `name` VARCHAR(255) NOT NULL,
-    `description` TEXT NULL,
-    `status` VARCHAR(30) NOT NULL DEFAULT 'planned',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_act_meet` FOREIGN KEY (`meet_id`) REFERENCES `meets`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS `volunteer_assignments` (
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `activity_id` BIGINT NOT NULL,
-    `volunteer_id` BIGINT NOT NULL,
-    `responsibility` TEXT NULL,
-    `status` VARCHAR(30) NOT NULL DEFAULT 'assigned',
-    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT `fk_va_activity` FOREIGN KEY (`activity_id`) REFERENCES `activities`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_va_volunteer` FOREIGN KEY (`volunteer_id`) REFERENCES `volunteers`(`id`) ON DELETE CASCADE,
-    CONSTRAINT `uk_activity_volunteer` UNIQUE (`activity_id`, `volunteer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(255) NOT NULL UNIQUE,
@@ -154,4 +118,22 @@ CREATE TABLE IF NOT EXISTS `gallery_photos` (
     `created_by` BIGINT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `uk_gallery_drive_file` UNIQUE (`drive_file_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Organizer spending for the meet (catering, mementos, venue, printing, other); amounts in INR
+CREATE TABLE IF NOT EXISTS `meet_expenses` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `meet_id` BIGINT NOT NULL,
+    `category` VARCHAR(40) NOT NULL,
+    `description` VARCHAR(255) NOT NULL,
+    `quantity` INT NULL,
+    `unit_cost` DECIMAL(12, 2) NULL,
+    `amount` DECIMAL(12, 2) NOT NULL,
+    `vendor` VARCHAR(255) NULL,
+    `paid_on` DATE NULL,
+    `notes` TEXT NULL,
+    `created_by` BIGINT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY `idx_expenses_meet_category` (`meet_id`, `category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 </head>
-<body style="background-color: var(--color-paper); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+<body class="theme-continuum admin-login-body" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
     <div style="max-width: 420px; width: 100%; padding: 1.5rem;">
         <div style="text-align: center; margin-bottom: 2rem;">
             <div style="margin: 0 auto 1rem; display: inline-block;">
-                {{ icon_jnu_seal(size=64) }}
+                {{ icon_jnu_seal(size=64, gold=true) }}
             </div>
             <span class="eyebrow">School of Computer &amp; Systems Sciences</span>
             <h2 style="font-size: 1.8rem; margin-top: 0.25rem;">Organizer Portal</h2>
@@ -34,7 +34,7 @@
             {% endif %}
         {% endwith %}
 
-        <div class="admin-card" style="border-top: 2px solid var(--color-ink);">
+        <div class="admin-card" style="border-top: 2px solid var(--color-gold);">
             <div class="card-body" style="padding: 2rem;">
                 <form method="POST" action="{{ url_for('admin.login', next=request.args.get('next')) }}">
                     <div class="form-group">

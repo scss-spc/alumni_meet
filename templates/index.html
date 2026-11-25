@@ -5,15 +5,26 @@
 
 {% block title %}Continuum — SC&amp;SS JNU Alumni Meet 2026{% endblock %}
 
+{% block extra_css %}
+    <!-- Devanagari serif for the JNU motto (subset to just its letters, a few KB) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Sanskrit&display=swap&text={{ 'तमसो मा ज्योतिर्गमय' | urlencode }}">
+{% endblock %}
+
 {% block content %}
 <!-- Hero Section: animated night scene (twinkling stars, glowing entrance, light path) -->
 <section class="hero hero-night">
     <div class="hero-sky" aria-hidden="true">
+        <!-- "Darkness unto Light" easter egg: dawn glow + sun rising behind the school (see app.js) -->
+        <span class="hero-dawn"></span>
+        <span class="hero-sun"></span>
         <div class="hero-stars" data-starfield></div>
         <span class="hero-shooting-star"></span>
-        <span class="hero-moon"></span>
         <span class="hero-core-glow"></span>
     </div>
+    <button type="button" class="hero-moon" data-dawn-toggle aria-pressed="false" title="Darkness unto Light">
+        <span class="visually-hidden">Darkness unto Light: watch the sun rise over SC&amp;SS</span>
+    </button>
+    <span class="visually-hidden" data-dawn-live aria-live="polite"></span>
 
     <div class="container hero-layout">
         <div class="hero-heading">
@@ -123,7 +134,17 @@
                     {% endfor %}{% endfor %}
                 </g>
 
-                <!-- entrance: dark recess, canopy, signboard with the JNU seal -->
+                <!-- JNU motto engraved on the left facade; it fills with golden light at dawn (moon easter egg) -->
+            <g class="scene-motto" text-anchor="middle">
+                <text class="scene-motto-sa scene-motto-edge-dark" x="305.7" y="1159.2" lang="sa">तमसो मा ज्योतिर्गमय</text>
+                <text class="scene-motto-sa scene-motto-edge-light" x="307.3" y="1160.8" lang="sa">तमसो मा ज्योतिर्गमय</text>
+                <text class="scene-motto-sa scene-motto-cut" x="306.5" y="1160" lang="sa">तमसो मा ज्योतिर्गमय</text>
+                <text class="scene-motto-en scene-motto-edge-dark" x="305.9" y="1185.4">DARKNESS UNTO LIGHT</text>
+                <text class="scene-motto-en scene-motto-edge-light" x="307.1" y="1186.6">DARKNESS UNTO LIGHT</text>
+                <text class="scene-motto-en scene-motto-cut" x="306.5" y="1186">DARKNESS UNTO LIGHT</text>
+            </g>
+
+            <!-- entrance: dark recess, canopy, signboard with the JNU seal -->
                 <rect x="495" y="1172" width="354" height="78" fill="#060F45"/>
                 <rect x="530" y="1186" width="32" height="44" fill="#0C2470"/>
                 <rect x="787" y="1186" width="33" height="44" fill="#0C2470"/>

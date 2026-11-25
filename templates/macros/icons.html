@@ -79,27 +79,18 @@
 </svg>
 {%- endmacro %}
 
+{% macro icon_receipt(size=18, class_name="") -%}
+<svg class="svg-icon {{ class_name }}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"></path>
+    <line x1="9" y1="8" x2="15" y2="8"></line>
+    <line x1="9" y1="12" x2="15" y2="12"></line>
+</svg>
+{%- endmacro %}
+
 {% macro icon_alumni(size=18, class_name="") -%}
 <svg class="svg-icon {{ class_name }}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
     <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-</svg>
-{%- endmacro %}
-
-{% macro icon_volunteers(size=18, class_name="") -%}
-<svg class="svg-icon {{ class_name }}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-    <circle cx="9" cy="7" r="4"></circle>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-</svg>
-{%- endmacro %}
-
-{% macro icon_activities(size=18, class_name="") -%}
-<svg class="svg-icon {{ class_name }}" width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-    <path d="M9 12l2 2 4-4"></path>
 </svg>
 {%- endmacro %}
 

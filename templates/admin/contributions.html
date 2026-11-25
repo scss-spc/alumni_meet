@@ -7,7 +7,7 @@
 {% block topbar_actions %}
     {% if session.get('user_role') == 'admin' %}
         <form method="POST" action="{{ url_for('admin.deduplicate_contributions_route') }}" style="margin: 0;" onsubmit="return confirm('Scan and remove duplicate contribution submissions?');">
-            <button type="submit" class="btn btn-secondary btn-sm" style="color: #4B5563; font-weight: 500;">
+            <button type="submit" class="btn btn-secondary btn-sm" style="color: var(--color-muted); font-weight: 500;">
                 Clean Duplicate Contributions
             </button>
         </form>
@@ -72,7 +72,7 @@
                             <tr>
                                 <td>
                                     <strong>{{ c.full_name }}</strong>
-                                    <div style="font-size: 0.78rem; color: #888;">{{ c.email }} · {{ c.graduation_year | batch_label }}</div>
+                                    <div style="font-size: 0.78rem; color: var(--color-muted);">{{ c.email }} · {{ c.graduation_year | batch_label }}</div>
                                 </td>
                                 <td><strong>{{ c.amount | currency_inr }}</strong></td>
                                 <td>
@@ -84,7 +84,7 @@
                                             View in Drive {{ icon_external(size=12) }}
                                         </a>
                                     {% else %}
-                                        <span style="font-size: 0.8rem; color: #888;">No Screenshot</span>
+                                        <span style="font-size: 0.8rem; color: var(--color-muted);">No Screenshot</span>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -96,7 +96,7 @@
                                             <button 
                                                 type="button"
                                                 class="btn btn-secondary btn-sm" 
-                                                style="color: #DC2626; border-color: #FCA5A5; padding: 0.35rem 0.5rem;"
+                                                style="color: #FF8A80; border-color: #FCA5A5; padding: 0.35rem 0.5rem;"
                                                 title="Delete Duplicate / Invalid Contribution"
                                                 onclick="openDeleteContribModal('{{ c.id }}', '{{ c.amount | currency_inr }}', '{{ c.full_name | escape }}')"
                                             >
@@ -114,7 +114,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #888; padding: 2.5rem;">
+                            <td colspan="6" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
                                 No contribution records found.
                             </td>
                         </tr>
@@ -151,7 +151,7 @@
 <div class="modal-overlay" id="deleteContribModal">
     <div class="modal-dialog">
         <div class="modal-header" style="border-bottom: 2px solid #EF4444;">
-            <h4 class="modal-title" style="color: #B91C1C;">Delete Contribution Record</h4>
+            <h4 class="modal-title" style="color: #FF8A80;">Delete Contribution Record</h4>
             <button class="modal-close" onclick="closeModal('deleteContribModal')">&times;</button>
         </div>
         <form method="POST" action="">
@@ -159,10 +159,10 @@
                 <p style="font-size: 0.92rem; color: var(--admin-text-main); margin-bottom: 1rem;">
                     Are you sure you want to permanently remove this duplicate or invalid contribution entry?
                 </p>
-                <div style="background-color: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;" id="deleteContribInfo">
+                <div style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.45); color: #FFB4AB; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;" id="deleteContribInfo">
                     <!-- Dynamic Target Contribution Info -->
                 </div>
-                <p style="font-size: 0.82rem; color: #666; margin: 0;">
+                <p style="font-size: 0.82rem; color: var(--color-muted); margin: 0;">
                     This will delete only this specific contribution entry. The alumnus profile and their meet RSVP will remain intact.
                 </p>
             </div>

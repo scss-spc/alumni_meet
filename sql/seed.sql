@@ -11,14 +11,3 @@ VALUES (
     'registration_open'
 )
 ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
-
--- Insert Initial Organizing Activities for Meet 1
-INSERT INTO `activities` (`meet_id`, `name`, `description`, `status`)
-VALUES 
-    (1, 'Registration & Welcome Desk', 'Managing on-spot arrivals, badge collection, and alumni kit distribution.', 'planned'),
-    (1, 'Catering & Hospitality', 'Lunch, tea, and high-tea arrangements.', 'planned'),
-    (1, 'Stage & Cultural Coordination', 'Keynote address, felicitation of senior professors, and cultural presentations.', 'planned'),
-    (1, 'Photography & Memory Archive', 'Documenting the gathering, photo booth, and batch group photo sessions.', 'planned'),
-    (1, 'Alumni Outreach & Communication', 'Coordination with batch representatives, invitations, and attendee assistance.', 'planned'),
-    (1, 'Technical & Venue Support', 'Audio-visual setup, projection, Wi-Fi support, and hybrid participation link.', 'planned')
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);

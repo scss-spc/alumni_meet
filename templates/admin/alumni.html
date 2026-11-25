@@ -6,7 +6,7 @@
 
 {% block topbar_actions %}
     {% if session.get('user_role') == 'admin' %}
-        <button type="button" class="btn btn-secondary btn-sm" style="color: #DC2626; border-color: #FCA5A5; font-weight: 600;" onclick="openModal('purgeAlumniModal')">
+        <button type="button" class="btn btn-secondary btn-sm" style="color: #FF8A80; border-color: #FCA5A5; font-weight: 600;" onclick="openModal('purgeAlumniModal')">
             Purge All Alumni Data
         </button>
     {% endif %}
@@ -70,7 +70,7 @@
                                 <td>
                                     <strong>{{ a.full_name }}</strong>
                                     {% if a.current_location %}
-                                        <div style="font-size: 0.75rem; color: #888; display: flex; align-items: center; gap: 0.25rem;">{{ icon_location(size=12) }} {{ a.current_location }}</div>
+                                        <div style="font-size: 0.75rem; color: var(--color-muted); display: flex; align-items: center; gap: 0.25rem;">{{ icon_location(size=12) }} {{ a.current_location }}</div>
                                     {% endif %}
                                 </td>
                                 <td>
@@ -80,12 +80,12 @@
                                 <td>
                                     <div><a href="mailto:{{ a.email }}">{{ a.email }}</a></div>
                                     {% if a.phone %}
-                                        <div style="font-size: 0.8rem; color: #666; display: flex; align-items: center; gap: 0.25rem;">{{ icon_phone(size=12) }} {{ a.phone }}</div>
+                                        <div style="font-size: 0.8rem; color: var(--color-muted); display: flex; align-items: center; gap: 0.25rem;">{{ icon_phone(size=12) }} {{ a.phone }}</div>
                                     {% endif %}
                                 </td>
                                 <td>
                                     <div>{{ a.designation or '—' }}</div>
-                                    <div style="font-size: 0.8rem; color: #666;">{{ a.organization or '—' }}</div>
+                                    <div style="font-size: 0.8rem; color: var(--color-muted);">{{ a.organization or '—' }}</div>
                                 </td>
                                 <td>
                                     {% if a.response_count > 0 %}
@@ -109,7 +109,7 @@
                                             <button 
                                                 type="button" 
                                                 class="btn btn-secondary btn-sm" 
-                                                style="color: #DC2626; border-color: #FCA5A5; padding: 0.35rem 0.5rem;" 
+                                                style="color: #FF8A80; border-color: #FCA5A5; padding: 0.35rem 0.5rem;" 
                                                 title="Delete Alumnus"
                                                 onclick="openDeleteAlumnusModal({{ a.id }}, '{{ a.full_name | escape }}')"
                                             >
@@ -127,7 +127,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="6" style="text-align: center; color: #888; padding: 2.5rem;">
+                            <td colspan="6" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
                                 No alumni records found matching the query.
                             </td>
                         </tr>
@@ -168,12 +168,12 @@
 <div class="modal-overlay" id="purgeAlumniModal">
     <div class="modal-dialog">
         <div class="modal-header" style="border-bottom: 2px solid #EF4444;">
-            <h4 class="modal-title" style="color: #B91C1C;">Purge All Alumni Records</h4>
+            <h4 class="modal-title" style="color: #FF8A80;">Purge All Alumni Records</h4>
             <button class="modal-close" onclick="closeModal('purgeAlumniModal')">&times;</button>
         </div>
         <form method="POST" action="{{ url_for('admin.purge_all_alumni') }}">
             <div class="modal-body">
-                <div style="background-color: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 1rem; border-radius: 4px; font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <div style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.45); color: #FFB4AB; padding: 1rem; border-radius: 4px; font-size: 0.88rem; margin-bottom: 1.25rem;">
                     <strong>Warning:</strong> This action is <strong>permanent and irreversible</strong>. It will delete:
                     <ul style="margin: 0.5rem 0 0 1.25rem; padding: 0;">
                         <li>All <strong>alumni profile records</strong> ({{ roster.total_count }} registered alumni)</li>
@@ -210,7 +210,7 @@
 <div class="modal-overlay" id="deleteSingleAlumnusModal">
     <div class="modal-dialog">
         <div class="modal-header" style="border-bottom: 2px solid #EF4444;">
-            <h4 class="modal-title" style="color: #B91C1C;">Delete Alumni Record</h4>
+            <h4 class="modal-title" style="color: #FF8A80;">Delete Alumni Record</h4>
             <button class="modal-close" onclick="closeModal('deleteSingleAlumnusModal')">&times;</button>
         </div>
         <form method="POST" action="">
@@ -218,10 +218,10 @@
                 <p style="font-size: 0.92rem; color: var(--admin-text-main); margin-bottom: 1rem;">
                     Are you sure you want to permanently delete the alumni profile, RSVP attendance, and contribution records for:
                 </p>
-                <div style="background-color: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;" id="deleteAlumnusTargetName">
+                <div style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.45); color: #FFB4AB; padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem;" id="deleteAlumnusTargetName">
                     <!-- Dynamic Target Alumnus Name -->
                 </div>
-                <p style="font-size: 0.82rem; color: #666; margin: 0;">
+                <p style="font-size: 0.82rem; color: var(--color-muted); margin: 0;">
                     This action is immediate and cannot be undone. All linked payment transactions and RSVP responses for this individual will be permanently wiped.
                 </p>
             </div>

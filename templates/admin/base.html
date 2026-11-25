@@ -1,4 +1,4 @@
-{% from "macros/icons.html" import icon_dashboard, icon_money, icon_alumni, icon_volunteers, icon_activities, icon_sync, icon_external, icon_menu, icon_jnu_seal, icon_gallery %}
+{% from "macros/icons.html" import icon_dashboard, icon_money, icon_alumni, icon_sync, icon_external, icon_menu, icon_jnu_seal, icon_gallery, icon_receipt %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
-<body class="admin-body">
+<body class="admin-body theme-continuum">
     {% macro nav_link(endpoint, label, icon, also=()) -%}
         {%- set is_active = request.endpoint == endpoint or request.endpoint in also -%}
         <li>
@@ -28,7 +28,7 @@
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="sidebar-header">
             <a href="{{ url_for('admin.dashboard') }}" class="sidebar-brand">
-                <span class="sidebar-brand-logo">{{ icon_jnu_seal(size=30) }}</span>
+                <span class="sidebar-brand-logo">{{ icon_jnu_seal(size=30, gold=true) }}</span>
                 <span class="sidebar-brand-text">
                     <span class="sidebar-brand-title">SC&amp;SS Admin</span>
                     <span class="sidebar-brand-sub">Alumni Meet Portal</span>
@@ -47,14 +47,9 @@
             <div class="sidebar-group-label">Meet</div>
             <ul class="sidebar-menu">
                 {{ nav_link('admin.contributions', 'Contributions', icon_money) }}
+                {{ nav_link('admin.expenses', 'Expenses', icon_receipt) }}
                 {{ nav_link('admin.alumni_list', 'Alumni Roster', icon_alumni, also=('admin.alumni_detail',)) }}
                 {{ nav_link('admin.gallery', 'Gallery', icon_gallery) }}
-            </ul>
-
-            <div class="sidebar-group-label">Organizing Team</div>
-            <ul class="sidebar-menu">
-                {{ nav_link('admin.volunteers', 'Volunteers', icon_volunteers) }}
-                {{ nav_link('admin.activities', 'Activities & Tasks', icon_activities) }}
             </ul>
 
             <div class="sidebar-group-label">Data</div>

@@ -11,6 +11,7 @@ from services.sync_service import perform_sync
 from services.section_service import ensure_sections_initialized
 from services.gallery_service import ensure_gallery_initialized
 from db.meets import ensure_attendance_status_column
+from db.expenses import ensure_expenses_table
 from db.sections import get_sections_dict
 import logging
 
@@ -174,6 +175,7 @@ def create_app(config_class=Config):
                 ensure_sections_initialized()
                 ensure_gallery_initialized()
                 ensure_attendance_status_column()
+                ensure_expenses_table()
             except Exception as e:
                 logger.warning(f"Could not connect to database on startup (will connect on requests): {e}")
 

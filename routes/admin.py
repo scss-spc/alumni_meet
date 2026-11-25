@@ -19,14 +19,6 @@ from services.contribution_service import (
     delete_single_contribution,
     clean_duplicate_contributions
 )
-from services.volunteer_service import (
-    get_volunteer_roster,
-    save_volunteer,
-    get_activities_overview,
-    add_activity,
-    assign_volunteer,
-    unassign_volunteer
-)
 from services.drive_service import get_drive_preview_url, get_drive_thumbnail_url
 from services.sync_service import get_sync_status, perform_sync, test_sheet_connection
 from services.scheduler_service import get_scheduler_info
@@ -38,6 +30,19 @@ from services.gallery_service import (
     remove_photo
 )
 from db.meets import get_meet_responses_admin
+from db.contributions import get_contribution_stats
+from services.expense_service import (
+    EXPENSE_CATEGORIES,
+    add_payment,
+    build_expense_summary,
+    get_expense_with_payments,
+    list_expenses,
+    parse_expense_form,
+    parse_payment_form,
+    remove_expense,
+    remove_payment,
+    save_expense
+)
 from db.audit import get_recent_audit_logs
 
 admin_bp = Blueprint("admin", __name__)
@@ -91,19 +96,24 @@ def dashboard():
     contrib_data = get_contributions_dashboard(meet_id=meet_id, per_page=5)
     recent_responses = get_meet_responses_admin(meet_id=meet_id, limit=5)
     audit_logs = get_recent_audit_logs(limit=5)
-    volunteers = get_volunteer_roster(status="active")
     sync_state = get_sync_status()
     scheduler_info = get_scheduler_info()
+    try:
+        expense_summary = build_expense_summary(
+            meet_id, meet_ctx["stats"], contrib_data["stats"].get("total_submitted_amount")
+        )
+    except Exception:
+        expense_summary = None  # e.g. expenses table not created yet
 
     return render_template(
         "admin/dashboard.html",
+        expense_summary=expense_summary,
         meet=meet_ctx["meet"],
         meet_stats=meet_ctx["stats"],
         financial_stats=contrib_data["stats"],
         recent_contributions=contrib_data["records"],
         recent_responses=recent_responses,
         audit_logs=audit_logs,
-        volunteer_count=len(volunteers),
         sync_state=sync_state,
         scheduler_info=scheduler_info
     )
@@ -273,78 +283,90 @@ def deduplicate_contributions_route():
     return redirect(url_for("admin.contributions"))
 
 
-@admin_bp.route("/volunteers", methods=["GET", "POST"])
+@admin_bp.route("/expenses", methods=["GET", "POST"])
 @login_required
-def volunteers():
-    """Volunteer management (Independent of Alumni records)."""
+def expenses():
+    """Spending on alumni: catering (per head), mementos (per alumnus) and other costs."""
+    meet_ctx = get_current_meet_context()
+    meet_id = meet_ctx["meet"]["id"]
+
     if request.method == "POST":
-        data = {
-            "id": request.form.get("id", type=int),
-            "full_name": request.form.get("full_name", "").strip(),
-            "email": request.form.get("email", "").strip() or None,
-            "phone": request.form.get("phone", "").strip() or None,
-            "role": request.form.get("role", "").strip() or None,
-            "status": request.form.get("status", "active"),
-            "notes": request.form.get("notes", "").strip() or None,
-        }
-        if not data["full_name"]:
-            flash("Volunteer full name is required.", "danger")
+        data, errors = parse_expense_form(request.form, meet_id)
+        if errors:
+            for err in errors:
+                flash(err, "danger")
         else:
-            save_volunteer(data)
-            flash("Volunteer saved successfully.", "success")
-        return redirect(url_for("admin.volunteers"))
+            expense_id = request.form.get("id", type=int)
+            saved_id, error = save_expense(data, expense_id=expense_id, user_id=session.get("user_id"))
+            if error:
+                flash(error, "danger")
+            else:
+                flash("Expense updated." if expense_id else "Expense added.", "success")
+        return redirect(url_for("admin.expenses", category=request.args.get("category") or None))
 
-    search = request.args.get("search", "").strip() or None
-    status = request.args.get("status", "").strip() or None
-    volunteer_list = get_volunteer_roster(status=status, search=search)
-
+    category = request.args.get("category", "").strip() or None
+    if category not in EXPENSE_CATEGORIES:
+        category = None
+    funds = get_contribution_stats(meet_id=meet_id).get("total_submitted_amount")
+    all_expenses = list_expenses(meet_id)
     return render_template(
-        "admin/volunteers.html",
-        volunteers=volunteer_list,
-        current_search=search or "",
-        current_status=status or ""
+        "admin/expenses.html",
+        meet=meet_ctx["meet"],
+        meet_stats=meet_ctx["stats"],
+        summary=build_expense_summary(meet_id, meet_ctx["stats"], funds, expenses=all_expenses),
+        expenses=[e for e in all_expenses if not category or e["category"] == category],
+        categories=EXPENSE_CATEGORIES,
+        current_category=category or ""
     )
 
-@admin_bp.route("/activities", methods=["GET", "POST"])
+@admin_bp.route("/expenses/<int:expense_id>/payments", methods=["POST"])
 @login_required
-def activities():
-    """Organizing activities and volunteer assignment."""
-    if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        description = request.form.get("description", "").strip()
-        if name:
-            add_activity(meet_id=1, name=name, description=description)
-            flash(f"Activity '{name}' created.", "success")
-        return redirect(url_for("admin.activities"))
+def add_expense_payment_route(expense_id: int):
+    """Record a part or full payment against an expense."""
+    expense = get_expense_with_payments(expense_id)
+    if not expense:
+        flash("Expense not found.", "warning")
+        return redirect(url_for("admin.expenses"))
+    payment, errors = parse_payment_form(request.form, expense["balance_due"])
+    if errors:
+        for err in errors:
+            flash(err, "danger")
+    else:
+        add_payment(expense_id, payment, user_id=session.get("user_id"))
+        remaining = expense["balance_due"] - payment["amount"]
+        if remaining <= 0:
+            flash(f"Payment recorded. \"{expense['description']}\" is now fully paid.", "success")
+        else:
+            flash(f"Part payment recorded. ₹{remaining:,.2f} still due on \"{expense['description']}\".", "success")
+    return redirect(request.referrer or url_for("admin.expenses"))
 
-    activity_list = get_activities_overview(meet_id=1)
-    volunteer_list = get_volunteer_roster(status="active")
-
-    return render_template(
-        "admin/activities.html",
-        activities=activity_list,
-        volunteers=volunteer_list
-    )
-
-@admin_bp.route("/activities/<int:activity_id>/assign", methods=["POST"])
+@admin_bp.route("/expenses/payments/<int:payment_id>/delete", methods=["POST"])
 @login_required
-def assign_activity_volunteer(activity_id: int):
-    """Assign volunteer to an organizing activity."""
-    volunteer_id = request.form.get("volunteer_id", type=int)
-    responsibility = request.form.get("responsibility", "").strip() or None
-    if volunteer_id:
-        assign_volunteer(activity_id, volunteer_id, responsibility)
-        flash("Volunteer assigned to activity.", "success")
-    return redirect(url_for("admin.activities"))
+@admin_required
+def delete_expense_payment_route(payment_id: int):
+    """Remove a wrongly recorded payment (admins only)."""
+    try:
+        removed = remove_payment(payment_id, user_id=session.get("user_id"))
+        flash("Payment removed." if removed else "Payment not found or already removed.",
+              "success" if removed else "warning")
+    except Exception as e:
+        flash(f"Error removing payment: {str(e)}", "danger")
+    return redirect(request.referrer or url_for("admin.expenses"))
 
-@admin_bp.route("/assignments/<int:assignment_id>/delete", methods=["POST"])
+@admin_bp.route("/expenses/<int:expense_id>/delete", methods=["POST"])
 @login_required
-def delete_assignment(assignment_id: int):
-    """Remove a volunteer assignment."""
-    unassign_volunteer(assignment_id)
-    flash("Volunteer assignment removed.", "info")
-    return redirect(url_for("admin.activities"))
-
+@admin_required
+def delete_expense_route(expense_id: int):
+    """Delete an expense entry (admins only)."""
+    try:
+        removed = remove_expense(expense_id, user_id=session.get("user_id"))
+        if removed:
+            flash(f"Deleted expense: {removed.get('description')}.", "success")
+        else:
+            flash("Expense not found or already deleted.", "warning")
+    except Exception as e:
+        flash(f"Error deleting expense: {str(e)}", "danger")
+    return redirect(request.referrer or url_for("admin.expenses"))
 
 @admin_bp.route("/gallery", methods=["GET", "POST"])
 @login_required

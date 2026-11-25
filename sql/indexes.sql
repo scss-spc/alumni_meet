@@ -13,11 +13,6 @@ CREATE INDEX `idx_contrib_status` ON `contributions` (`meet_id`, `payment_status
 CREATE INDEX `idx_contrib_alumni` ON `contributions` (`alumni_id`);
 CREATE INDEX `idx_contrib_tx_ref` ON `contributions` (`transaction_reference`);
 
--- Volunteer & Activity indexes
-CREATE INDEX `idx_vol_status` ON `volunteers` (`status`);
-CREATE INDEX `idx_act_meet_status` ON `activities` (`meet_id`, `status`);
-CREATE INDEX `idx_va_volunteer` ON `volunteer_assignments` (`volunteer_id`);
-
 -- Users & Audit Logs
 CREATE INDEX `idx_audit_entity` ON `audit_logs` (`entity_type`, `entity_id`);
 CREATE INDEX `idx_audit_user` ON `audit_logs` (`user_id`);

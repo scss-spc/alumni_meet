@@ -1,0 +1,402 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Expenses{% endblock %}
+{% block page_title %}Alumni Expenses{% endblock %}
+
+{% block topbar_actions %}
+    <button class="btn btn-primary btn-sm" type="button" onclick="openExpenseModal()">+ Add Expense</button>
+{% endblock %}
+
+{% macro inr(value) -%}{{ value | currency_inr }}{%- endmacro %}
+{% macro dmy(value) -%}{{ value.strftime('%d %b %Y') if value else '—' }}{%- endmacro %}
+
+{% block content %}
+<p style="color: var(--admin-text-muted); margin: 0 0 1.25rem;">
+    {{ meet.name }} · spending on alumni. Catering is planned per head (alumni + family &amp; guests); mementos are for alumni only.
+    Expenses can be paid in parts. Use <strong>Payments</strong> on a row to record each part.
+</p>
+
+<!-- Who we are spending on -->
+<div class="stat-grid">
+    <div class="stat-tile">
+        <div class="stat-label">Alumni Attending · Mementos</div>
+        <div class="stat-number primary">{{ summary.alumni_attending }}</div>
+        <div class="stat-sub">1 memento per alumnus (family &amp; guests excluded){% if meet_stats.total_maybe %} · up to {{ summary.alumni_attending + meet_stats.total_maybe }} if all "maybe" alumni come{% endif %}</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Total Headcount · Catering</div>
+        <div class="stat-number">{{ summary.headcount }}</div>
+        <div class="stat-sub">{{ summary.alumni_attending }} alumni + {{ summary.family_and_guests }} family &amp; guests{% if meet_stats.maybe_headcount %} · up to {{ summary.headcount + meet_stats.maybe_headcount }} with "maybe"{% endif %}</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Committed</div>
+        <div class="stat-number">{{ inr(summary.total_committed) }}</div>
+        <div class="stat-sub">All expenses booked{% if summary.spent_per_alumnus is not none %} · {{ inr(summary.spent_per_alumnus) }} per attending alumnus{% endif %}</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Paid So Far</div>
+        <div class="stat-number success">{{ inr(summary.total_paid) }}</div>
+        <div class="stat-sub">{{ summary.status_counts.paid }} fully paid · {{ summary.status_counts.partial }} partly paid</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Still To Pay</div>
+        <div class="stat-number {{ 'warning' if summary.total_due > 0 else '' }}">{{ inr(summary.total_due) }}</div>
+        <div class="stat-sub">{{ summary.status_counts.unpaid }} unpaid · {{ summary.status_counts.partial }} with a balance due</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Catering</div>
+        <div class="stat-number">{{ inr(summary.catering_total) }}</div>
+        <div class="stat-sub">{% if summary.catering_per_head is not none %}{{ inr(summary.catering_per_head) }} per head ({{ summary.headcount }} people){% else %}Per-head cost shows once people confirm{% endif %}</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Mementos</div>
+        <div class="stat-number">{{ inr(summary.mementos_total) }}</div>
+        <div class="stat-sub">{% if summary.memento_per_alumnus is not none %}{{ inr(summary.memento_per_alumnus) }} per alumnus ({{ summary.alumni_attending }} alumni){% else %}Per-alumnus cost shows once alumni confirm{% endif %}</div>
+    </div>
+    <div class="stat-tile">
+        <div class="stat-label">Funds Left After Expenses</div>
+        <div class="stat-number {{ 'success' if summary.balance >= 0 else 'warning' }}">{{ inr(summary.balance) }}</div>
+        <div class="stat-sub">{{ inr(summary.funds_contributed) }} contributed − {{ inr(summary.total_committed) }} committed · {{ inr(summary.cash_in_hand) }} in hand after payments so far</div>
+    </div>
+</div>
+
+<!-- Category filter -->
+<div class="admin-card">
+    <div class="card-body expense-filters">
+        <a href="{{ url_for('admin.expenses') }}" class="expense-chip {% if not current_category %}active{% endif %}">
+            All <span>{{ inr(summary.total_committed) }}</span>
+        </a>
+        {% for c in summary.by_category if c.key in categories %}
+            <a href="{{ url_for('admin.expenses', category=c.key) }}" class="expense-chip {% if current_category == c.key %}active{% endif %}">
+                {{ c.label }} <span>{{ inr(c.total) }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Expense list -->
+<div class="admin-card">
+    <div class="card-body" style="padding: 0;">
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Date Created</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Paid / Due</th>
+                        <th>Status</th>
+                        <th>Fully Paid On</th>
+                        <th>Vendor</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in expenses %}
+                        {% set edit_data = {
+                            'id': e.id, 'category': e.category, 'description': e.description,
+                            'quantity': e.quantity if e.quantity is not none else '',
+                            'unit_cost': (e.unit_cost | string) if e.unit_cost is not none else '',
+                            'amount': e.amount | string, 'vendor': e.vendor or '',
+                            'expense_date': e.expense_date.isoformat() if e.expense_date else '', 'notes': e.notes or '',
+                            'paid_total': e.paid_total | string
+                        } %}
+                        {% set pay_list = [] %}
+                        {% for p in e.payments %}
+                            {% set _ = pay_list.append({
+                                'date': dmy(p.paid_on) | string, 'amount': inr(p.amount) | string, 'note': p.note or '',
+                                'delete_url': url_for('admin.delete_expense_payment_route', payment_id=p.id)
+                            }) %}
+                        {% endfor %}
+                        {% set pay_data = {
+                            'description': e.description, 'amount': inr(e.amount) | string,
+                            'paid': inr(e.paid_total) | string, 'due': inr(e.balance_due) | string,
+                            'due_value': e.balance_due | string, 'status': e.payment_status_label,
+                            'fully_paid_on': dmy(e.fully_paid_on) | string if e.fully_paid_on else '',
+                            'action': url_for('admin.add_expense_payment_route', expense_id=e.id),
+                            'payments': pay_list
+                        } %}
+                        <tr>
+                            <td style="white-space: nowrap;">{{ dmy(e.expense_date) }}</td>
+                            <td><span class="badge badge-active">{{ e.category_label }}</span></td>
+                            <td>
+                                <strong>{{ e.description }}</strong>
+                                {% if e.notes %}<div style="font-size: 0.8rem; color: var(--color-muted);">{{ e.notes }}</div>{% endif %}
+                            </td>
+                            <td style="white-space: nowrap;">
+                                <strong>{{ inr(e.amount) }}</strong>
+                                {% if e.quantity is not none and e.unit_cost is not none %}
+                                    <div style="font-size: 0.78rem; color: var(--color-muted);">{{ e.quantity }} × {{ inr(e.unit_cost) }}</div>
+                                {% endif %}
+                            </td>
+                            <td style="white-space: nowrap;">
+                                {{ inr(e.paid_total) }}
+                                {% if e.balance_due > 0 %}<div style="font-size: 0.78rem; color: #F5C26B;">{{ inr(e.balance_due) }} due</div>{% endif %}
+                                {% if e.payments | length > 1 %}<div style="font-size: 0.75rem; color: var(--color-muted);">{{ e.payments | length }} payments</div>{% endif %}
+                            </td>
+                            <td><span class="pay-status pay-status-{{ e.payment_status }}">{{ e.payment_status_label }}</span></td>
+                            <td style="white-space: nowrap;">{{ dmy(e.fully_paid_on) }}</td>
+                            <td>{{ e.vendor or '—' }}</td>
+                            <td class="expense-actions">
+                                <button type="button" class="btn btn-primary btn-sm" onclick='openPaymentModal({{ pay_data | tojson }})'>{{ 'Payments' if e.payment_status == 'paid' else 'Pay' }}</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick='openExpenseModal({{ edit_data | tojson }})'>Edit</button>
+                                {% if session.get('user_role') == 'admin' %}
+                                    <form method="POST" action="{{ url_for('admin.delete_expense_route', expense_id=e.id) }}" style="display: inline;"
+                                          onsubmit="return confirm('Delete this expense and all its payments: {{ e.description | e | replace("'", "") }}?');">
+                                        <button type="submit" class="btn btn-secondary btn-sm" style="color: #FF8A80; border-color: #FCA5A5;">Delete</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
+                                {% if current_category %}No expenses in this category yet.{% else %}No expenses recorded yet. Click "+ Add Expense" to log catering, mementos and other costs.{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add / Edit Expense Modal -->
+<div class="modal-overlay" id="expenseModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title" id="expModalTitle">Add Expense</h4>
+            <button type="button" class="modal-close" onclick="closeModal('expenseModal')">&times;</button>
+        </div>
+        <form method="POST" action="{{ url_for('admin.expenses', category=current_category or None) }}">
+            <input type="hidden" name="id" id="expId" value="">
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="expCategory">Category *</label>
+                        <select name="category" id="expCategory" class="form-control" style="width: 100%;" required>
+                            {% for key, label in categories.items() %}
+                                <option value="{{ key }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expDate">Date Created *</label>
+                        <input type="date" name="expense_date" id="expDate" class="form-control" style="width: 100%;" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="expDescription">Description *</label>
+                    <input type="text" name="description" id="expDescription" maxlength="255" required class="form-control" style="width: 100%;" placeholder="e.g. Dinner buffet, engraved memento plaques">
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="expQuantity">Quantity</label>
+                        <input type="number" name="quantity" id="expQuantity" min="0" step="1" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expUnitCost">Unit Cost (₹)</label>
+                        <input type="number" name="unit_cost" id="expUnitCost" min="0" step="0.01" class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="expAmount">Total Amount (₹) *</label>
+                        <input type="number" name="amount" id="expAmount" min="0" step="0.01" class="form-control" style="width: 100%;" placeholder="Qty × unit cost">
+                    </div>
+                </div>
+                <div class="expense-quick-fill">
+                    Set quantity to:
+                    <button type="button" class="btn btn-secondary btn-sm" data-fill-qty="{{ summary.alumni_attending }}">Alumni attending ({{ summary.alumni_attending }})</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-fill-qty="{{ summary.headcount }}">Total headcount ({{ summary.headcount }})</button>
+                </div>
+                <p class="expense-paid-note" id="expPaidNote" hidden></p>
+
+                <div class="form-group">
+                    <label class="form-label" for="expVendor">Vendor / Paid To</label>
+                    <input type="text" name="vendor" id="expVendor" maxlength="255" class="form-control" style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="expNotes">Notes</label>
+                    <textarea name="notes" id="expNotes" rows="2" class="form-control" style="width: 100%;" placeholder="Invoice number, payment terms, etc."></textarea>
+                </div>
+
+                <!-- Optional first payment (add mode only) -->
+                <fieldset class="expense-paynow" id="expPayNow">
+                    <legend>Payment made now <span>(optional; leave blank if not paid yet)</span></legend>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="expPaidNow">Amount Paid (₹)</label>
+                            <input type="number" name="paid_now" id="expPaidNow" min="0" step="0.01" class="form-control" style="width: 100%;" placeholder="Part or full">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="expPaidNowOn">Payment Date</label>
+                            <input type="date" name="paid_now_on" id="expPaidNowOn" class="form-control" style="width: 100%;">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm" id="expPayFull">Paid in full</button>
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Expense</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Payments Modal: history + record a part/full payment -->
+<div class="modal-overlay" id="paymentModal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h4 class="modal-title" id="payModalTitle">Payments</h4>
+            <button type="button" class="modal-close" onclick="closeModal('paymentModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="payment-summary" id="paySummary"></div>
+            <table class="admin-table payment-history">
+                <thead><tr><th>Paid On</th><th>Amount</th><th>Note</th>{% if session.get('user_role') == 'admin' %}<th></th>{% endif %}</tr></thead>
+                <tbody id="payHistory"></tbody>
+            </table>
+            <form method="POST" id="payForm" class="payment-form">
+                <h5>Record a payment</h5>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="payAmount">Amount (₹) *</label>
+                        <input type="number" name="amount" id="payAmount" min="0.01" step="0.01" required class="form-control" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="payDate">Paid On *</label>
+                        <input type="date" name="paid_on" id="payDate" required class="form-control" style="width: 100%;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="payNote">Note</label>
+                    <input type="text" name="note" id="payNote" maxlength="255" class="form-control" style="width: 100%;" placeholder="e.g. Advance, final settlement, UPI ref">
+                </div>
+                <div class="modal-footer" style="margin: 0 -1.5rem -1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('paymentModal')">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Payment</button>
+                </div>
+            </form>
+            <p class="payment-done" id="payDone" hidden>This expense is fully paid.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const f = (id) => document.getElementById(id);
+    const today = () => new Date().toISOString().slice(0, 10);
+    const isAdmin = {{ 'true' if session.get('user_role') == 'admin' else 'false' }};
+    const qty = f("expQuantity"), unit = f("expUnitCost"), amount = f("expAmount");
+    let amountTouched = false;
+
+    // Amount follows quantity × unit cost until the organizer types their own amount.
+    const recalc = () => {
+        if (amountTouched) return;
+        const q = parseFloat(qty.value), u = parseFloat(unit.value);
+        amount.value = (!isNaN(q) && !isNaN(u)) ? (q * u).toFixed(2) : "";
+    };
+    qty.addEventListener("input", recalc);
+    unit.addEventListener("input", recalc);
+    amount.addEventListener("input", () => { amountTouched = amount.value !== ""; });
+
+    document.querySelectorAll("[data-fill-qty]").forEach(btn => {
+        btn.addEventListener("click", () => { qty.value = btn.dataset.fillQty; recalc(); });
+    });
+    f("expCategory").addEventListener("change", (e) => {
+        if (qty.value) return;
+        const pick = e.target.value === "mementos" ? "{{ summary.alumni_attending }}"
+                   : e.target.value === "catering" ? "{{ summary.headcount }}" : "";
+        if (pick && pick !== "0") { qty.value = pick; recalc(); }
+    });
+    f("expPayFull").addEventListener("click", () => {
+        f("expPaidNow").value = amount.value;
+        if (!f("expPaidNowOn").value) f("expPaidNowOn").value = today();
+    });
+
+    window.openExpenseModal = function (exp) {
+        const isEdit = !!exp;
+        exp = exp || {};
+        f("expModalTitle").textContent = isEdit ? "Edit Expense" : "Add Expense";
+        f("expId").value = exp.id || "";
+        f("expCategory").value = exp.category || "catering";
+        f("expDescription").value = exp.description || "";
+        qty.value = exp.quantity === undefined ? "" : exp.quantity;
+        unit.value = exp.unit_cost || "";
+        amount.value = exp.amount || "";
+        amountTouched = isEdit && !!exp.amount;
+        f("expVendor").value = exp.vendor || "";
+        f("expDate").value = exp.expense_date || today();
+        f("expNotes").value = exp.notes || "";
+        // First payment can be entered when adding; later payments go through "Pay".
+        f("expPayNow").hidden = isEdit;
+        f("expPaidNow").value = "";
+        f("expPaidNowOn").value = today();
+        const paid = parseFloat(exp.paid_total || "0");
+        f("expPaidNote").hidden = !(isEdit && paid > 0);
+        f("expPaidNote").textContent = isEdit && paid > 0
+            ? "₹" + paid.toLocaleString("en-IN", {minimumFractionDigits: 2}) + " already paid, so the total can't go below that." : "";
+        if (!isEdit && !qty.value && "{{ summary.headcount }}" !== "0") { qty.value = "{{ summary.headcount }}"; }
+        openModal("expenseModal");
+        f("expDescription").focus();
+    };
+
+    window.openPaymentModal = function (exp) {
+        f("payModalTitle").textContent = "Payments: " + exp.description;
+        f("paySummary").innerHTML = "";
+        [["Total", exp.amount], ["Paid", exp.paid], ["Due", exp.due], ["Status", exp.status + (exp.fully_paid_on ? " on " + exp.fully_paid_on : "")]]
+            .forEach(([label, value]) => {
+                const div = document.createElement("div");
+                const l = document.createElement("span"); l.textContent = label;
+                const v = document.createElement("strong"); v.textContent = value;
+                div.append(l, v);
+                f("paySummary").appendChild(div);
+            });
+
+        const body = f("payHistory");
+        body.innerHTML = "";
+        if (!exp.payments.length) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = isAdmin ? 4 : 3;
+            td.textContent = "No payments yet.";
+            td.style.color = "var(--color-muted)";
+            tr.appendChild(td);
+            body.appendChild(tr);
+        }
+        exp.payments.forEach(p => {
+            const tr = document.createElement("tr");
+            [p.date, p.amount, p.note || "—"].forEach(text => {
+                const td = document.createElement("td"); td.textContent = text; tr.appendChild(td);
+            });
+            if (isAdmin) {
+                const td = document.createElement("td");
+                const form = document.createElement("form");
+                form.method = "POST"; form.action = p.delete_url;
+                form.onsubmit = () => confirm("Remove this payment of " + p.amount + "?");
+                const btn = document.createElement("button");
+                btn.type = "submit"; btn.className = "btn btn-secondary btn-sm"; btn.textContent = "Remove";
+                btn.style.color = "#FF8A80";
+                form.appendChild(btn); td.appendChild(form); tr.appendChild(td);
+            }
+            body.appendChild(tr);
+        });
+
+        const due = parseFloat(exp.due_value || "0");
+        f("payForm").hidden = due <= 0;
+        f("payDone").hidden = due > 0;
+        f("payForm").action = exp.action;
+        f("payAmount").value = due > 0 ? due.toFixed(2) : "";
+        f("payAmount").max = due > 0 ? due.toFixed(2) : "";
+        f("payDate").value = today();
+        f("payNote").value = "";
+        openModal("paymentModal");
+    };
+})();
+</script>
+{% endblock %}

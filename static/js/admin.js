@@ -80,40 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    window.openVolunteerModal = function(volunteer = null) {
-        const modal = document.getElementById("volunteerModal");
-        if (modal) {
-            const idInput = document.getElementById("volId");
-            const nameInput = document.getElementById("volFullName");
-            const emailInput = document.getElementById("volEmail");
-            const phoneInput = document.getElementById("volPhone");
-            const roleInput = document.getElementById("volRole");
-            const statusInput = document.getElementById("volStatus");
-            const notesInput = document.getElementById("volNotes");
-
-            if (volunteer) {
-                document.getElementById("volModalTitle").textContent = "Edit Volunteer";
-                idInput.value = volunteer.id || "";
-                nameInput.value = volunteer.full_name || "";
-                emailInput.value = volunteer.email || "";
-                phoneInput.value = volunteer.phone || "";
-                roleInput.value = volunteer.role || "";
-                statusInput.value = volunteer.status || "active";
-                notesInput.value = volunteer.notes || "";
-            } else {
-                document.getElementById("volModalTitle").textContent = "Add New Volunteer";
-                idInput.value = "";
-                nameInput.value = "";
-                emailInput.value = "";
-                phoneInput.value = "";
-                roleInput.value = "";
-                statusInput.value = "active";
-                notesInput.value = "";
-            }
-            openModal("volunteerModal");
-        }
-    };
-
     window.openDeleteAlumnusModal = function(alumniId, alumniName) {
         const modal = document.getElementById("deleteSingleAlumnusModal");
         if (modal) {

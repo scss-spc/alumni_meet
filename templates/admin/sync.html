@@ -79,15 +79,15 @@
                     </tr>
                     <tr>
                         <td style="font-weight: 600;">Last Sync Message</td>
-                        <td style="font-size: 0.88rem; color: #475569;">
+                        <td style="font-size: 0.88rem; color: var(--color-muted);">
                             {{ sync_state.message }}
                         </td>
                     </tr>
                     {% if sync_state.last_error %}
                     <tr>
-                        <td style="font-weight: 600; color: #DC2626;">Error Diagnostic</td>
+                        <td style="font-weight: 600; color: #FF8A80;">Error Diagnostic</td>
                         <td>
-                            <code style="color: #DC2626; font-size: 0.82rem;">{{ sync_state.last_error }}</code>
+                            <code style="color: #FF8A80; font-size: 0.82rem;">{{ sync_state.last_error }}</code>
                         </td>
                     </tr>
                     {% endif %}
@@ -98,7 +98,7 @@
             <!-- Connection Test Result Box -->
             <div id="testResultBox" style="display: none; padding: 1rem; border-radius: 6px; font-size: 0.88rem; margin-top: 1rem;"></div>
 
-            <div style="background: #F1F5F9; padding: 1rem; border-radius: 6px; font-size: 0.85rem; color: #475569; margin-top: 1rem;">
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-size: 0.85rem; color: var(--color-muted); margin-top: 1rem;">
                 <strong>Connection Instructions:</strong>
                 <ul style="margin: 0.5rem 0 0 1.25rem; padding: 0;">
                     <li><strong>Option 1 (Easiest):</strong> Share the Google Sheet as <em>"Anyone with the link can view"</em> and set <code>GOOGLE_SHEET_ID</code> in <code>.env</code>.</li>
@@ -114,7 +114,7 @@
             <span class="card-title">Ingestion & Field Mapping</span>
         </div>
         <div class="card-body">
-            <h5 style="margin-bottom: 0.75rem; font-size: 0.95rem; color: #1E293B;">Auto-Detected Google Form Fields</h5>
+            <h5 style="margin-bottom: 0.75rem; font-size: 0.95rem; color: var(--color-text);">Auto-Detected Google Form Fields</h5>
             {% if sync_state.column_mapping %}
                 <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
                     <table class="admin-table">
@@ -128,20 +128,20 @@
                             {% for db_col, form_col in sync_state.column_mapping.items() %}
                                 <tr>
                                     <td><code>{{ db_col }}</code></td>
-                                    <td style="font-size: 0.85rem; color: #2563EB;">{{ form_col }}</td>
+                                    <td style="font-size: 0.85rem; color: var(--color-gold);">{{ form_col }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                <p style="color: #888; font-size: 0.88rem;">
+                <p style="color: var(--color-muted); font-size: 0.88rem;">
                     Run a sync or connection test to display the active column mappings.
                 </p>
             {% endif %}
 
-            <div style="margin-top: 1.5rem; border-top: 1px solid #E2E8F0; padding-top: 1rem;">
-                <h5 style="margin-bottom: 0.5rem; font-size: 0.95rem; color: #1E293B;">Last Ingestion Metrics</h5>
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+                <h5 style="margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--color-text);">Last Ingestion Metrics</h5>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; font-size: 0.88rem;">
                     <div>{{ icon_alumni(size=14) }} <strong>New Alumni Created:</strong> {{ sync_state.metrics.alumni_created or 0 }}</div>
                     <div>{{ icon_sync(size=14) }} <strong>Alumni Updated:</strong> {{ sync_state.metrics.alumni_updated or 0 }}</div>
@@ -183,7 +183,7 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="4" style="text-align: center; color: #888; padding: 2rem;">
+                            <td colspan="4" style="text-align: center; color: var(--color-muted); padding: 2rem;">
                                 No synchronization audit history recorded yet.
                             </td>
                         </tr>
@@ -197,14 +197,14 @@
 <!-- Database Reset / Purge Danger Card -->
 {% if session.get('user_role') == 'admin' %}
 <div class="admin-card" style="margin-top: 1.5rem; border-left: 4px solid #EF4444;">
-    <div class="card-header" style="background-color: #FEF2F2;">
-        <span class="card-title" style="color: #991B1B;">Danger Zone — Database Clean Slate</span>
-        <button class="btn btn-secondary btn-sm" style="color: #DC2626; border-color: #FCA5A5; font-weight: 600;" onclick="openModal('purgeSyncModal')">
+    <div class="card-header" style="background-color: rgba(239, 68, 68, 0.12);">
+        <span class="card-title" style="color: #FFB4AB;">Danger Zone — Database Clean Slate</span>
+        <button class="btn btn-secondary btn-sm" style="color: #FF8A80; border-color: #FCA5A5; font-weight: 600;" onclick="openModal('purgeSyncModal')">
             Purge All Alumni Data
         </button>
     </div>
     <div class="card-body">
-        <p style="font-size: 0.88rem; color: #64748B; margin: 0;">
+        <p style="font-size: 0.88rem; color: var(--color-muted); margin: 0;">
             Wipe all ingested alumni, RSVP responses, and contribution records from the database to perform a completely fresh synchronization from Google Sheets.
         </p>
     </div>
@@ -214,12 +214,12 @@
 <div class="modal-overlay" id="purgeSyncModal">
     <div class="modal-dialog">
         <div class="modal-header" style="border-bottom: 2px solid #EF4444;">
-            <h4 class="modal-title" style="color: #B91C1C;">Purge All Alumni Records</h4>
+            <h4 class="modal-title" style="color: #FF8A80;">Purge All Alumni Records</h4>
             <button class="modal-close" onclick="closeModal('purgeSyncModal')">&times;</button>
         </div>
         <form method="POST" action="{{ url_for('admin.purge_all_alumni') }}">
             <div class="modal-body">
-                <div style="background-color: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 1rem; border-radius: 4px; font-size: 0.88rem; margin-bottom: 1.25rem;">
+                <div style="background-color: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.45); color: #FFB4AB; padding: 1rem; border-radius: 4px; font-size: 0.88rem; margin-bottom: 1.25rem;">
                     <strong>Warning:</strong> This will permanently delete all alumni profiles, RSVPs, contributions, and recognition settings.
                 </div>
                 <p style="font-size: 0.88rem; color: var(--color-muted); margin-bottom: 0.75rem;">

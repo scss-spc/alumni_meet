@@ -2,8 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 import db.alumni as alumni_db
 import db.contributions as contrib_db
-import db.volunteers as vol_db
-import db.activities as act_db
+import db.expenses as expense_db
 import db.users as users_db
 import db.audit as audit_db
 
@@ -42,14 +41,13 @@ def test_contribution_db_queries():
         assert "%s" in sql
         assert "%Amit%" in params
 
-def test_volunteer_db_queries():
-    """Verify volunteer queries operate independently of alumni table."""
-    with patch("db.volunteers.execute_query") as mock_exec:
+def test_expense_db_queries():
+    """Verify expense queries are parameterized and scoped to a meet."""
+    with patch("db.expenses.execute_query") as mock_exec:
         mock_exec.return_value = []
-        vol_db.get_all_volunteers(status="active", search="Host")
+        expense_db.get_expenses(meet_id=1, category="catering")
         assert mock_exec.called
         sql, params = mock_exec.call_args[0]
-        assert "FROM volunteers" in sql
-        assert "JOIN alumni" not in sql  # Volunteer entity MUST be independent of alumni
-        assert "active" in params
-        assert "%Host%" in params
+        assert "FROM meet_expenses" in sql
+        assert "meet_id = %s" in sql and "category = %s" in sql
+        assert params == (1, "catering")

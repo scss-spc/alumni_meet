@@ -239,6 +239,57 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // "Darkness unto Light" easter egg: clicking the moon brings a brief dawn over SC&SS
+    const dawnHero = document.querySelector(".hero-night");
+    const dawnToggle = document.querySelector("[data-dawn-toggle]");
+    if (dawnHero && dawnToggle) {
+        const live = dawnHero.querySelector("[data-dawn-live]");
+        const sceneSvg = dawnHero.querySelector(".hero-scene-svg");
+        const DAWN_MS = 9000;
+        let dawnTimer = null;
+
+        // Place the sun on the roofline of the perforated upper block (poster coords 560, 928), so it rises from behind the school.
+        const placeSun = () => {
+            const heroBox = dawnHero.getBoundingClientRect();
+            let x = heroBox.width * 0.7;
+            let y = heroBox.height * 0.45;
+            let size = 90;
+            if (sceneSvg && sceneSvg.getScreenCTM) {
+                const ctm = sceneSvg.getScreenCTM();
+                if (ctm) {
+                    const pt = sceneSvg.createSVGPoint();
+                    pt.x = 560;
+                    pt.y = 928;
+                    const p = pt.matrixTransform(ctm);
+                    x = p.x - heroBox.left;
+                    y = p.y - heroBox.top;
+                    size = Math.max(40, 96 * ctm.a);
+                }
+            }
+            dawnHero.style.setProperty("--sun-x", x.toFixed(1) + "px");
+            dawnHero.style.setProperty("--sun-y", y.toFixed(1) + "px");
+            dawnHero.style.setProperty("--sun-size", size.toFixed(1) + "px");
+        };
+
+        const setDawn = (on) => {
+            clearTimeout(dawnTimer);
+            if (on) {
+                placeSun();
+                // Re-measure once the scene's entrance animation has settled.
+                setTimeout(placeSun, 1300);
+            }
+            dawnHero.classList.toggle("is-dawn", on);
+            dawnToggle.setAttribute("aria-pressed", String(on));
+            if (live) live.textContent = on ? "Tamaso mā jyotirgamaya: Darkness unto Light." : "";
+            if (on) dawnTimer = setTimeout(() => setDawn(false), DAWN_MS);
+        };
+
+        dawnToggle.addEventListener("click", () => setDawn(!dawnHero.classList.contains("is-dawn")));
+        window.addEventListener("resize", () => {
+            if (dawnHero.classList.contains("is-dawn")) placeSun();
+        });
+    }
+
     // Hero night sky: scatter twinkling stars (decorative; skipped when motion is reduced)
     const starfield = document.querySelector("[data-starfield]");
     if (starfield && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {

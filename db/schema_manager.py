@@ -53,6 +53,6 @@ def init_database():
     run_sql_file(schema_file)
     logger.info("Applying indexes...")
     run_sql_file(indexes_file)
-    logger.info("Seeding initial meet and activities...")
+    logger.info("Seeding initial meet...")
     run_sql_file(seed_file)
     logger.info("Database initialization complete.")
