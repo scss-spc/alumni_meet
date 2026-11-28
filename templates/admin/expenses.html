@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 
 {% block title %}Expenses{% endblock %}
-{% block page_title %}Alumni Expenses{% endblock %}
+{% block page_title %}Expenses{% endblock %}
 
 {% block topbar_actions %}
     <button class="btn btn-primary btn-sm" type="button" onclick="openExpenseModal()">+ Add Expense</button>
@@ -12,8 +12,9 @@
 
 {% block content %}
 <p style="color: var(--admin-text-muted); margin: 0 0 1.25rem;">
-    {{ meet.name }} · spending on alumni. Catering is planned per head (alumni + family &amp; guests); mementos are for alumni only.
+    {{ meet.name }} · spending on alumni, students and teachers. Tag each expense with who it is for. Catering is planned per head (alumni + family &amp; guests); the per-alumnus memento cost counts only mementos tagged for alumni.
     Expenses can be paid in parts. Use <strong>Payments</strong> on a row to record each part.
+    Category totals and the shortfall are shown publicly on <a href="{{ url_for('public.expenses') }}" target="_blank" rel="noopener">the Expenses page</a> (vendors and notes stay private).
 </p>
 
 <!-- Who we are spending on -->
@@ -49,9 +50,9 @@
         <div class="stat-sub">{% if summary.catering_per_head is not none %}{{ inr(summary.catering_per_head) }} per head ({{ summary.headcount }} people){% else %}Per-head cost shows once people confirm{% endif %}</div>
     </div>
     <div class="stat-tile">
-        <div class="stat-label">Mementos</div>
+        <div class="stat-label">Mementos (all)</div>
         <div class="stat-number">{{ inr(summary.mementos_total) }}</div>
-        <div class="stat-sub">{% if summary.memento_per_alumnus is not none %}{{ inr(summary.memento_per_alumnus) }} per alumnus ({{ summary.alumni_attending }} alumni){% else %}Per-alumnus cost shows once alumni confirm{% endif %}</div>
+        <div class="stat-sub">{% if summary.memento_per_alumnus is not none %}{{ inr(summary.memento_per_alumnus) }} per alumnus for alumni mementos ({{ summary.alumni_attending }} alumni){% else %}Per-alumnus cost shows once alumni confirm{% endif %}</div>
     </div>
     <div class="stat-tile">
         <div class="stat-label">Funds Left After Expenses</div>
@@ -63,12 +64,22 @@
 <!-- Category filter -->
 <div class="admin-card">
     <div class="card-body expense-filters">
-        <a href="{{ url_for('admin.expenses') }}" class="expense-chip {% if not current_category %}active{% endif %}">
-            All <span>{{ inr(summary.total_committed) }}</span>
+        <a href="{{ url_for('admin.expenses', audience=current_audience or None) }}" class="expense-chip {% if not current_category %}active{% endif %}">
+            All categories <span>{{ inr(summary.total_committed) }}</span>
         </a>
         {% for c in summary.by_category if c.key in categories %}
-            <a href="{{ url_for('admin.expenses', category=c.key) }}" class="expense-chip {% if current_category == c.key %}active{% endif %}">
+            <a href="{{ url_for('admin.expenses', category=c.key, audience=current_audience or None) }}" class="expense-chip {% if current_category == c.key %}active{% endif %}">
                 {{ c.label }} <span>{{ inr(c.total) }}</span>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="card-body expense-filters" style="padding-top: 0;">
+        <a href="{{ url_for('admin.expenses', category=current_category or None) }}" class="expense-chip {% if not current_audience %}active{% endif %}">
+            Spent on anyone <span>{{ inr(summary.total_committed) }}</span>
+        </a>
+        {% for a in summary.by_audience if a.key in audiences %}
+            <a href="{{ url_for('admin.expenses', audience=a.key, category=current_category or None) }}" class="expense-chip {% if current_audience == a.key %}active{% endif %}">
+                {{ a.label }} <span>{{ inr(a.total) }}</span>
             </a>
         {% endfor %}
     </div>
@@ -83,6 +94,7 @@
                     <tr>
                         <th>Date Created</th>
                         <th>Category</th>
+                        <th>Spent On</th>
                         <th>Description</th>
                         <th>Amount</th>
                         <th>Paid / Due</th>
@@ -95,7 +107,7 @@
                 <tbody>
                     {% for e in expenses %}
                         {% set edit_data = {
-                            'id': e.id, 'category': e.category, 'description': e.description,
+                            'id': e.id, 'category': e.category, 'audience': e.audience, 'description': e.description,
                             'quantity': e.quantity if e.quantity is not none else '',
                             'unit_cost': (e.unit_cost | string) if e.unit_cost is not none else '',
                             'amount': e.amount | string, 'vendor': e.vendor or '',
@@ -120,6 +132,7 @@
                         <tr>
                             <td style="white-space: nowrap;">{{ dmy(e.expense_date) }}</td>
                             <td><span class="badge badge-active">{{ e.category_label }}</span></td>
+                            <td>{{ e.audience_label }}</td>
                             <td>
                                 <strong>{{ e.description }}</strong>
                                 {% if e.notes %}<div style="font-size: 0.8rem; color: var(--color-muted);">{{ e.notes }}</div>{% endif %}
@@ -151,8 +164,8 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="9" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
-                                {% if current_category %}No expenses in this category yet.{% else %}No expenses recorded yet. Click "+ Add Expense" to log catering, mementos and other costs.{% endif %}
+                            <td colspan="10" style="text-align: center; color: var(--color-muted); padding: 2.5rem;">
+                                {% if current_category or current_audience %}No expenses match this filter yet.{% else %}No expenses recorded yet. Click "+ Add Expense" to log catering, mementos and other costs.{% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -169,7 +182,7 @@
             <h4 class="modal-title" id="expModalTitle">Add Expense</h4>
             <button type="button" class="modal-close" onclick="closeModal('expenseModal')">&times;</button>
         </div>
-        <form method="POST" action="{{ url_for('admin.expenses', category=current_category or None) }}">
+        <form method="POST" action="{{ url_for('admin.expenses', category=current_category or None, audience=current_audience or None) }}">
             <input type="hidden" name="id" id="expId" value="">
             <div class="modal-body">
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
@@ -182,6 +195,14 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" for="expAudience">Spent On *</label>
+                        <select name="audience" id="expAudience" class="form-control" style="width: 100%;" required>
+                            {% for key, label in audiences.items() %}
+                                <option value="{{ key }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" for="expDate">Date Created *</label>
                         <input type="date" name="expense_date" id="expDate" class="form-control" style="width: 100%;" required>
                     </div>
@@ -189,7 +210,7 @@
 
                 <div class="form-group">
                     <label class="form-label" for="expDescription">Description *</label>
-                    <input type="text" name="description" id="expDescription" maxlength="255" required class="form-control" style="width: 100%;" placeholder="e.g. Dinner buffet, engraved memento plaques">
+                    <input type="text" name="description" id="expDescription" maxlength="255" required class="form-control" style="width: 100%;" placeholder="e.g. Dinner buffet, mementos for faculty, student volunteer T-shirts">
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
@@ -325,6 +346,7 @@
         f("expModalTitle").textContent = isEdit ? "Edit Expense" : "Add Expense";
         f("expId").value = exp.id || "";
         f("expCategory").value = exp.category || "catering";
+        f("expAudience").value = exp.audience || "{{ current_audience or 'alumni' }}";
         f("expDescription").value = exp.description || "";
         qty.value = exp.quantity === undefined ? "" : exp.quantity;
         unit.value = exp.unit_cost || "";

@@ -8,9 +8,11 @@ from flask import render_template
 from app import create_app
 from config import Config
 from services.expense_service import (
+    EXPENSE_AUDIENCES,
     EXPENSE_CATEGORIES,
     apply_payment_status,
     build_expense_summary,
+    build_public_expense_summary,
     parse_expense_form,
     parse_payment_form,
     save_expense,
@@ -169,7 +171,7 @@ def test_expenses_page_renders_dates_status_and_payments():
     with app.test_request_context("/"):
         html = render_template("admin/expenses.html", meet={"name": "Continuum"}, meet_stats=STATS,
                                summary=summary, expenses=expenses, categories=EXPENSE_CATEGORIES,
-                               current_category="")
+                               audiences=EXPENSE_AUDIENCES, current_category="", current_audience="")
     assert "Date Created" in html and "Fully Paid On" in html
     assert "Partly paid" in html and "₹34,600.00 due" in html
     assert "22 Nov 2026" in html          # fully paid on the clearing payment's date
@@ -189,3 +191,68 @@ def test_dashboard_shows_alumni_and_headcount_split():
     assert "Alumni Attending · Mementos" in html
     assert "Total Headcount · Catering" in html
     assert "96 alumni + 45 family &amp; guests" in html
+
+
+# ---------- who the money is spent on (alumni / students / teachers) ----------
+
+def test_audience_defaults_to_alumni_and_rejects_unknown():
+    data, errors = parse_expense_form({"category": "other", "description": "Misc", "amount": "100"}, meet_id=1)
+    assert errors == [] and data["audience"] == "alumni"
+    data, errors = parse_expense_form({"category": "mementos", "description": "Faculty shawls", "amount": "9000",
+                                       "audience": "teachers"}, meet_id=1)
+    assert errors == [] and data["audience"] == "teachers"
+    _, errors = parse_expense_form({"category": "other", "description": "Misc", "amount": "100",
+                                    "audience": "aliens"}, meet_id=1)
+    assert any("who the expense is for" in e for e in errors)
+
+
+def test_summary_splits_by_audience_and_memento_per_alumnus_counts_alumni_only():
+    expenses = [
+        _expense(1, "mementos", "43200", audience="alumni"),
+        _expense(2, "mementos", "9000", audience="teachers"),
+        _expense(3, "catering", "12000", audience="students"),
+        _expense(4, "printing", "500"),  # legacy row without audience -> alumni
+    ]
+    s = build_expense_summary(1, STATS, 0, expenses=expenses)
+    by_aud = {a["key"]: a["total"] for a in s["by_audience"]}
+    assert by_aud == {"alumni": Decimal("43700.00"), "students": Decimal("12000.00"),
+                      "teachers": Decimal("9000.00"), "all": Decimal("0")}
+    assert s["mementos_total"] == Decimal("52200.00")
+    assert s["memento_per_alumnus"] == Decimal("450.00")  # 43200 / 96, teacher mementos excluded
+
+
+def test_public_summary_shortfall_allocations_and_no_private_fields():
+    expenses = [
+        _expense(1, "catering", "60000", payments=[("20000", date(2026, 11, 2))], audience="all",
+                 vendor="Secret Caterers", notes="internal invoice 42"),
+        _expense(2, "mementos", "30000", audience="teachers"),
+        _expense(3, "printing", "10000", audience="students"),
+    ]
+    p = build_public_expense_summary(1, funds_contributed=75000, expenses=expenses)
+    assert p["total_committed"] == Decimal("100000.00")
+    assert p["shortfall"] == Decimal("25000.00") and p["surplus"] == Decimal("0")
+    assert p["funded_percent"] == 75.0
+    assert [c["key"] for c in p["by_category"]] == ["catering", "mementos", "printing"]  # largest first, empty dropped
+    assert p["by_category"][0]["percent"] == 60.0 and p["by_category"][0]["due"] == Decimal("40000.00")
+    assert {a["key"] for a in p["by_audience"]} == {"all", "teachers", "students"}
+    for item in p["line_items"]:
+        assert "vendor" not in item and "notes" not in item
+
+    covered = build_public_expense_summary(1, funds_contributed=120000, expenses=expenses)
+    assert covered["shortfall"] == Decimal("0") and covered["surplus"] == Decimal("20000.00")
+    assert covered["funded_percent"] == 100.0
+
+
+def test_public_expenses_page_renders_without_private_details():
+    app = create_app(ExpenseTestConfig)
+    expenses = [_expense(1, "mementos", "30000", audience="teachers", description="Faculty felicitation",
+                         vendor="Secret Vendor", notes="internal note")]
+    with app.test_client() as client,             patch("routes.public.get_current_meet_context",
+                  return_value={"meet": {"id": 1, "name": "Continuum"}, "stats": {}}),             patch("routes.public.get_public_contributions_tracker",
+                  return_value={"stats": {"total_raised": 10000.0, "total_contributors": 4}, "contributors": []}),             patch("services.expense_service.list_expenses", return_value=expenses):
+        res = client.get("/expenses")
+    html = res.get_data(as_text=True)
+    assert res.status_code == 200
+    assert "Current Shortfall" in html and "₹20,000.00" in html
+    assert "Faculty felicitation" in html and "Teachers" in html
+    assert "Secret Vendor" not in html and "internal note" not in html

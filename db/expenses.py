@@ -8,6 +8,7 @@ EXPENSE_TABLE_SQL = """
         `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
         `meet_id` BIGINT NOT NULL,
         `category` VARCHAR(40) NOT NULL,
+        `audience` VARCHAR(20) NOT NULL DEFAULT 'alumni',
         `description` VARCHAR(255) NOT NULL,
         `quantity` INT NULL,
         `unit_cost` DECIMAL(12, 2) NULL,
@@ -37,7 +38,7 @@ PAYMENT_TABLE_SQL = """
 """
 
 _EXPENSE_COLUMNS = """
-    id, meet_id, category, description, quantity, unit_cost, amount, vendor,
+    id, meet_id, category, audience, description, quantity, unit_cost, amount, vendor,
     COALESCE(expense_date, DATE(created_at)) AS expense_date, notes, created_by, created_at, updated_at
 """
 
@@ -49,6 +50,10 @@ def ensure_expenses_table() -> None:
     # Upgrade tables created before "date created" existed.
     execute_query("ALTER TABLE meet_expenses ADD COLUMN IF NOT EXISTS expense_date DATE NULL AFTER vendor", commit=True)
     execute_query("UPDATE meet_expenses SET expense_date = DATE(created_at) WHERE expense_date IS NULL", commit=True)
+    # Who the money is spent on (alumni / students / teachers / everyone); older rows were all for alumni.
+    execute_query(
+        "ALTER TABLE meet_expenses ADD COLUMN IF NOT EXISTS audience VARCHAR(20) NOT NULL DEFAULT 'alumni' AFTER category",
+        commit=True)
     # Older single "date paid" values become one full payment (only for expenses with no payments yet).
     execute_query("""
         INSERT INTO meet_expense_payments (expense_id, amount, paid_on, note, created_by)
@@ -80,11 +85,11 @@ def get_expense(expense_id: int) -> Optional[Dict[str, Any]]:
 def create_expense(data: Dict[str, Any]) -> int:
     sql = """
         INSERT INTO meet_expenses
-            (meet_id, category, description, quantity, unit_cost, amount, vendor, expense_date, notes, created_by)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            (meet_id, category, audience, description, quantity, unit_cost, amount, vendor, expense_date, notes, created_by)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     return execute_query(sql, (
-        data["meet_id"], data["category"], data["description"], data.get("quantity"),
+        data["meet_id"], data["category"], data.get("audience") or "alumni", data["description"], data.get("quantity"),
         data.get("unit_cost"), data["amount"], data.get("vendor"), data.get("expense_date"),
         data.get("notes"), data.get("created_by"),
     ), commit=True)
@@ -93,13 +98,13 @@ def create_expense(data: Dict[str, Any]) -> int:
 def update_expense(expense_id: int, data: Dict[str, Any]) -> None:
     sql = """
         UPDATE meet_expenses
-        SET category = %s, description = %s, quantity = %s, unit_cost = %s, amount = %s,
+        SET category = %s, audience = %s, description = %s, quantity = %s, unit_cost = %s, amount = %s,
             vendor = %s, expense_date = %s, notes = %s
         WHERE id = %s
     """
     execute_query(sql, (
-        data["category"], data["description"], data.get("quantity"), data.get("unit_cost"),
-        data["amount"], data.get("vendor"), data.get("expense_date"), data.get("notes"), expense_id,
+        data["category"], data.get("audience") or "alumni", data["description"], data.get("quantity"),
+        data.get("unit_cost"), data["amount"], data.get("vendor"), data.get("expense_date"), data.get("notes"), expense_id,
     ), commit=True)
 
 

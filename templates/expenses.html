@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% from "macros/icons.html" import icon_external, icon_jnu_seal %}
+
+{% block title %}Expenses &amp; Shortfall — Continuum 2026{% endblock %}
+
+{% macro inr(value) -%}{{ value | currency_inr }}{%- endmacro %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-content">
+            <span class="eyebrow">SC&amp;SS JNU Alumni Meet 2026 · Financial Transparency</span>
+            <h1>Where the Money Goes</h1>
+            <hr class="editorial-rule">
+            <p class="lead-text">
+                Every rupee committed for {{ meet.name }}, split by category and by who it is spent on: alumni, students and teachers.
+                Figures update as organizers record expenses.
+            </p>
+            <div class="btn-group" style="margin-top: 1.5rem;">
+                <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg">
+                    {{ 'Help Close the Gap' if spending and spending.shortfall > 0 else 'Contribute' }} {{ icon_external() }}
+                </a>
+                <a href="{{ url_for('public.contribute') }}" class="btn btn-secondary btn-lg">Contribution Tracker</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem;">
+                    <div>
+                        <span class="hero-card-badge">{{ 'Current Shortfall' if spending and spending.shortfall > 0 else 'Funding Status' }}</span>
+                        {% if spending %}
+                            <div class="spend-hero-amount {{ 'is-short' if spending.shortfall > 0 else 'is-ok' }}">
+                                {{ inr(spending.shortfall if spending.shortfall > 0 else spending.surplus) }}
+                            </div>
+                            <p class="spend-hero-sub">
+                                {% if spending.shortfall > 0 %}still needed to cover expenses committed so far
+                                {% elif spending.total_committed > 0 %}left over after all committed expenses
+                                {% else %}raised. No expenses recorded yet{% endif %}
+                            </p>
+                        {% endif %}
+                    </div>
+                    {{ icon_jnu_seal(size=44, gold=true) }}
+                </div>
+                {% if spending %}
+                    <div class="progress-container" style="margin-bottom: 0.5rem;">
+                        <div class="progress-meta-row">
+                            <span><strong>{{ inr(spending.funds_raised) }}</strong> raised</span>
+                            <span>of <strong>{{ inr(spending.total_committed) }}</strong> committed</span>
+                        </div>
+                        <div class="progress-track progress-track-lg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ spending.funded_percent }}" aria-label="Share of committed expenses covered by funds raised">
+                            <div class="progress-fill" style="width: {{ spending.funded_percent }}%;">
+                                <span class="progress-indicator-pill">{{ spending.funded_percent | round(0) | int }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section" style="padding-top: var(--space-lg);">
+    <div class="container">
+        {% if not spending %}
+            <div class="content-card"><p style="margin: 0;">Spending details are not available right now. Please check back shortly.</p></div>
+        {% else %}
+            <!-- Totals -->
+            <div class="spend-kpis">
+                <div class="metric-box">
+                    <div class="metric-value">{{ inr(spending.funds_raised) }}</div>
+                    <div class="metric-label">Funds Raised</div>
+                    <div class="metric-sub">{{ tracker.stats.total_contributors }} contributors</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">{{ inr(spending.total_committed) }}</div>
+                    <div class="metric-label">Expenses Committed</div>
+                    <div class="metric-sub">{{ spending.entries }} expense{{ '' if spending.entries == 1 else 's' }} booked</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">{{ inr(spending.total_paid) }}</div>
+                    <div class="metric-label">Paid So Far</div>
+                    <div class="metric-sub">{{ inr(spending.total_due) }} still to pay vendors</div>
+                </div>
+                <div class="metric-box {{ 'spend-kpi-short' if spending.shortfall > 0 else 'spend-kpi-ok' }}">
+                    <div class="metric-value">{{ inr(spending.shortfall if spending.shortfall > 0 else spending.surplus) }}</div>
+                    <div class="metric-label">{{ 'Shortfall' if spending.shortfall > 0 else 'Surplus' }}</div>
+                    <div class="metric-sub">Committed − raised{% if spending.shortfall <= 0 %} (covered){% endif %}</div>
+                </div>
+            </div>
+
+            {% if spending.entries %}
+            <!-- Allocation -->
+            <div class="grid-2 spend-alloc-grid">
+                <div>
+                    <div class="section-label"><span class="label-num">01</span><span>By Category</span></div>
+                    <h2>Category-wise Allocation</h2>
+                    <hr class="editorial-rule">
+                    <ul class="spend-bars">
+                        {% for c in spending.by_category %}
+                            <li>
+                                <div class="spend-bar-head">
+                                    <span>{{ c.label }}</span>
+                                    <span><strong>{{ inr(c.total) }}</strong> · {{ c.percent }}%</span>
+                                </div>
+                                <div class="spend-bar-track"><div class="spend-bar-fill" style="width: {{ c.percent }}%;"></div></div>
+                                <div class="spend-bar-sub">{{ inr(c.paid) }} paid{% if c.due > 0 %} · {{ inr(c.due) }} due{% endif %}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <div class="section-label"><span class="label-num">02</span><span>By Group</span></div>
+                    <h2>Spent On</h2>
+                    <hr class="editorial-rule">
+                    <ul class="spend-bars">
+                        {% for a in spending.by_audience %}
+                            <li>
+                                <div class="spend-bar-head">
+                                    <span>{{ a.label }}</span>
+                                    <span><strong>{{ inr(a.total) }}</strong> · {{ a.percent }}%</span>
+                                </div>
+                                <div class="spend-bar-track"><div class="spend-bar-fill spend-bar-fill-alt" style="width: {{ a.percent }}%;"></div></div>
+                                <div class="spend-bar-sub">{{ a.entries }} expense{{ '' if a.entries == 1 else 's' }}</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Line items -->
+            <div style="margin-top: var(--space-xl);">
+                <div class="section-label"><span class="label-num">03</span><span>Ledger</span></div>
+                <h2>Every Expense</h2>
+                <hr class="editorial-rule">
+                <div class="table-responsive">
+                    <table class="admin-table spend-table">
+                        <thead>
+                            <tr><th>Item</th><th>Category</th><th>Spent On</th><th>Amount</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for i in spending.line_items %}
+                                <tr>
+                                    <td><strong>{{ i.description }}</strong></td>
+                                    <td>{{ i.category_label }}</td>
+                                    <td>{{ i.audience_label }}</td>
+                                    <td style="white-space: nowrap;">{{ inr(i.amount) }}</td>
+                                    <td><span class="spend-status spend-status-{{ i.status }}">{{ i.status_label }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% else %}
+                <div class="content-card" style="margin-top: var(--space-lg);">
+                    <p style="margin: 0;">No expenses have been recorded yet. Allocations will appear here as organizers book catering, mementos and other costs.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="cta-banner" style="margin-top: var(--space-xl); text-align: center;">
+            <h2>{{ 'Help us close the ' ~ inr(spending.shortfall) ~ ' gap' if spending and spending.shortfall > 0 else 'Support the SC&SS Alumni Meet 2026' }}</h2>
+            <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
+            <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
+                Contributions go straight to the costs listed above for alumni, students and teachers.
+            </p>
+            <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
+                Contribute via Official Google Form {{ icon_external() }}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -32,6 +32,7 @@ from services.gallery_service import (
 from db.meets import get_meet_responses_admin
 from db.contributions import get_contribution_stats
 from services.expense_service import (
+    EXPENSE_AUDIENCES,
     EXPENSE_CATEGORIES,
     add_payment,
     build_expense_summary,
@@ -302,11 +303,15 @@ def expenses():
                 flash(error, "danger")
             else:
                 flash("Expense updated." if expense_id else "Expense added.", "success")
-        return redirect(url_for("admin.expenses", category=request.args.get("category") or None))
+        return redirect(url_for("admin.expenses", category=request.args.get("category") or None,
+                                audience=request.args.get("audience") or None))
 
     category = request.args.get("category", "").strip() or None
     if category not in EXPENSE_CATEGORIES:
         category = None
+    audience = request.args.get("audience", "").strip() or None
+    if audience not in EXPENSE_AUDIENCES:
+        audience = None
     funds = get_contribution_stats(meet_id=meet_id).get("total_submitted_amount")
     all_expenses = list_expenses(meet_id)
     return render_template(
@@ -314,9 +319,12 @@ def expenses():
         meet=meet_ctx["meet"],
         meet_stats=meet_ctx["stats"],
         summary=build_expense_summary(meet_id, meet_ctx["stats"], funds, expenses=all_expenses),
-        expenses=[e for e in all_expenses if not category or e["category"] == category],
+        expenses=[e for e in all_expenses
+                  if (not category or e["category"] == category) and (not audience or e["audience"] == audience)],
         categories=EXPENSE_CATEGORIES,
-        current_category=category or ""
+        audiences=EXPENSE_AUDIENCES,
+        current_category=category or "",
+        current_audience=audience or ""
     )
 
 @admin_bp.route("/expenses/<int:expense_id>/payments", methods=["POST"])

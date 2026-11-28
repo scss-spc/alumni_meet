@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `meet_expenses` (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `meet_id` BIGINT NOT NULL,
     `category` VARCHAR(40) NOT NULL,
+    `audience` VARCHAR(20) NOT NULL DEFAULT 'alumni', -- alumni / students / teachers / all
     `description` VARCHAR(255) NOT NULL,
     `quantity` INT NULL,
     `unit_cost` DECIMAL(12, 2) NULL,

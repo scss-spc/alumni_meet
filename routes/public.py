@@ -3,6 +3,7 @@ import time
 from flask import Blueprint, render_template, request, redirect, url_for, current_app
 from services.meet_service import get_current_meet_context
 from services.contribution_service import get_public_contributions_tracker
+from services.expense_service import build_public_expense_summary
 from services.gallery_service import get_public_gallery, get_gallery_preview
 from db.alumni import get_distinct_batches, get_distinct_courses
 from config import Config
@@ -112,5 +113,31 @@ def contribute():
         tracker=tracker,
         batches=batches,
         courses=courses,
+        google_form_url=Config.GOOGLE_FORM_URL
+    )
+
+@public_bp.route("/expenses")
+@public_bp.route("/spending")
+def expenses():
+    """Public spending transparency: funds raised vs committed, shortfall, and category-wise allocation.
+
+    Reads the expenses organizers record in the admin panel; vendors and internal notes are never shown.
+    """
+    context = _cached("meet_context", get_current_meet_context)
+    meet_id = context["meet"]["id"]
+    tracker = _cached(("tracker", meet_id), lambda: get_public_contributions_tracker(meet_id=meet_id))
+
+    def load():
+        try:
+            return build_public_expense_summary(meet_id, tracker["stats"]["total_raised"])
+        except Exception:
+            current_app.logger.exception("Could not build the public expense summary")
+            return None
+
+    return render_template(
+        "expenses.html",
+        meet=context["meet"],
+        tracker=tracker,
+        spending=_cached(("spending", meet_id), load),
         google_form_url=Config.GOOGLE_FORM_URL
     )

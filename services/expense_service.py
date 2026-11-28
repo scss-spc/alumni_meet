@@ -21,13 +21,22 @@ from db.expenses import (
 logger = logging.getLogger(__name__)
 
 # Spending categories. Catering scales with total headcount (alumni + family/guests);
-# mementos are for alumni only, so they scale with the number of attending alumni.
+# alumni mementos scale with the number of attending alumni (teacher/student mementos are tagged separately).
 EXPENSE_CATEGORIES: Dict[str, str] = {
     "catering": "Catering (food & high tea)",
-    "mementos": "Mementos (alumni only)",
+    "mementos": "Mementos",
     "venue": "Venue & Décor",
     "printing": "Printing & Stationery",
+    "photography": "Photographer",
     "other": "Other",
+}
+
+# Who an expense is spent on. Older expenses (before this field existed) are treated as alumni.
+EXPENSE_AUDIENCES: Dict[str, str] = {
+    "alumni": "Alumni",
+    "students": "Students",
+    "teachers": "Teachers",
+    "all": "Everyone",
 }
 
 PAYMENT_STATUS_LABELS = {"unpaid": "Unpaid", "partial": "Partly paid", "paid": "Paid"}
@@ -38,6 +47,10 @@ _ZERO = Decimal("0")
 
 def category_label(key: str) -> str:
     return EXPENSE_CATEGORIES.get(key, key.title() if key else "Other")
+
+
+def audience_label(key: str) -> str:
+    return EXPENSE_AUDIENCES.get(key or "alumni", (key or "").title() or "Alumni")
 
 
 def _money(value: Any) -> Decimal:
@@ -99,6 +112,10 @@ def parse_expense_form(form: Dict[str, Any], meet_id: int,
     if category not in EXPENSE_CATEGORIES:
         errors.append("Choose a valid category.")
 
+    audience = (form.get("audience") or "alumni").strip()
+    if audience not in EXPENSE_AUDIENCES:
+        errors.append("Choose who the expense is for.")
+
     description = (form.get("description") or "").strip()
     if not description:
         errors.append("Description is required.")
@@ -125,6 +142,7 @@ def parse_expense_form(form: Dict[str, Any], meet_id: int,
     data = {
         "meet_id": meet_id,
         "category": category,
+        "audience": audience,
         "description": description,
         "quantity": quantity,
         "unit_cost": unit_cost,
@@ -181,6 +199,8 @@ def apply_payment_status(expense: Dict[str, Any], payments: List[Dict[str, Any]]
         "payment_status_label": PAYMENT_STATUS_LABELS[status],
         "fully_paid_on": fully_paid_on if status == "paid" else None,
         "category_label": category_label(expense.get("category")),
+        "audience": expense.get("audience") or "alumni",
+        "audience_label": audience_label(expense.get("audience")),
     })
     return expense
 
@@ -204,7 +224,7 @@ def get_expense_with_payments(expense_id: int) -> Optional[Dict[str, Any]]:
 # ---------- writes (audited) ----------
 
 def _audit_payload(data: Dict[str, Any]) -> str:
-    keep = ("category", "description", "quantity", "unit_cost", "amount", "vendor", "expense_date")
+    keep = ("category", "audience", "description", "quantity", "unit_cost", "amount", "vendor", "expense_date")
     return json.dumps({k: data.get(k) for k in keep}, default=str)
 
 
@@ -276,7 +296,12 @@ def build_expense_summary(meet_id: int, meet_stats: Dict[str, Any], funds_contri
         key: {"key": key, "label": label, "total": _ZERO, "paid": _ZERO, "entries": 0}
         for key, label in EXPENSE_CATEGORIES.items()
     }
+    auds: Dict[str, Dict[str, Any]] = {
+        key: {"key": key, "label": label, "total": _ZERO, "paid": _ZERO, "entries": 0}
+        for key, label in EXPENSE_AUDIENCES.items()
+    }
     status_counts = {"unpaid": 0, "partial": 0, "paid": 0}
+    alumni_mementos = _ZERO
     for e in expenses:
         if "paid_total" not in e:
             apply_payment_status(e, e.get("payments") or [])
@@ -285,6 +310,13 @@ def build_expense_summary(meet_id: int, meet_stats: Dict[str, Any], funds_contri
         c["total"] += _money(e.get("amount"))
         c["paid"] += e["paid_total"]
         c["entries"] += 1
+        akey = e.get("audience") or "alumni"
+        if key == "mementos" and akey == "alumni":
+            alumni_mementos += _money(e.get("amount"))
+        a = auds.setdefault(akey, {"key": akey, "label": audience_label(akey), "total": _ZERO, "paid": _ZERO, "entries": 0})
+        a["total"] += _money(e.get("amount"))
+        a["paid"] += e["paid_total"]
+        a["entries"] += 1
         status_counts[e["payment_status"]] += 1
 
     by_category = list(cats.values())
@@ -299,6 +331,7 @@ def build_expense_summary(meet_id: int, meet_stats: Dict[str, Any], funds_contri
 
     return {
         "by_category": by_category,
+        "by_audience": list(auds.values()),
         "total_spent": committed,          # total committed (all expenses), kept for the dashboard
         "total_committed": committed,
         "total_paid": paid,
@@ -310,9 +343,56 @@ def build_expense_summary(meet_id: int, meet_stats: Dict[str, Any], funds_contri
         "catering_total": catering,
         "mementos_total": mementos,
         "catering_per_head": per(catering, headcount),
-        "memento_per_alumnus": per(mementos, alumni),
+        "memento_per_alumnus": per(alumni_mementos, alumni),
         "spent_per_alumnus": per(committed, alumni),
         "funds_contributed": funds,
         "balance": funds - committed,
+        "shortfall": max(committed - funds, _ZERO),
         "cash_in_hand": funds - paid,
+    }
+
+
+def _share(part: Decimal, whole: Decimal) -> float:
+    return float(round(part / whole * 100, 1)) if whole > 0 else 0.0
+
+
+def build_public_expense_summary(meet_id: int, funds_contributed: Any = 0,
+                                 expenses: Optional[List[Dict[str, Any]]] = None) -> Dict[str, Any]:
+    """Public-safe spending overview: totals, shortfall, category / audience allocations and line items.
+
+    Vendors, notes and payment notes are internal and never included.
+    """
+    expenses = expenses if expenses is not None else list_expenses(meet_id)
+    summary = build_expense_summary(meet_id, {}, funds_contributed, expenses=expenses)
+    committed = summary["total_committed"]
+    funds = summary["funds_contributed"]
+
+    def allocations(groups: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        rows = [
+            {"key": g["key"], "label": g["label"], "total": g["total"], "paid": g["paid"],
+             "due": g["total"] - g["paid"], "entries": g["entries"], "percent": _share(g["total"], committed)}
+            for g in groups if g["entries"]
+        ]
+        return sorted(rows, key=lambda r: r["total"], reverse=True)
+
+    items = [
+        {"description": e["description"], "category": e.get("category") or "other",
+         "category_label": e["category_label"], "audience_label": e["audience_label"],
+         "amount": _money(e.get("amount")), "paid": e["paid_total"], "status": e["payment_status"],
+         "status_label": e["payment_status_label"], "expense_date": e.get("expense_date")}
+        for e in expenses
+    ]
+    return {
+        "funds_raised": funds,
+        "total_committed": committed,
+        "total_paid": summary["total_paid"],
+        "total_due": summary["total_due"],
+        "shortfall": summary["shortfall"],
+        "surplus": max(funds - committed, _ZERO),
+        "funded_percent": min(_share(funds, committed), 100.0) if committed > 0 else 100.0,
+        "paid_percent": _share(summary["total_paid"], committed),
+        "by_category": allocations(summary["by_category"]),
+        "by_audience": allocations(summary["by_audience"]),
+        "line_items": items,
+        "entries": len(items),
     }

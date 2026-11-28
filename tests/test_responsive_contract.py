@@ -28,6 +28,7 @@ PAGES = [
     "/",
     "/meet",
     "/contribute",
+    "/expenses",
     "/gallery",
     "/alumni",
     "/admin/login",
