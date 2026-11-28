@@ -254,5 +254,22 @@ def test_public_expenses_page_renders_without_private_details():
     html = res.get_data(as_text=True)
     assert res.status_code == 200
     assert "Current Shortfall" in html and "₹20,000.00" in html
-    assert "Faculty felicitation" in html and "Teachers" in html
+    assert "Faculty felicitation" in html and "Mementos" in html
+    assert "Spent On" not in html
     assert "Secret Vendor" not in html and "internal note" not in html
+
+
+def test_public_ledger_merges_same_item_booked_for_several_groups():
+    expenses = [
+        _expense(1, "catering", "6750", audience="students", description="Dinner"),
+        _expense(2, "catering", "22500", audience="teachers", description="dinner ",
+                 payments=[("2500", date(2026, 11, 2))]),
+        _expense(3, "catering", "20000", audience="alumni", description="Dinner"),
+        _expense(4, "mementos", "1500", description="Dinner"),  # different category stays separate
+    ]
+    p = build_public_expense_summary(1, funds_contributed=0, expenses=expenses)
+    assert len(p["line_items"]) == 2
+    dinner = next(i for i in p["line_items"] if i["category"] == "catering")
+    assert dinner["amount"] == Decimal("49250.00") and dinner["paid"] == Decimal("2500.00")
+    assert dinner["status"] == "partial" and dinner["entries"] == 3
+    assert p["entries"] == 4  # expense count still reflects every booking

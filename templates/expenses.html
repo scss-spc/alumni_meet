@@ -13,7 +13,7 @@
             <h1>Where the Money Goes</h1>
             <hr class="editorial-rule">
             <p class="lead-text">
-                Every rupee committed for {{ meet.name }}, split by category and by who it is spent on: alumni, students and teachers.
+                Every rupee committed for {{ meet.name }}, split by category.
                 Figures update as organizers record expenses.
             </p>
             <div class="btn-group" style="margin-top: 1.5rem;">
@@ -91,7 +91,7 @@
 
             {% if spending.entries %}
             <!-- Allocation -->
-            <div class="grid-2 spend-alloc-grid">
+            <div class="spend-alloc-grid">
                 <div>
                     <div class="section-label"><span class="label-num">01</span><span>By Category</span></div>
                     <h2>Category-wise Allocation</h2>
@@ -109,41 +109,23 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <div>
-                    <div class="section-label"><span class="label-num">02</span><span>By Group</span></div>
-                    <h2>Spent On</h2>
-                    <hr class="editorial-rule">
-                    <ul class="spend-bars">
-                        {% for a in spending.by_audience %}
-                            <li>
-                                <div class="spend-bar-head">
-                                    <span>{{ a.label }}</span>
-                                    <span><strong>{{ inr(a.total) }}</strong> · {{ a.percent }}%</span>
-                                </div>
-                                <div class="spend-bar-track"><div class="spend-bar-fill spend-bar-fill-alt" style="width: {{ a.percent }}%;"></div></div>
-                                <div class="spend-bar-sub">{{ a.entries }} expense{{ '' if a.entries == 1 else 's' }}</div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
             </div>
 
             <!-- Line items -->
             <div style="margin-top: var(--space-xl);">
-                <div class="section-label"><span class="label-num">03</span><span>Ledger</span></div>
+                <div class="section-label"><span class="label-num">02</span><span>Ledger</span></div>
                 <h2>Every Expense</h2>
                 <hr class="editorial-rule">
                 <div class="table-responsive">
                     <table class="admin-table spend-table">
                         <thead>
-                            <tr><th>Item</th><th>Category</th><th>Spent On</th><th>Amount</th><th>Status</th></tr>
+                            <tr><th>Item</th><th>Category</th><th>Amount</th><th>Status</th></tr>
                         </thead>
                         <tbody>
                             {% for i in spending.line_items %}
                                 <tr>
                                     <td><strong>{{ i.description }}</strong></td>
                                     <td>{{ i.category_label }}</td>
-                                    <td>{{ i.audience_label }}</td>
                                     <td style="white-space: nowrap;">{{ inr(i.amount) }}</td>
                                     <td><span class="spend-status spend-status-{{ i.status }}">{{ i.status_label }}</span></td>
                                 </tr>
@@ -163,7 +145,7 @@
             <h2>{{ 'Help us close the ' ~ inr(spending.shortfall) ~ ' gap' if spending and spending.shortfall > 0 else 'Support the SC&SS Alumni Meet 2026' }}</h2>
             <hr class="editorial-rule editorial-rule-center" style="background-color: rgba(244, 241, 234, 0.3);">
             <p style="margin-bottom: var(--space-lg); max-width: 600px; margin-left: auto; margin-right: auto;">
-                Contributions go straight to the costs listed above for alumni, students and teachers.
+                Contributions go straight to the costs listed above.
             </p>
             <a href="{{ google_form_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-paper btn-lg">
                 Contribute via Official Google Form {{ icon_external() }}

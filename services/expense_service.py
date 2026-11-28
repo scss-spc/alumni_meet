@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Spending categories. Catering scales with total headcount (alumni + family/guests);
 # alumni mementos scale with the number of attending alumni (teacher/student mementos are tagged separately).
 EXPENSE_CATEGORIES: Dict[str, str] = {
-    "catering": "Catering (food & high tea)",
+    "catering": "Catering",
     "mementos": "Mementos",
     "venue": "Venue & Décor",
     "printing": "Printing & Stationery",
@@ -375,13 +375,28 @@ def build_public_expense_summary(meet_id: int, funds_contributed: Any = 0,
         ]
         return sorted(rows, key=lambda r: r["total"], reverse=True)
 
-    items = [
-        {"description": e["description"], "category": e.get("category") or "other",
-         "category_label": e["category_label"], "audience_label": e["audience_label"],
-         "amount": _money(e.get("amount")), "paid": e["paid_total"], "status": e["payment_status"],
-         "status_label": e["payment_status_label"], "expense_date": e.get("expense_date")}
-        for e in expenses
-    ]
+    # Public ledger: rows with the same description and category (e.g. "Dinner" booked separately for
+    # alumni, students and teachers) are merged into one line.
+    merged: Dict[Tuple[str, str], Dict[str, Any]] = {}
+    for e in expenses:
+        category = e.get("category") or "other"
+        key = (" ".join((e.get("description") or "").split()).casefold(), category)
+        item = merged.get(key)
+        if item is None:
+            item = merged[key] = {
+                "description": " ".join((e.get("description") or "").split()), "category": category,
+                "category_label": e["category_label"], "amount": _ZERO, "paid": _ZERO,
+                "expense_date": e.get("expense_date"), "entries": 0,
+            }
+        item["amount"] += _money(e.get("amount"))
+        item["paid"] += e["paid_total"]
+        item["entries"] += 1
+    items = list(merged.values())
+    for item in items:
+        status = "unpaid" if item["paid"] <= 0 else ("partial" if item["paid"] < item["amount"] else "paid")
+        item["status"] = status
+        item["status_label"] = PAYMENT_STATUS_LABELS[status]
+
     return {
         "funds_raised": funds,
         "total_committed": committed,
@@ -394,5 +409,5 @@ def build_public_expense_summary(meet_id: int, funds_contributed: Any = 0,
         "by_category": allocations(summary["by_category"]),
         "by_audience": allocations(summary["by_audience"]),
         "line_items": items,
-        "entries": len(items),
+        "entries": len(expenses),
     }
