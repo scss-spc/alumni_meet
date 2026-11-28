@@ -15,7 +15,11 @@ COLUMN_ALIASES = {
     ],
     "email": [
         "email", "email address", "e-mail", "e-mail address", "mail",
-        "username", "email id", "contact email"
+        "username", "email id"
+    ],
+    # Second, self-typed email field on the form (e.g. "Email ID"); used when the login email is shared/placeholder.
+    "contact_email": [
+        "email id", "contact email", "alternate email", "alternative email", "personal email"
     ],
     "phone": [
         "phone", "phone number", "contact", "contact number", "mobile",
@@ -101,8 +105,12 @@ def detect_column_mapping(headers: List[str]) -> Dict[str, str]:
     cleaned_headers = [(h, clean_header_text(h)) for h in headers if h]
 
     for canonical, aliases in COLUMN_ALIASES.items():
+        # The second email field must not point at the same column as the main email.
+        taken = {mapping.get("email")} if canonical == "contact_email" else set()
         # First: exact match with alias
         for raw_h, clean_h in cleaned_headers:
+            if raw_h in taken:
+                continue
             if clean_h in aliases:
                 mapping[canonical] = raw_h
                 break
@@ -110,6 +118,8 @@ def detect_column_mapping(headers: List[str]) -> Dict[str, str]:
         # Second: substring or word-boundary match if not yet mapped
         if canonical not in mapping:
             for raw_h, clean_h in cleaned_headers:
+                if raw_h in taken:
+                    continue
                 for alias in aliases:
                     if alias in clean_h or clean_h in alias:
                         mapping[canonical] = raw_h
@@ -118,6 +128,75 @@ def detect_column_mapping(headers: List[str]) -> Dict[str, str]:
                     break
 
     return mapping
+
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+# Local parts organizers type when adding a row for someone who has no email on file.
+_PLACEHOLDER_LOCAL_PARTS = {"na", "n.a", "n/a", "none", "nil", "null", "no", "noemail", "no.email", "test",
+                            "abc", "xyz", "xxx", "dummy", "notavailable", "not.available", "unknown"}
+
+
+def clean_email(val: Any) -> Optional[str]:
+    """Lower-cased email if it looks valid, else None."""
+    text = str(val or "").strip().lower()
+    return text if _EMAIL_RE.match(text) else None
+
+
+def is_placeholder_email(email: Optional[str]) -> bool:
+    if not email:
+        return True
+    local, _, domain = email.partition("@")
+    return local in _PLACEHOLDER_LOCAL_PARTS or domain in ("example.com", "example.org", "no-email.invalid")
+
+
+def _name_key(name: str) -> str:
+    return " ".join((name or "").split()).casefold()
+
+
+def _generated_email(name: str, year: Optional[int], row_number: Any) -> str:
+    slug = re.sub(r"[^a-z0-9]+", ".", _name_key(name)).strip(".") or f"row{row_number}"
+    return f"{slug}.{year or 'na'}@no-email.invalid"
+
+
+def assign_identity_emails(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Give every distinct person in the sheet their own email, which is how alumni are matched in the database.
+
+    Organizers add rows by hand for alumni who did not fill the form, often re-using a placeholder like
+    na@gmail.com or their own email. Without this, all those rows collapse into one alumnus: the name keeps
+    being overwritten and only the first contribution is kept.
+
+    Rules (processed in sheet order, so results are stable between syncs):
+      * The first row to use an email keeps it. Later rows with the same email AND the same name are the
+        same person (e.g. a resubmission).
+      * A placeholder login email is swapped for the row's own "Email ID" when that is a real address.
+      * A later row with the same email but a different name is someone else: it uses its "Email ID" if
+        that is free, otherwise a generated "<name>.<batch>@no-email.invalid" address.
+    """
+    owner: Dict[str, str] = {}  # email -> name key of the person who claimed it
+
+    def free_for(email: Optional[str], name: str) -> bool:
+        return bool(email) and owner.get(email, name) == name
+
+    for rec in records:
+        name = _name_key(rec.get("full_name"))
+        email = rec.get("email")
+        contact = clean_email(rec.get("contact_email"))
+        if is_placeholder_email(email) and contact and not is_placeholder_email(contact) and free_for(contact, name):
+            email = contact
+        if not free_for(email, name):
+            if contact and not is_placeholder_email(contact) and free_for(contact, name):
+                email = contact
+            else:
+                email = _generated_email(rec.get("full_name"), rec.get("graduation_year"), rec.get("row_number"))
+                if not free_for(email, name):
+                    email = email.replace("@", f".row{rec.get('row_number')}@")
+        if email != rec.get("email"):
+            logger.info(f"Row {rec.get('row_number')}: email {rec.get('email')} is shared with another person; "
+                        f"syncing '{rec.get('full_name')}' as {email}.")
+            rec["sheet_email"] = rec.get("email")
+            rec["email"] = email
+        owner.setdefault(email, name)
+    return records
+
 
 def parse_year(val: Any) -> Optional[int]:
     """Parse graduation year from diverse formats (e.g., '2018', 'Batch of 2018', 2018.0)."""
@@ -383,6 +462,7 @@ class GoogleSheetsConnector:
                 # Alumni metadata
                 "full_name": full_name.strip(),
                 "email": email_clean,
+                "contact_email": get_val("contact_email"),
                 "phone": get_val("phone"),
                 "graduation_year": parse_year(get_val("graduation_year")),
                 "course": get_val("course"),
@@ -408,4 +488,4 @@ class GoogleSheetsConnector:
 
             normalized_records.append(record)
 
-        return normalized_records, col_map
+        return assign_identity_emails(normalized_records), col_map

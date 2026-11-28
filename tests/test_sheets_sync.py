@@ -209,3 +209,47 @@ def test_scheduler_info():
     assert "auto_sync_enabled" in info
     assert "interval_hours" in info
     assert info["interval_hours"] == 24
+
+
+# ---------- manually added rows that share an email ----------
+
+def test_rows_sharing_a_placeholder_or_borrowed_email_become_separate_people():
+    from services.sheets_service import assign_identity_emails, detect_column_mapping
+
+    mapping = detect_column_mapping(["Timestamp", "Email Address", "Full Name", "Email  ID"])
+    assert mapping["email"] == "Email Address" and mapping["contact_email"] == "Email  ID"
+
+    def rec(row, name, email, contact, year=2010):
+        return {"row_number": row, "full_name": name, "email": email, "contact_email": contact,
+                "graduation_year": year}
+
+    records = assign_identity_emails([
+        rec(9, "Nishant Upadhyay", "nishant@gmail.com", "nishant@gmail.com"),
+        rec(16, "Ashish Yadav", "na@gmail.com", "NA"),                       # first claimant keeps it
+        rec(20, "Shreya Rai", "shreya@gmail.com", "shreya@gmail.com"),
+        rec(37, "Shruti Agrawal", "shreya@gmail.com", "shruti@gmail.com"),  # borrowed a friend's email
+        rec(39, "Nishant  upadhyay ", "nishant@gmail.com", "nishant@gmail.com"),  # resubmission, same person
+        rec(42, "Amit Kumar Jha", "na@gmail.com", "na@gmail.com", 2004),     # no real email anywhere
+        rec(43, "Shekhar kagdiyal", "na@gmail.com", "shekhar@gmail.com"),
+    ])
+    emails = {r["row_number"]: r["email"] for r in records}
+    assert emails[16] == "na@gmail.com"
+    assert emails[37] == "shruti@gmail.com"
+    assert emails[9] == emails[39] == "nishant@gmail.com"
+    assert emails[42] == "amit.kumar.jha.2004@no-email.invalid"
+    assert emails[43] == "shekhar@gmail.com"
+    assert len({emails[k] for k in (16, 20, 37, 42, 43)}) == 5
+
+
+def test_placeholder_login_email_uses_real_contact_email_and_results_are_stable():
+    from services.sheets_service import assign_identity_emails
+
+    rows = lambda: [{"row_number": 2, "full_name": "Priya", "email": "na@gmail.com",
+                     "contact_email": "Priya@Example.in", "graduation_year": 2012},
+                    {"row_number": 3, "full_name": "Ravi", "email": "test@gmail.com",
+                     "contact_email": "", "graduation_year": None},
+                    {"row_number": 4, "full_name": "Ravi", "email": "test@gmail.com",
+                     "contact_email": "", "graduation_year": None}]
+    first = [r["email"] for r in assign_identity_emails(rows())]
+    assert first == ["priya@example.in", "test@gmail.com", "test@gmail.com"]
+    assert first == [r["email"] for r in assign_identity_emails(rows())]
